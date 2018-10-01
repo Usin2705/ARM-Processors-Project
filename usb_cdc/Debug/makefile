@@ -44,7 +44,7 @@ all: usb_cdc.axf
 usb_cdc.axf: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: MCU C++ Linker'
-	arm-none-eabi-c++ -nostdlib -L"C:\Users\Usin\Desktop\Projects\Metro\Embedded System project - ARM\lpc_board_nxp_lpcxpresso_1549\Debug" -L"C:\Users\Usin\Desktop\Projects\Metro\Embedded System project - ARM\lpc_chip_15xx\Debug" -L"C:\Users\Usin\Desktop\Projects\Metro\Embedded System project - ARM\FreeRTOS\Debug" -Xlinker -Map="usb_cdc.map" -Xlinker --gc-sections -Xlinker -print-memory-usage -mcpu=cortex-m3 -mthumb -T "usb_cdc_Debug.ld" -o "usb_cdc.axf" $(OBJS) $(USER_OBJS) $(LIBS)
+	arm-none-eabi-c++ -nostdlib -L"C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_board_nxp_lpcxpresso_1549\Debug" -L"C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\Debug" -L"C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\Debug" -Xlinker -Map="usb_cdc.map" -Xlinker --gc-sections -Xlinker -print-memory-usage -mcpu=cortex-m3 -mthumb -T "usb_cdc_Debug.ld" -o "usb_cdc.axf" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 	$(MAKE) --no-print-directory post-build

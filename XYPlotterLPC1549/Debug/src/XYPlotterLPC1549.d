@@ -59,12 +59,12 @@ src/XYPlotterLPC1549.o src/XYPlotterLPC1549.d: \
  C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\src\include/mpu_wrappers.h \
  C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\src\include/task.h \
  C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\src\include/list.h \
- C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\Lab10_03_timer_command\inc/ITM_write.h \
+ C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\XYPlotterLPC1549\inc/ITM_write.h \
  ../src/DigitalIoPin.h \
- C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\Lab10_03_timer_command\inc/Fmutex.h \
+ C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\XYPlotterLPC1549\inc/Fmutex.h \
  C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\src\include/semphr.h \
  C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\src\include/queue.h \
- C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\Lab10_03_timer_command\inc/user_vcom.h
+ C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\XYPlotterLPC1549\inc/user_vcom.h
 
 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_board_nxp_lpcxpresso_1549\inc/board.h:
 
@@ -184,14 +184,14 @@ C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\src\include/task.
 
 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\src\include/list.h:
 
-C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\Lab10_03_timer_command\inc/ITM_write.h:
+C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\XYPlotterLPC1549\inc/ITM_write.h:
 
 ../src/DigitalIoPin.h:
 
-C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\Lab10_03_timer_command\inc/Fmutex.h:
+C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\XYPlotterLPC1549\inc/Fmutex.h:
 
 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\src\include/semphr.h:
 
 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\src\include/queue.h:
 
-C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\Lab10_03_timer_command\inc/user_vcom.h:
+C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\XYPlotterLPC1549\inc/user_vcom.h:

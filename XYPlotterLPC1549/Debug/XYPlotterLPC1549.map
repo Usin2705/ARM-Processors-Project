@@ -442,8 +442,8 @@ Discarded input sections
  .debug_macro   0x00000000      0x46b ./src/Fmutex.o
  .debug_macro   0x00000000       0x86 ./src/Fmutex.o
  .debug_macro   0x00000000       0x7e ./src/Fmutex.o
- .debug_line    0x00000000      0x848 ./src/Fmutex.o
- .debug_str     0x00000000    0x1693f ./src/Fmutex.o
+ .debug_line    0x00000000      0x842 ./src/Fmutex.o
+ .debug_str     0x00000000    0x16939 ./src/Fmutex.o
  .comment       0x00000000       0x7f ./src/Fmutex.o
  .debug_frame   0x00000000       0xc8 ./src/Fmutex.o
  .ARM.attributes
@@ -5425,89 +5425,89 @@ OUTPUT(XYPlotterLPC1549.axf elf32-littlearm)
  .debug_macro   0x0000b07e      0x260 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\Debug\liblpc_chip_15xx.a(sysinit_15xx.o)
  .debug_macro   0x0000b2de      0x260 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\Debug\liblpc_chip_15xx.a(uart_15xx.o)
 
-.debug_line     0x00000000     0xc58a
- .debug_line    0x00000000      0x596 ./src/ITM_write.o
- .debug_line    0x00000596     0x10c9 ./src/XYPlotterLPC1549.o
- .debug_line    0x0000165f      0x38c ./src/cdc_desc.o
- .debug_line    0x000019eb      0xadf ./src/cdc_main.o
- .debug_line    0x000024ca      0x93c ./src/cdc_vcom.o
- .debug_line    0x00002e06       0xd5 ./src/cr_startup_lpc15xx.o
- .debug_line    0x00002edb      0x68b ./src/sysinit.o
- .debug_line    0x00003566      0xd7e C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\Debug\libfreertos.a(queue.o)
- .debug_line    0x000042e4     0x12f2 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\Debug\libfreertos.a(tasks.o)
- .debug_line    0x000055d6      0x859 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\Debug\libfreertos.a(heap_3.o)
- .debug_line    0x00005e2f      0x933 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\Debug\libfreertos.a(port.o)
- .debug_line    0x00006762      0x8a0 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\Debug\libfreertos.a(FreeRTOSCommonHooks.o)
- .debug_line    0x00007002      0x895 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\Debug\libfreertos.a(list.o)
- .debug_line    0x00007897      0x8ca C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_board_nxp_lpcxpresso_1549\Debug\liblpc_board_nxp_lpcxpresso_1549.a(board.o)
- .debug_line    0x00008161      0x79e C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_board_nxp_lpcxpresso_1549\Debug\liblpc_board_nxp_lpcxpresso_1549.a(board_sysinit.o)
- .debug_line    0x000088ff      0x57c C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\Debug\liblpc_chip_15xx.a(chip_15xx.o)
- .debug_line    0x00008e7b      0x7d0 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\Debug\liblpc_chip_15xx.a(clock_15xx.o)
- .debug_line    0x0000964b      0x5d4 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\Debug\liblpc_chip_15xx.a(gpio_15xx.o)
- .debug_line    0x00009c1f      0x51c C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\Debug\liblpc_chip_15xx.a(iocon_15xx.o)
- .debug_line    0x0000a13b      0x5fc C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\Debug\liblpc_chip_15xx.a(ritimer_15xx.o)
- .debug_line    0x0000a737      0x575 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\Debug\liblpc_chip_15xx.a(sct_15xx.o)
- .debug_line    0x0000acac      0x547 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\Debug\liblpc_chip_15xx.a(swm_15xx.o)
- .debug_line    0x0000b1f3      0x57e C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\Debug\liblpc_chip_15xx.a(sysctl_15xx.o)
- .debug_line    0x0000b771      0x5b1 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\Debug\liblpc_chip_15xx.a(sysinit_15xx.o)
- .debug_line    0x0000bd22      0x6f6 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\Debug\liblpc_chip_15xx.a(uart_15xx.o)
- .debug_line    0x0000c418      0x125 c:/nxp/mcuxpressoide_10.2.1_795/ide/tools/bin/../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/lib/thumb/v7-m\libcr_newlib_nohost.a(_cr_sbrk.o)
- .debug_line    0x0000c53d       0x4d c:/nxp/mcuxpressoide_10.2.1_795/ide/tools/bin/../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/lib/thumb/v7-m\libcr_newlib_nohost.a(_cr_check_heap.o)
+.debug_line     0x00000000     0xc56c
+ .debug_line    0x00000000      0x590 ./src/ITM_write.o
+ .debug_line    0x00000590     0x10c3 ./src/XYPlotterLPC1549.o
+ .debug_line    0x00001653      0x386 ./src/cdc_desc.o
+ .debug_line    0x000019d9      0xad9 ./src/cdc_main.o
+ .debug_line    0x000024b2      0x936 ./src/cdc_vcom.o
+ .debug_line    0x00002de8       0xd5 ./src/cr_startup_lpc15xx.o
+ .debug_line    0x00002ebd      0x68b ./src/sysinit.o
+ .debug_line    0x00003548      0xd7e C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\Debug\libfreertos.a(queue.o)
+ .debug_line    0x000042c6     0x12f2 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\Debug\libfreertos.a(tasks.o)
+ .debug_line    0x000055b8      0x859 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\Debug\libfreertos.a(heap_3.o)
+ .debug_line    0x00005e11      0x933 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\Debug\libfreertos.a(port.o)
+ .debug_line    0x00006744      0x8a0 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\Debug\libfreertos.a(FreeRTOSCommonHooks.o)
+ .debug_line    0x00006fe4      0x895 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\Debug\libfreertos.a(list.o)
+ .debug_line    0x00007879      0x8ca C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_board_nxp_lpcxpresso_1549\Debug\liblpc_board_nxp_lpcxpresso_1549.a(board.o)
+ .debug_line    0x00008143      0x79e C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_board_nxp_lpcxpresso_1549\Debug\liblpc_board_nxp_lpcxpresso_1549.a(board_sysinit.o)
+ .debug_line    0x000088e1      0x57c C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\Debug\liblpc_chip_15xx.a(chip_15xx.o)
+ .debug_line    0x00008e5d      0x7d0 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\Debug\liblpc_chip_15xx.a(clock_15xx.o)
+ .debug_line    0x0000962d      0x5d4 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\Debug\liblpc_chip_15xx.a(gpio_15xx.o)
+ .debug_line    0x00009c01      0x51c C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\Debug\liblpc_chip_15xx.a(iocon_15xx.o)
+ .debug_line    0x0000a11d      0x5fc C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\Debug\liblpc_chip_15xx.a(ritimer_15xx.o)
+ .debug_line    0x0000a719      0x575 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\Debug\liblpc_chip_15xx.a(sct_15xx.o)
+ .debug_line    0x0000ac8e      0x547 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\Debug\liblpc_chip_15xx.a(swm_15xx.o)
+ .debug_line    0x0000b1d5      0x57e C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\Debug\liblpc_chip_15xx.a(sysctl_15xx.o)
+ .debug_line    0x0000b753      0x5b1 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\Debug\liblpc_chip_15xx.a(sysinit_15xx.o)
+ .debug_line    0x0000bd04      0x6f6 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\Debug\liblpc_chip_15xx.a(uart_15xx.o)
+ .debug_line    0x0000c3fa      0x125 c:/nxp/mcuxpressoide_10.2.1_795/ide/tools/bin/../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/lib/thumb/v7-m\libcr_newlib_nohost.a(_cr_sbrk.o)
+ .debug_line    0x0000c51f       0x4d c:/nxp/mcuxpressoide_10.2.1_795/ide/tools/bin/../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/lib/thumb/v7-m\libcr_newlib_nohost.a(_cr_check_heap.o)
 
-.debug_str      0x00000000    0x2d82e
- .debug_str     0x00000000     0xf794 ./src/ITM_write.o
-                               0xf947 (size before relaxing)
- .debug_str     0x0000f794    0x118c1 ./src/XYPlotterLPC1549.o
-                              0x2100a (size before relaxing)
- .debug_str     0x00021055     0x53fe ./src/cdc_desc.o
-                               0x93a7 (size before relaxing)
- .debug_str     0x00026453     0x1c01 ./src/cdc_main.o
-                              0x1dab1 (size before relaxing)
- .debug_str     0x00028054      0x1fb ./src/cdc_vcom.o
-                              0x19323 (size before relaxing)
- .debug_str     0x0002824f      0x1f2 ./src/cr_startup_lpc15xx.o
+.debug_str      0x00000000    0x2d87b
+ .debug_str     0x00000000     0xf78e ./src/ITM_write.o
+                               0xf941 (size before relaxing)
+ .debug_str     0x0000f78e    0x118c1 ./src/XYPlotterLPC1549.o
+                              0x21004 (size before relaxing)
+ .debug_str     0x0002104f     0x53fe ./src/cdc_desc.o
+                               0x93a1 (size before relaxing)
+ .debug_str     0x0002644d     0x1c01 ./src/cdc_main.o
+                              0x1daab (size before relaxing)
+ .debug_str     0x0002804e      0x1fb ./src/cdc_vcom.o
+                              0x1931d (size before relaxing)
+ .debug_str     0x00028249      0x245 ./src/cr_startup_lpc15xx.o
                                0x322a (size before relaxing)
- .debug_str     0x00028441       0x11 ./src/sysinit.o
+ .debug_str     0x0002848e       0x11 ./src/sysinit.o
                               0x1359e (size before relaxing)
- .debug_str     0x00028452      0x96b C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\Debug\libfreertos.a(queue.o)
+ .debug_str     0x0002849f      0x96b C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\Debug\libfreertos.a(queue.o)
                               0x182ef (size before relaxing)
- .debug_str     0x00028dbd     0x1e34 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\Debug\libfreertos.a(tasks.o)
+ .debug_str     0x00028e0a     0x1e34 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\Debug\libfreertos.a(tasks.o)
                               0x194e5 (size before relaxing)
- .debug_str     0x0002abf1       0x6a C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\Debug\libfreertos.a(heap_3.o)
+ .debug_str     0x0002ac3e       0x6a C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\Debug\libfreertos.a(heap_3.o)
                               0x170e8 (size before relaxing)
- .debug_str     0x0002ac5b      0x5fe C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\Debug\libfreertos.a(port.o)
+ .debug_str     0x0002aca8      0x5fe C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\Debug\libfreertos.a(port.o)
                               0x177f4 (size before relaxing)
- .debug_str     0x0002b259       0xc4 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\Debug\libfreertos.a(FreeRTOSCommonHooks.o)
+ .debug_str     0x0002b2a6       0xc4 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\Debug\libfreertos.a(FreeRTOSCommonHooks.o)
                               0x17065 (size before relaxing)
- .debug_str     0x0002b31d       0x9b C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\Debug\libfreertos.a(list.o)
+ .debug_str     0x0002b36a       0x9b C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\Debug\libfreertos.a(list.o)
                               0x16bcd (size before relaxing)
- .debug_str     0x0002b3b8      0x397 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_board_nxp_lpcxpresso_1549\Debug\liblpc_board_nxp_lpcxpresso_1549.a(board.o)
+ .debug_str     0x0002b405      0x397 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_board_nxp_lpcxpresso_1549\Debug\liblpc_board_nxp_lpcxpresso_1549.a(board.o)
                               0x13f57 (size before relaxing)
- .debug_str     0x0002b74f      0x83e C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_board_nxp_lpcxpresso_1549\Debug\liblpc_board_nxp_lpcxpresso_1549.a(board_sysinit.o)
+ .debug_str     0x0002b79c      0x83e C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_board_nxp_lpcxpresso_1549\Debug\liblpc_board_nxp_lpcxpresso_1549.a(board_sysinit.o)
                               0x14587 (size before relaxing)
- .debug_str     0x0002bf8d      0x146 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\Debug\liblpc_chip_15xx.a(chip_15xx.o)
+ .debug_str     0x0002bfda      0x146 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\Debug\liblpc_chip_15xx.a(chip_15xx.o)
                                0xfca1 (size before relaxing)
- .debug_str     0x0002c0d3      0x88f C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\Debug\liblpc_chip_15xx.a(clock_15xx.o)
+ .debug_str     0x0002c120      0x88f C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\Debug\liblpc_chip_15xx.a(clock_15xx.o)
                               0x100bc (size before relaxing)
- .debug_str     0x0002c962       0xdf C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\Debug\liblpc_chip_15xx.a(gpio_15xx.o)
+ .debug_str     0x0002c9af       0xdf C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\Debug\liblpc_chip_15xx.a(gpio_15xx.o)
                                0xf75e (size before relaxing)
- .debug_str     0x0002ca41       0x41 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\Debug\liblpc_chip_15xx.a(iocon_15xx.o)
+ .debug_str     0x0002ca8e       0x41 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\Debug\liblpc_chip_15xx.a(iocon_15xx.o)
                                0xf27b (size before relaxing)
- .debug_str     0x0002ca82      0x12b C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\Debug\liblpc_chip_15xx.a(ritimer_15xx.o)
+ .debug_str     0x0002cacf      0x12b C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\Debug\liblpc_chip_15xx.a(ritimer_15xx.o)
                                0xf7a3 (size before relaxing)
- .debug_str     0x0002cbad       0xb4 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\Debug\liblpc_chip_15xx.a(sct_15xx.o)
+ .debug_str     0x0002cbfa       0xb4 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\Debug\liblpc_chip_15xx.a(sct_15xx.o)
                                0xf894 (size before relaxing)
- .debug_str     0x0002cc61      0x55d C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\Debug\liblpc_chip_15xx.a(swm_15xx.o)
+ .debug_str     0x0002ccae      0x55d C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\Debug\liblpc_chip_15xx.a(swm_15xx.o)
                                0xfc83 (size before relaxing)
- .debug_str     0x0002d1be      0x183 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\Debug\liblpc_chip_15xx.a(sysctl_15xx.o)
+ .debug_str     0x0002d20b      0x183 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\Debug\liblpc_chip_15xx.a(sysctl_15xx.o)
                                0xf769 (size before relaxing)
- .debug_str     0x0002d341      0x13f C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\Debug\liblpc_chip_15xx.a(sysinit_15xx.o)
+ .debug_str     0x0002d38e      0x13f C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\Debug\liblpc_chip_15xx.a(sysinit_15xx.o)
                                0xf757 (size before relaxing)
- .debug_str     0x0002d480      0x20a C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\Debug\liblpc_chip_15xx.a(uart_15xx.o)
+ .debug_str     0x0002d4cd      0x20a C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\Debug\liblpc_chip_15xx.a(uart_15xx.o)
                                0xf8ba (size before relaxing)
- .debug_str     0x0002d68a      0x17f c:/nxp/mcuxpressoide_10.2.1_795/ide/tools/bin/../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/lib/thumb/v7-m\libcr_newlib_nohost.a(_cr_sbrk.o)
+ .debug_str     0x0002d6d7      0x17f c:/nxp/mcuxpressoide_10.2.1_795/ide/tools/bin/../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/lib/thumb/v7-m\libcr_newlib_nohost.a(_cr_sbrk.o)
                                 0x60e (size before relaxing)
- .debug_str     0x0002d809       0x25 c:/nxp/mcuxpressoide_10.2.1_795/ide/tools/bin/../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/lib/thumb/v7-m\libcr_newlib_nohost.a(_cr_check_heap.o)
+ .debug_str     0x0002d856       0x25 c:/nxp/mcuxpressoide_10.2.1_795/ide/tools/bin/../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/lib/thumb/v7-m\libcr_newlib_nohost.a(_cr_check_heap.o)
                                 0x166 (size before relaxing)
 
 .comment        0x00000000       0x7e

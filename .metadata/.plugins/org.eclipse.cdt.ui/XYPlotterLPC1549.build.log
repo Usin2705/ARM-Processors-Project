@@ -1,0 +1,20 @@
+14:06:09 **** Incremental Build of configuration Debug for project XYPlotterLPC1549 ****
+make -r -j4 all 
+Building target: XYPlotterLPC1549.axf
+Invoking: MCU C++ Linker
+arm-none-eabi-c++ -nostdlib -L"C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_board_nxp_lpcxpresso_1549\Debug" -L"C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\Debug" -L"C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\Debug" -Xlinker -Map="XYPlotterLPC1549.map" -Xlinker --gc-sections -Xlinker -print-memory-usage -mcpu=cortex-m3 -mthumb -T "XYPlotterLPC1549_Debug.ld" -o "XYPlotterLPC1549.axf"  ./src/DigitalIoPin.o ./src/Fmutex.o ./src/ITM_write.o ./src/XYPlotterLPC1549.o ./src/cdc_desc.o ./src/cdc_main.o ./src/cdc_vcom.o ./src/cr_cpp_config.o ./src/cr_startup_lpc15xx.o ./src/crp.o ./src/sysinit.o   -lfreertos -llpc_board_nxp_lpcxpresso_1549 -llpc_chip_15xx -lFreeRTOS
+Memory region         Used Size  Region Size  %age Used
+       MFlash256:       36384 B       256 KB     13.88%
+      Ram0_16_32:        4168 B        32 KB     12.72%
+          Ram2_4:          0 GB         4 KB      0.00%
+Finished building target: XYPlotterLPC1549.axf
+ 
+make --no-print-directory post-build
+Performing post-build steps
+arm-none-eabi-size "XYPlotterLPC1549.axf"; # arm-none-eabi-objcopy -v -O binary "XYPlotterLPC1549.axf" "XYPlotterLPC1549.bin" ; # checksum -p LPC1549 -d "XYPlotterLPC1549.bin";
+   text	   data	    bss	    dec	    hex	filename
+  33828	   2556	   1612	  37996	   946c	XYPlotterLPC1549.axf
+ 
+
+14:06:10 Build Finished (took 890ms)
+

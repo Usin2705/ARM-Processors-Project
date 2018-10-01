@@ -49,7 +49,7 @@ src/cdc_main.o src/cdc_main.d: ../src/cdc_main.c \
  C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\inc/i2cs_15xx.h \
  C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_board_nxp_lpcxpresso_1549\inc/board_api.h \
  C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\inc/lpc_types.h \
- C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\Lab10_03_timer_command\inc/app_usbd_cfg.h \
+ C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\XYPlotterLPC1549\inc/app_usbd_cfg.h \
  C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\inc/error.h \
  C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\inc\usbd/usbd_rom_api.h \
  C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\inc\usbd/usbd.h \
@@ -63,8 +63,8 @@ src/cdc_main.o src/cdc_main.d: ../src/cdc_main.c \
  C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\inc\usbd/usbd_hid.h \
  C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\inc\usbd/usbd_cdcuser.h \
  C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\inc\usbd/usbd_cdc.h \
- C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\Lab10_03_timer_command\inc/cdc_vcom.h \
- C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\Lab10_03_timer_command\inc/app_usbd_cfg.h \
+ C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\XYPlotterLPC1549\inc/cdc_vcom.h \
+ C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\XYPlotterLPC1549\inc/app_usbd_cfg.h \
  C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\src\include/FreeRTOS.h \
  C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\inc/FreeRTOSConfig.h \
  C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\src\include/projdefs.h \
@@ -75,8 +75,8 @@ src/cdc_main.o src/cdc_main.d: ../src/cdc_main.c \
  C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\src\include/queue.h \
  C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\src\include/semphr.h \
  C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\src\include/queue.h \
- C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\Lab10_03_timer_command\inc/ITM_write.h \
- C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\Lab10_03_timer_command\inc/user_vcom.h
+ C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\XYPlotterLPC1549\inc/ITM_write.h \
+ C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\XYPlotterLPC1549\inc/user_vcom.h
 
 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_board_nxp_lpcxpresso_1549\inc/board.h:
 
@@ -178,7 +178,7 @@ C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_board_nxp_lpcxpresso_1
 
 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\inc/lpc_types.h:
 
-C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\Lab10_03_timer_command\inc/app_usbd_cfg.h:
+C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\XYPlotterLPC1549\inc/app_usbd_cfg.h:
 
 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\inc/error.h:
 
@@ -206,9 +206,9 @@ C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\inc\usbd/usb
 
 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\inc\usbd/usbd_cdc.h:
 
-C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\Lab10_03_timer_command\inc/cdc_vcom.h:
+C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\XYPlotterLPC1549\inc/cdc_vcom.h:
 
-C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\Lab10_03_timer_command\inc/app_usbd_cfg.h:
+C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\XYPlotterLPC1549\inc/app_usbd_cfg.h:
 
 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\src\include/FreeRTOS.h:
 
@@ -230,6 +230,6 @@ C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\src\include/semph
 
 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\src\include/queue.h:
 
-C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\Lab10_03_timer_command\inc/ITM_write.h:
+C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\XYPlotterLPC1549\inc/ITM_write.h:
 
-C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\Lab10_03_timer_command\inc/user_vcom.h:
+C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\XYPlotterLPC1549\inc/user_vcom.h:

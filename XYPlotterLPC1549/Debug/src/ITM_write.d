@@ -46,7 +46,7 @@ src/ITM_write.o src/ITM_write.d: ../src/ITM_write.c \
  C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\inc/i2cm_15xx.h \
  C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\inc/i2c_common_15xx.h \
  C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\inc/i2cs_15xx.h \
- C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\Lab10_03_timer_command\inc/ITM_write.h
+ C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\XYPlotterLPC1549\inc/ITM_write.h
 
 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\inc/chip.h:
 
@@ -142,4 +142,4 @@ C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\inc/i2c_comm
 
 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\inc/i2cs_15xx.h:
 
-C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\Lab10_03_timer_command\inc/ITM_write.h:
+C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\XYPlotterLPC1549\inc/ITM_write.h:

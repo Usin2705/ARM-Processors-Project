@@ -1,5 +1,5 @@
 src/cdc_vcom.o src/cdc_vcom.d: ../src/cdc_vcom.c \
- C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\Lab10_03_timer_command\inc/app_usbd_cfg.h \
+ C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\XYPlotterLPC1549\inc/app_usbd_cfg.h \
  C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\inc/lpc_types.h \
  C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\inc/error.h \
  C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\inc\usbd/usbd_rom_api.h \
@@ -63,10 +63,10 @@ src/cdc_vcom.o src/cdc_vcom.d: ../src/cdc_vcom.c \
  C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\inc/i2c_common_15xx.h \
  C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\inc/i2cs_15xx.h \
  C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_board_nxp_lpcxpresso_1549\inc/board_api.h \
- C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\Lab10_03_timer_command\inc/cdc_vcom.h \
- C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\Lab10_03_timer_command\inc/app_usbd_cfg.h
+ C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\XYPlotterLPC1549\inc/cdc_vcom.h \
+ C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\XYPlotterLPC1549\inc/app_usbd_cfg.h
 
-C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\Lab10_03_timer_command\inc/app_usbd_cfg.h:
+C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\XYPlotterLPC1549\inc/app_usbd_cfg.h:
 
 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\inc/lpc_types.h:
 
@@ -194,6 +194,6 @@ C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\inc/i2cs_15x
 
 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_board_nxp_lpcxpresso_1549\inc/board_api.h:
 
-C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\Lab10_03_timer_command\inc/cdc_vcom.h:
+C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\XYPlotterLPC1549\inc/cdc_vcom.h:
 
-C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\Lab10_03_timer_command\inc/app_usbd_cfg.h:
+C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\XYPlotterLPC1549\inc/app_usbd_cfg.h:

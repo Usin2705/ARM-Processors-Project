@@ -1,5 +1,5 @@
 src/cdc_desc.o src/cdc_desc.d: ../src/cdc_desc.c \
- C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\Lab10_03_timer_command\inc/app_usbd_cfg.h \
+ C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\XYPlotterLPC1549\inc/app_usbd_cfg.h \
  C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\inc/lpc_types.h \
  C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\inc/error.h \
  C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\inc\usbd/usbd_rom_api.h \
@@ -15,7 +15,7 @@ src/cdc_desc.o src/cdc_desc.d: ../src/cdc_desc.c \
  C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\inc\usbd/usbd_cdcuser.h \
  C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\inc\usbd/usbd_cdc.h
 
-C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\Lab10_03_timer_command\inc/app_usbd_cfg.h:
+C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\XYPlotterLPC1549\inc/app_usbd_cfg.h:
 
 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_chip_15xx\inc/lpc_types.h:
 

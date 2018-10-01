@@ -1,5 +1,5 @@
 src/Fmutex.o src/Fmutex.d: ../src/Fmutex.cpp \
- C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\Lab10_03_timer_command\inc/Fmutex.h \
+ C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\XYPlotterLPC1549\inc/Fmutex.h \
  C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\src\include/FreeRTOS.h \
  C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\inc/FreeRTOSConfig.h \
  C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\lpc_board_nxp_lpcxpresso_1549\inc/board.h \
@@ -60,7 +60,7 @@ src/Fmutex.o src/Fmutex.d: ../src/Fmutex.cpp \
  C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\src\include/semphr.h \
  C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\src\include/queue.h
 
-C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\Lab10_03_timer_command\inc/Fmutex.h:
+C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\XYPlotterLPC1549\inc/Fmutex.h:
 
 C:\Users\Usin\Desktop\Projects\ARM-Processors-Project\FreeRTOS\src\include/FreeRTOS.h:
 
