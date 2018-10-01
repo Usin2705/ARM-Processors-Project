@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<list key="org.eclipse.ui.internal.wizards.datatransfer.SmartImportRootWizardPage.knownSources">
+		<item value="C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa"/>
 		<item value="C:\Users\Usin\Desktop\Projects\ARM-Processors-Project"/>
 	</list>
 	<list key="installedFeatures">
