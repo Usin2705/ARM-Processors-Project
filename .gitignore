@@ -3,3 +3,6 @@ GcodeParser/.vs/GcodeParser/v15/ipch/5880db346aa15ff.ipch
 GcodeParser/.vs/GcodeParser/v15/Browse.VC.opendb
 GcodeParser/.vs/GcodeParser/v15/Browse.VC.db
 /.metadata/
+mDraw/
+lpc_chip_15xx/.cproject
+lpc_board_nxp_lpcxpresso_1549/.cproject
