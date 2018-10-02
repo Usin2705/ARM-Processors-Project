@@ -26,6 +26,36 @@
 #include "Fmutex.h"
 #include "user_vcom.h"
 #include <string.h>
+#include "queue.h"
+
+
+// structure for holding the G-code
+typedef struct {
+
+	char cmd_type[3];			/*command type of the G-code*/
+
+	float x_pos;				/*goto x position value*/
+	float y_pos;				/*goto y position value*/
+
+	int pen_pos;				/*pen position(servo value)*/
+	int pen_up;					/*pen down value*/
+	int pen_dw;					/*pen up value*/
+
+	int x_dir;					/*stepper x-axis direction*/
+	int y_dir;					/*stepper y-axis direction*/
+
+	int speed;					/*speed of the stepper motor*/
+
+	int plot_area_h;			/*height of the plotting area*/
+	int plot_area_w;			/*width of the plotting area*/
+
+	int abs;					/*coordinates absolute or relative(absolute: abs = 1)*/
+
+}Gcode;
+
+// Queue for Gcode structs
+QueueHandle_t cmdQueue;
+
 
 /* the following is required if runtime statistics are to be collected */
 extern "C" {
@@ -48,11 +78,61 @@ static void prvSetupHardware(void){
 	Board_LED_Set(0, false);
 }
 
+/*sends Gcode struct to the queue*/
+static void send_gcode(Gcode gcode){
+
+	if(xQueueSendToBack(cmdQueue, &gcode, portMAX_DELAY)){
+
+	}
+	else{
+		ITM_write("Cannot Send to the Queue\n\r");
+	}
+}
+
+/*function for parsing the G-code*/
+static void parse_gcode(const char* buffer){
+
+	Gcode gcode;
+	char cmd[3] = {0};
+
+	sscanf(buffer, "%s ", cmd);
+
+	/*M1: set pen position*/
+	if(strcmp(cmd, "M1")){
+
+		sscanf(buffer, "M1 %d", &gcode.pen_pos);
+	}
+	/*M2: save pen up/down position*/
+	if(strcmp(cmd, "M2")){
+
+		sscanf(buffer, "M2 U%d D%d ", &gcode.pen_up, &gcode.pen_dw);
+	}
+	/*M5: save the stepper directions, plot area and plotting speed*/
+	if(strcmp(cmd, "M5")){
+
+		sscanf(buffer, "M5 A%d B%d H%d W%d S%d", &gcode.x_dir, &gcode.y_dir, &gcode.plot_area_h, &gcode.plot_area_w, &gcode.speed);
+	}
+	/*M10: Log opening in mDraw*/
+	if(strcmp(cmd, "M10") == 0){
+	}
+	/*M11: Limit Status Query*/
+	if(strcmp(cmd, "M11") == 0){
+
+	}
+	/*G1: Go to position*/
+	if(strcmp(cmd, "G1") == 0){
+
+		sscanf(buffer, "G1 X%f Y%f A%d", &gcode.x_pos, &gcode.y_pos, &gcode.abs);
+	}
+	strcpy(gcode.cmd_type, cmd);
+
+	send_gcode(gcode);
+
+}
+
 /*Task receives Gcode commands from mDraw program via USB*/
 void static vTaskReceive(void* pvParamters){
 
-	const char* START = "M10";
-	const char* XY_TYPE = "XY";
 	const char* OK = "\r\nOK\n\r";
 
 	std::string gcode_str = "";
@@ -67,14 +147,16 @@ void static vTaskReceive(void* pvParamters){
 
 		if(gcode_buff[len - 1] == '\n'){
 			gcode_str += gcode_buff;
+			gcode_str[gcode_str.length() - 1] = '\0';
 			full_gcode = true;
 		}
 		else{
 			gcode_str += gcode_buff;
 		}
-
 		/*the full g-code has been received*/
 		if(full_gcode){
+
+			parse_gcode(gcode_str.c_str());
 
 			ITM_write(gcode_str.c_str());
 			ITM_write("\n\r");
@@ -91,6 +173,8 @@ int main(void) {
 
 	prvSetupHardware();
 	ITM_init();
+
+	cmdQueue = xQueueCreate(10, sizeof(Gcode));
 
 	xTaskCreate(vTaskReceive, "vTaksReceive",
 			configMINIMAL_STACK_SIZE + 128, NULL, (tskIDLE_PRIORITY + 1UL),

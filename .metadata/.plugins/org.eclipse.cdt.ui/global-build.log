@@ -1,49 +1,28 @@
-16:13:09 **** Incremental Build of configuration Debug for project lpc_board_nxp_lpcxpresso_1549 ****
+16:33:27 **** Incremental Build of configuration Debug for project lpc_board_nxp_lpcxpresso_1549 ****
 make -r all 
 make: Nothing to be done for `all'.
-16:13:10 **** Incremental Build of configuration Debug for project lpc_chip_15xx ****
+16:33:29 **** Incremental Build of configuration Debug for project lpc_chip_15xx ****
 make -r all 
 make: Nothing to be done for `all'.
-16:13:12 **** Incremental Build of configuration Debug for project FreeRTOS ****
+16:33:30 **** Incremental Build of configuration Debug for project FreeRTOS ****
 make -r all 
 make: Nothing to be done for `all'.
-16:13:13 **** Incremental Build of configuration Debug for project XYPlotterLPC1549 ****
+16:33:32 **** Incremental Build of configuration Debug for project XYPlotterLPC1549 ****
 make -r -j4 all 
 Building file: ../src/XYPlotterLPC1549_new.cpp
 Invoking: MCU C++ Compiler
 arm-none-eabi-c++ -std=c++11 -D__NEWLIB__ -DDEBUG -D__CODE_RED -DCORE_M3 -D__USE_LPCOPEN -DCPP_USE_HEAP -D__LPC15XX__ -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\XYPlotterLPC1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\include" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\portable\GCC\ARM_CM3" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -O0 -fno-common -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions -mcpu=cortex-m3 -mthumb -MMD -MP -MF"src/XYPlotterLPC1549_new.d" -MT"src/XYPlotterLPC1549_new.o" -MT"src/XYPlotterLPC1549_new.d" -o "src/XYPlotterLPC1549_new.o" "../src/XYPlotterLPC1549_new.cpp"
-../src/XYPlotterLPC1549_new.cpp: In function 'void question_task(void*)':
-../src/XYPlotterLPC1549_new.cpp:110:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
-    for(int i = 0; i < len; i++){
-                   ~~^~~~~
-../src/XYPlotterLPC1549_new.cpp: In function 'void vTaskReceive(void*)':
-../src/XYPlotterLPC1549_new.cpp:193:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
-   for(int i = 0; i < len; i++){
-                  ~~^~~~~
-../src/XYPlotterLPC1549_new.cpp:181:14: warning: unused variable 'START' [-Wunused-variable]
-  const char* START = "M10";
-              ^~~~~
-../src/XYPlotterLPC1549_new.cpp:182:14: warning: unused variable 'XY_TYPE' [-Wunused-variable]
-  const char* XY_TYPE = "XY";
-              ^~~~~~~
-../src/XYPlotterLPC1549_new.cpp:183:14: warning: unused variable 'OK' [-Wunused-variable]
-  const char* OK = "\r\nOK\n\r";
-              ^~
-../src/XYPlotterLPC1549_new.cpp: At global scope:
-../src/XYPlotterLPC1549_new.cpp:78:13: warning: 'void receive_task(void*)' defined but not used [-Wunused-function]
- static void receive_task(void *pvParameters) {
-             ^~~~~~~~~~~~
-../src/XYPlotterLPC1549_new.cpp:60:13: warning: 'void send_task(void*)' defined but not used [-Wunused-function]
- static void send_task(void *pvParameters) {
-             ^~~~~~~~~
+../src/XYPlotterLPC1549_new.cpp:82:13: warning: 'void send_gcode(Gcode)' defined but not used [-Wunused-function]
+ static void send_gcode(Gcode gcode){
+             ^~~~~~~~~~
 Finished building: ../src/XYPlotterLPC1549_new.cpp
  
 Building target: XYPlotterLPC1549.axf
 Invoking: MCU C++ Linker
 arm-none-eabi-c++ -nostdlib -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\Debug" -Xlinker -Map="XYPlotterLPC1549.map" -Xlinker --gc-sections -Xlinker -print-memory-usage -mcpu=cortex-m3 -mthumb -T "XYPlotterLPC1549_Debug.ld" -o "XYPlotterLPC1549.axf"  ./src/DigitalIoPin.o ./src/Fmutex.o ./src/ITM_write.o ./src/XYPlotterLPC1549_new.o ./src/cdc_desc.o ./src/cdc_main.o ./src/cdc_vcom.o ./src/cr_cpp_config.o ./src/cr_startup_lpc15xx.o ./src/crp.o ./src/sysinit.o   -lfreertos -llpc_board_nxp_lpcxpresso_1549 -llpc_chip_15xx -lFreeRTOS
 Memory region         Used Size  Region Size  %age Used
-       MFlash256:       30388 B       256 KB     11.59%
-      Ram0_16_32:        3864 B        32 KB     11.79%
+       MFlash256:       61824 B       256 KB     23.58%
+      Ram0_16_32:        4224 B        32 KB     12.89%
           Ram2_4:          0 GB         4 KB      0.00%
 Finished building target: XYPlotterLPC1549.axf
  
@@ -51,69 +30,45 @@ make --no-print-directory post-build
 Performing post-build steps
 arm-none-eabi-size "XYPlotterLPC1549.axf"; # arm-none-eabi-objcopy -v -O binary "XYPlotterLPC1549.axf" "XYPlotterLPC1549.bin" ; # checksum -p LPC1549 -d "XYPlotterLPC1549.bin";
    text	   data	    bss	    dec	    hex	filename
-  28188	   2200	   1664	  32052	   7d34	XYPlotterLPC1549.axf
+  59260	   2564	   1660	  63484	   f7fc	XYPlotterLPC1549.axf
  
-16:13:38 **** Incremental Build of configuration Debug for project lpc_board_nxp_lpcxpresso_1549 ****
+16:35:28 **** Incremental Build of configuration Debug for project lpc_board_nxp_lpcxpresso_1549 ****
 make -r all 
 make: Nothing to be done for `all'.
-16:13:39 **** Incremental Build of configuration Debug for project lpc_chip_15xx ****
+16:35:29 **** Incremental Build of configuration Debug for project lpc_chip_15xx ****
 make -r all 
 make: Nothing to be done for `all'.
-16:13:41 **** Incremental Build of configuration Debug for project FreeRTOS ****
+16:35:31 **** Incremental Build of configuration Debug for project FreeRTOS ****
 make -r all 
 make: Nothing to be done for `all'.
-16:13:43 **** Incremental Build of configuration Debug for project XYPlotterLPC1549 ****
+16:35:33 **** Incremental Build of configuration Debug for project XYPlotterLPC1549 ****
 make -r -j4 all 
 make: Nothing to be done for `all'.
-16:13:48 **** Incremental Build of configuration Debug for project XYPlotterLPC1549 ****
+16:35:37 **** Incremental Build of configuration Debug for project XYPlotterLPC1549 ****
 make -r -j4 all 
 make: Nothing to be done for `all'.
-16:14:49 **** Incremental Build of configuration Debug for project lpc_board_nxp_lpcxpresso_1549 ****
+16:41:20 **** Incremental Build of configuration Debug for project lpc_board_nxp_lpcxpresso_1549 ****
 make -r all 
 make: Nothing to be done for `all'.
-16:14:51 **** Incremental Build of configuration Debug for project lpc_chip_15xx ****
+16:41:22 **** Incremental Build of configuration Debug for project lpc_chip_15xx ****
 make -r all 
 make: Nothing to be done for `all'.
-16:14:53 **** Incremental Build of configuration Debug for project FreeRTOS ****
+16:41:23 **** Incremental Build of configuration Debug for project FreeRTOS ****
 make -r all 
 make: Nothing to be done for `all'.
-16:14:55 **** Incremental Build of configuration Debug for project XYPlotterLPC1549 ****
+16:41:25 **** Incremental Build of configuration Debug for project XYPlotterLPC1549 ****
 make -r -j4 all 
 Building file: ../src/XYPlotterLPC1549_new.cpp
 Invoking: MCU C++ Compiler
 arm-none-eabi-c++ -std=c++11 -D__NEWLIB__ -DDEBUG -D__CODE_RED -DCORE_M3 -D__USE_LPCOPEN -DCPP_USE_HEAP -D__LPC15XX__ -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\XYPlotterLPC1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\include" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\portable\GCC\ARM_CM3" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -O0 -fno-common -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions -mcpu=cortex-m3 -mthumb -MMD -MP -MF"src/XYPlotterLPC1549_new.d" -MT"src/XYPlotterLPC1549_new.o" -MT"src/XYPlotterLPC1549_new.d" -o "src/XYPlotterLPC1549_new.o" "../src/XYPlotterLPC1549_new.cpp"
-../src/XYPlotterLPC1549_new.cpp: In function 'void question_task(void*)':
-../src/XYPlotterLPC1549_new.cpp:110:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
-    for(int i = 0; i < len; i++){
-                   ~~^~~~~
-../src/XYPlotterLPC1549_new.cpp: In function 'void vTaskReceive(void*)':
-../src/XYPlotterLPC1549_new.cpp:193:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
-   for(int i = 0; i < len; i++){
-                  ~~^~~~~
-../src/XYPlotterLPC1549_new.cpp:181:14: warning: unused variable 'START' [-Wunused-variable]
-  const char* START = "M10";
-              ^~~~~
-../src/XYPlotterLPC1549_new.cpp:182:14: warning: unused variable 'XY_TYPE' [-Wunused-variable]
-  const char* XY_TYPE = "XY";
-              ^~~~~~~
-../src/XYPlotterLPC1549_new.cpp:183:14: warning: unused variable 'OK' [-Wunused-variable]
-  const char* OK = "\r\nOK\n\r";
-              ^~
-../src/XYPlotterLPC1549_new.cpp: At global scope:
-../src/XYPlotterLPC1549_new.cpp:78:13: warning: 'void receive_task(void*)' defined but not used [-Wunused-function]
- static void receive_task(void *pvParameters) {
-             ^~~~~~~~~~~~
-../src/XYPlotterLPC1549_new.cpp:60:13: warning: 'void send_task(void*)' defined but not used [-Wunused-function]
- static void send_task(void *pvParameters) {
-             ^~~~~~~~~
 Finished building: ../src/XYPlotterLPC1549_new.cpp
  
 Building target: XYPlotterLPC1549.axf
 Invoking: MCU C++ Linker
 arm-none-eabi-c++ -nostdlib -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\Debug" -Xlinker -Map="XYPlotterLPC1549.map" -Xlinker --gc-sections -Xlinker -print-memory-usage -mcpu=cortex-m3 -mthumb -T "XYPlotterLPC1549_Debug.ld" -o "XYPlotterLPC1549.axf"  ./src/DigitalIoPin.o ./src/Fmutex.o ./src/ITM_write.o ./src/XYPlotterLPC1549_new.o ./src/cdc_desc.o ./src/cdc_main.o ./src/cdc_vcom.o ./src/cr_cpp_config.o ./src/cr_startup_lpc15xx.o ./src/crp.o ./src/sysinit.o   -lfreertos -llpc_board_nxp_lpcxpresso_1549 -llpc_chip_15xx -lFreeRTOS
 Memory region         Used Size  Region Size  %age Used
-       MFlash256:       30388 B       256 KB     11.59%
-      Ram0_16_32:        3864 B        32 KB     11.79%
+       MFlash256:       61920 B       256 KB     23.62%
+      Ram0_16_32:        4224 B        32 KB     12.89%
           Ram2_4:          0 GB         4 KB      0.00%
 Finished building target: XYPlotterLPC1549.axf
  
@@ -121,45 +76,21 @@ make --no-print-directory post-build
 Performing post-build steps
 arm-none-eabi-size "XYPlotterLPC1549.axf"; # arm-none-eabi-objcopy -v -O binary "XYPlotterLPC1549.axf" "XYPlotterLPC1549.bin" ; # checksum -p LPC1549 -d "XYPlotterLPC1549.bin";
    text	   data	    bss	    dec	    hex	filename
-  28188	   2200	   1664	  32052	   7d34	XYPlotterLPC1549.axf
+  59356	   2564	   1660	  63580	   f85c	XYPlotterLPC1549.axf
  
-16:15:04 **** Incremental Build of configuration Debug for project XYPlotterLPC1549 ****
+16:41:34 **** Incremental Build of configuration Debug for project XYPlotterLPC1549 ****
 make -r -j4 all 
 Building file: ../src/XYPlotterLPC1549_new.cpp
 Invoking: MCU C++ Compiler
 arm-none-eabi-c++ -std=c++11 -D__NEWLIB__ -DDEBUG -D__CODE_RED -DCORE_M3 -D__USE_LPCOPEN -DCPP_USE_HEAP -D__LPC15XX__ -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\XYPlotterLPC1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\include" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\portable\GCC\ARM_CM3" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -O0 -fno-common -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions -mcpu=cortex-m3 -mthumb -MMD -MP -MF"src/XYPlotterLPC1549_new.d" -MT"src/XYPlotterLPC1549_new.o" -MT"src/XYPlotterLPC1549_new.d" -o "src/XYPlotterLPC1549_new.o" "../src/XYPlotterLPC1549_new.cpp"
-../src/XYPlotterLPC1549_new.cpp: In function 'void question_task(void*)':
-../src/XYPlotterLPC1549_new.cpp:110:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
-    for(int i = 0; i < len; i++){
-                   ~~^~~~~
-../src/XYPlotterLPC1549_new.cpp: In function 'void vTaskReceive(void*)':
-../src/XYPlotterLPC1549_new.cpp:193:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
-   for(int i = 0; i < len; i++){
-                  ~~^~~~~
-../src/XYPlotterLPC1549_new.cpp:181:14: warning: unused variable 'START' [-Wunused-variable]
-  const char* START = "M10";
-              ^~~~~
-../src/XYPlotterLPC1549_new.cpp:182:14: warning: unused variable 'XY_TYPE' [-Wunused-variable]
-  const char* XY_TYPE = "XY";
-              ^~~~~~~
-../src/XYPlotterLPC1549_new.cpp:183:14: warning: unused variable 'OK' [-Wunused-variable]
-  const char* OK = "\r\nOK\n\r";
-              ^~
-../src/XYPlotterLPC1549_new.cpp: At global scope:
-../src/XYPlotterLPC1549_new.cpp:78:13: warning: 'void receive_task(void*)' defined but not used [-Wunused-function]
- static void receive_task(void *pvParameters) {
-             ^~~~~~~~~~~~
-../src/XYPlotterLPC1549_new.cpp:60:13: warning: 'void send_task(void*)' defined but not used [-Wunused-function]
- static void send_task(void *pvParameters) {
-             ^~~~~~~~~
 Finished building: ../src/XYPlotterLPC1549_new.cpp
  
 Building target: XYPlotterLPC1549.axf
 Invoking: MCU C++ Linker
 arm-none-eabi-c++ -nostdlib -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\Debug" -Xlinker -Map="XYPlotterLPC1549.map" -Xlinker --gc-sections -Xlinker -print-memory-usage -mcpu=cortex-m3 -mthumb -T "XYPlotterLPC1549_Debug.ld" -o "XYPlotterLPC1549.axf"  ./src/DigitalIoPin.o ./src/Fmutex.o ./src/ITM_write.o ./src/XYPlotterLPC1549_new.o ./src/cdc_desc.o ./src/cdc_main.o ./src/cdc_vcom.o ./src/cr_cpp_config.o ./src/cr_startup_lpc15xx.o ./src/crp.o ./src/sysinit.o   -lfreertos -llpc_board_nxp_lpcxpresso_1549 -llpc_chip_15xx -lFreeRTOS
 Memory region         Used Size  Region Size  %age Used
-       MFlash256:       30388 B       256 KB     11.59%
-      Ram0_16_32:        3864 B        32 KB     11.79%
+       MFlash256:       61920 B       256 KB     23.62%
+      Ram0_16_32:        4224 B        32 KB     12.89%
           Ram2_4:          0 GB         4 KB      0.00%
 Finished building target: XYPlotterLPC1549.axf
  
@@ -167,40 +98,30 @@ make --no-print-directory post-build
 Performing post-build steps
 arm-none-eabi-size "XYPlotterLPC1549.axf"; # arm-none-eabi-objcopy -v -O binary "XYPlotterLPC1549.axf" "XYPlotterLPC1549.bin" ; # checksum -p LPC1549 -d "XYPlotterLPC1549.bin";
    text	   data	    bss	    dec	    hex	filename
-  28188	   2200	   1664	  32052	   7d34	XYPlotterLPC1549.axf
+  59356	   2564	   1660	  63580	   f85c	XYPlotterLPC1549.axf
  
-16:20:37 **** Incremental Build of configuration Debug for project lpc_board_nxp_lpcxpresso_1549 ****
+16:44:17 **** Incremental Build of configuration Debug for project lpc_board_nxp_lpcxpresso_1549 ****
 make -r all 
 make: Nothing to be done for `all'.
-16:20:39 **** Incremental Build of configuration Debug for project lpc_chip_15xx ****
+16:44:18 **** Incremental Build of configuration Debug for project lpc_chip_15xx ****
 make -r all 
 make: Nothing to be done for `all'.
-16:20:41 **** Incremental Build of configuration Debug for project FreeRTOS ****
+16:44:20 **** Incremental Build of configuration Debug for project FreeRTOS ****
 make -r all 
 make: Nothing to be done for `all'.
-16:20:43 **** Incremental Build of configuration Debug for project XYPlotterLPC1549 ****
+16:44:22 **** Incremental Build of configuration Debug for project XYPlotterLPC1549 ****
 make -r -j4 all 
 Building file: ../src/XYPlotterLPC1549_new.cpp
 Invoking: MCU C++ Compiler
 arm-none-eabi-c++ -std=c++11 -D__NEWLIB__ -DDEBUG -D__CODE_RED -DCORE_M3 -D__USE_LPCOPEN -DCPP_USE_HEAP -D__LPC15XX__ -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\XYPlotterLPC1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\include" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\portable\GCC\ARM_CM3" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -O0 -fno-common -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions -mcpu=cortex-m3 -mthumb -MMD -MP -MF"src/XYPlotterLPC1549_new.d" -MT"src/XYPlotterLPC1549_new.o" -MT"src/XYPlotterLPC1549_new.d" -o "src/XYPlotterLPC1549_new.o" "../src/XYPlotterLPC1549_new.cpp"
-../src/XYPlotterLPC1549_new.cpp: In function 'void vTaskReceive(void*)':
-../src/XYPlotterLPC1549_new.cpp:66:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
-   for(int i = 0; i < len; i++){
-                  ~~^~~~~
-../src/XYPlotterLPC1549_new.cpp:54:14: warning: unused variable 'START' [-Wunused-variable]
-  const char* START = "M10";
-              ^~~~~
-../src/XYPlotterLPC1549_new.cpp:55:14: warning: unused variable 'XY_TYPE' [-Wunused-variable]
-  const char* XY_TYPE = "XY";
-              ^~~~~~~
 Finished building: ../src/XYPlotterLPC1549_new.cpp
  
 Building target: XYPlotterLPC1549.axf
 Invoking: MCU C++ Linker
 arm-none-eabi-c++ -nostdlib -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\Debug" -Xlinker -Map="XYPlotterLPC1549.map" -Xlinker --gc-sections -Xlinker -print-memory-usage -mcpu=cortex-m3 -mthumb -T "XYPlotterLPC1549_Debug.ld" -o "XYPlotterLPC1549.axf"  ./src/DigitalIoPin.o ./src/Fmutex.o ./src/ITM_write.o ./src/XYPlotterLPC1549_new.o ./src/cdc_desc.o ./src/cdc_main.o ./src/cdc_vcom.o ./src/cr_cpp_config.o ./src/cr_startup_lpc15xx.o ./src/crp.o ./src/sysinit.o   -lfreertos -llpc_board_nxp_lpcxpresso_1549 -llpc_chip_15xx -lFreeRTOS
 Memory region         Used Size  Region Size  %age Used
-       MFlash256:       31176 B       256 KB     11.89%
-      Ram0_16_32:        3856 B        32 KB     11.77%
+       MFlash256:       61920 B       256 KB     23.62%
+      Ram0_16_32:        4224 B        32 KB     12.89%
           Ram2_4:          0 GB         4 KB      0.00%
 Finished building target: XYPlotterLPC1549.axf
  
@@ -208,31 +129,21 @@ make --no-print-directory post-build
 Performing post-build steps
 arm-none-eabi-size "XYPlotterLPC1549.axf"; # arm-none-eabi-objcopy -v -O binary "XYPlotterLPC1549.axf" "XYPlotterLPC1549.bin" ; # checksum -p LPC1549 -d "XYPlotterLPC1549.bin";
    text	   data	    bss	    dec	    hex	filename
-  28976	   2200	   1656	  32832	   8040	XYPlotterLPC1549.axf
+  59356	   2564	   1660	  63580	   f85c	XYPlotterLPC1549.axf
  
-16:20:52 **** Incremental Build of configuration Debug for project XYPlotterLPC1549 ****
+16:44:29 **** Incremental Build of configuration Debug for project XYPlotterLPC1549 ****
 make -r -j4 all 
 Building file: ../src/XYPlotterLPC1549_new.cpp
 Invoking: MCU C++ Compiler
 arm-none-eabi-c++ -std=c++11 -D__NEWLIB__ -DDEBUG -D__CODE_RED -DCORE_M3 -D__USE_LPCOPEN -DCPP_USE_HEAP -D__LPC15XX__ -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\XYPlotterLPC1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\include" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\portable\GCC\ARM_CM3" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -O0 -fno-common -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions -mcpu=cortex-m3 -mthumb -MMD -MP -MF"src/XYPlotterLPC1549_new.d" -MT"src/XYPlotterLPC1549_new.o" -MT"src/XYPlotterLPC1549_new.d" -o "src/XYPlotterLPC1549_new.o" "../src/XYPlotterLPC1549_new.cpp"
-../src/XYPlotterLPC1549_new.cpp: In function 'void vTaskReceive(void*)':
-../src/XYPlotterLPC1549_new.cpp:66:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
-   for(int i = 0; i < len; i++){
-                  ~~^~~~~
-../src/XYPlotterLPC1549_new.cpp:54:14: warning: unused variable 'START' [-Wunused-variable]
-  const char* START = "M10";
-              ^~~~~
-../src/XYPlotterLPC1549_new.cpp:55:14: warning: unused variable 'XY_TYPE' [-Wunused-variable]
-  const char* XY_TYPE = "XY";
-              ^~~~~~~
 Finished building: ../src/XYPlotterLPC1549_new.cpp
  
 Building target: XYPlotterLPC1549.axf
 Invoking: MCU C++ Linker
 arm-none-eabi-c++ -nostdlib -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\Debug" -Xlinker -Map="XYPlotterLPC1549.map" -Xlinker --gc-sections -Xlinker -print-memory-usage -mcpu=cortex-m3 -mthumb -T "XYPlotterLPC1549_Debug.ld" -o "XYPlotterLPC1549.axf"  ./src/DigitalIoPin.o ./src/Fmutex.o ./src/ITM_write.o ./src/XYPlotterLPC1549_new.o ./src/cdc_desc.o ./src/cdc_main.o ./src/cdc_vcom.o ./src/cr_cpp_config.o ./src/cr_startup_lpc15xx.o ./src/crp.o ./src/sysinit.o   -lfreertos -llpc_board_nxp_lpcxpresso_1549 -llpc_chip_15xx -lFreeRTOS
 Memory region         Used Size  Region Size  %age Used
-       MFlash256:       31176 B       256 KB     11.89%
-      Ram0_16_32:        3856 B        32 KB     11.77%
+       MFlash256:       61920 B       256 KB     23.62%
+      Ram0_16_32:        4224 B        32 KB     12.89%
           Ram2_4:          0 GB         4 KB      0.00%
 Finished building target: XYPlotterLPC1549.axf
  
@@ -240,748 +151,5 @@ make --no-print-directory post-build
 Performing post-build steps
 arm-none-eabi-size "XYPlotterLPC1549.axf"; # arm-none-eabi-objcopy -v -O binary "XYPlotterLPC1549.axf" "XYPlotterLPC1549.bin" ; # checksum -p LPC1549 -d "XYPlotterLPC1549.bin";
    text	   data	    bss	    dec	    hex	filename
-  28976	   2200	   1656	  32832	   8040	XYPlotterLPC1549.axf
- 
-16:23:09 **** Incremental Build of configuration Debug for project lpc_board_nxp_lpcxpresso_1549 ****
-make -r all 
-make: Nothing to be done for `all'.
-16:23:10 **** Incremental Build of configuration Debug for project lpc_chip_15xx ****
-make -r all 
-make: Nothing to be done for `all'.
-16:23:12 **** Incremental Build of configuration Debug for project FreeRTOS ****
-make -r all 
-make: Nothing to be done for `all'.
-16:23:14 **** Incremental Build of configuration Debug for project XYPlotterLPC1549 ****
-make -r -j4 all 
-Building file: ../src/XYPlotterLPC1549_new.cpp
-Invoking: MCU C++ Compiler
-arm-none-eabi-c++ -std=c++11 -D__NEWLIB__ -DDEBUG -D__CODE_RED -DCORE_M3 -D__USE_LPCOPEN -DCPP_USE_HEAP -D__LPC15XX__ -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\XYPlotterLPC1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\include" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\portable\GCC\ARM_CM3" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -O0 -fno-common -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions -mcpu=cortex-m3 -mthumb -MMD -MP -MF"src/XYPlotterLPC1549_new.d" -MT"src/XYPlotterLPC1549_new.o" -MT"src/XYPlotterLPC1549_new.d" -o "src/XYPlotterLPC1549_new.o" "../src/XYPlotterLPC1549_new.cpp"
-../src/XYPlotterLPC1549_new.cpp: In function 'void vTaskReceive(void*)':
-../src/XYPlotterLPC1549_new.cpp:66:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
-   for(int i = 0; i < len; i++){
-                  ~~^~~~~
-../src/XYPlotterLPC1549_new.cpp:54:14: warning: unused variable 'START' [-Wunused-variable]
-  const char* START = "M10";
-              ^~~~~
-../src/XYPlotterLPC1549_new.cpp:55:14: warning: unused variable 'XY_TYPE' [-Wunused-variable]
-  const char* XY_TYPE = "XY";
-              ^~~~~~~
-Finished building: ../src/XYPlotterLPC1549_new.cpp
- 
-Building target: XYPlotterLPC1549.axf
-Invoking: MCU C++ Linker
-arm-none-eabi-c++ -nostdlib -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\Debug" -Xlinker -Map="XYPlotterLPC1549.map" -Xlinker --gc-sections -Xlinker -print-memory-usage -mcpu=cortex-m3 -mthumb -T "XYPlotterLPC1549_Debug.ld" -o "XYPlotterLPC1549.axf"  ./src/DigitalIoPin.o ./src/Fmutex.o ./src/ITM_write.o ./src/XYPlotterLPC1549_new.o ./src/cdc_desc.o ./src/cdc_main.o ./src/cdc_vcom.o ./src/cr_cpp_config.o ./src/cr_startup_lpc15xx.o ./src/crp.o ./src/sysinit.o   -lfreertos -llpc_board_nxp_lpcxpresso_1549 -llpc_chip_15xx -lFreeRTOS
-Memory region         Used Size  Region Size  %age Used
-       MFlash256:       31176 B       256 KB     11.89%
-      Ram0_16_32:        3856 B        32 KB     11.77%
-          Ram2_4:          0 GB         4 KB      0.00%
-Finished building target: XYPlotterLPC1549.axf
- 
-make --no-print-directory post-build
-Performing post-build steps
-arm-none-eabi-size "XYPlotterLPC1549.axf"; # arm-none-eabi-objcopy -v -O binary "XYPlotterLPC1549.axf" "XYPlotterLPC1549.bin" ; # checksum -p LPC1549 -d "XYPlotterLPC1549.bin";
-   text	   data	    bss	    dec	    hex	filename
-  28976	   2200	   1656	  32832	   8040	XYPlotterLPC1549.axf
- 
-16:23:22 **** Incremental Build of configuration Debug for project XYPlotterLPC1549 ****
-make -r -j4 all 
-Building file: ../src/XYPlotterLPC1549_new.cpp
-Invoking: MCU C++ Compiler
-arm-none-eabi-c++ -std=c++11 -D__NEWLIB__ -DDEBUG -D__CODE_RED -DCORE_M3 -D__USE_LPCOPEN -DCPP_USE_HEAP -D__LPC15XX__ -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\XYPlotterLPC1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\include" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\portable\GCC\ARM_CM3" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -O0 -fno-common -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions -mcpu=cortex-m3 -mthumb -MMD -MP -MF"src/XYPlotterLPC1549_new.d" -MT"src/XYPlotterLPC1549_new.o" -MT"src/XYPlotterLPC1549_new.d" -o "src/XYPlotterLPC1549_new.o" "../src/XYPlotterLPC1549_new.cpp"
-../src/XYPlotterLPC1549_new.cpp: In function 'void vTaskReceive(void*)':
-../src/XYPlotterLPC1549_new.cpp:66:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
-   for(int i = 0; i < len; i++){
-                  ~~^~~~~
-../src/XYPlotterLPC1549_new.cpp:54:14: warning: unused variable 'START' [-Wunused-variable]
-  const char* START = "M10";
-              ^~~~~
-../src/XYPlotterLPC1549_new.cpp:55:14: warning: unused variable 'XY_TYPE' [-Wunused-variable]
-  const char* XY_TYPE = "XY";
-              ^~~~~~~
-Finished building: ../src/XYPlotterLPC1549_new.cpp
- 
-Building target: XYPlotterLPC1549.axf
-Invoking: MCU C++ Linker
-arm-none-eabi-c++ -nostdlib -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\Debug" -Xlinker -Map="XYPlotterLPC1549.map" -Xlinker --gc-sections -Xlinker -print-memory-usage -mcpu=cortex-m3 -mthumb -T "XYPlotterLPC1549_Debug.ld" -o "XYPlotterLPC1549.axf"  ./src/DigitalIoPin.o ./src/Fmutex.o ./src/ITM_write.o ./src/XYPlotterLPC1549_new.o ./src/cdc_desc.o ./src/cdc_main.o ./src/cdc_vcom.o ./src/cr_cpp_config.o ./src/cr_startup_lpc15xx.o ./src/crp.o ./src/sysinit.o   -lfreertos -llpc_board_nxp_lpcxpresso_1549 -llpc_chip_15xx -lFreeRTOS
-Memory region         Used Size  Region Size  %age Used
-       MFlash256:       31176 B       256 KB     11.89%
-      Ram0_16_32:        3856 B        32 KB     11.77%
-          Ram2_4:          0 GB         4 KB      0.00%
-Finished building target: XYPlotterLPC1549.axf
- 
-make --no-print-directory post-build
-Performing post-build steps
-arm-none-eabi-size "XYPlotterLPC1549.axf"; # arm-none-eabi-objcopy -v -O binary "XYPlotterLPC1549.axf" "XYPlotterLPC1549.bin" ; # checksum -p LPC1549 -d "XYPlotterLPC1549.bin";
-   text	   data	    bss	    dec	    hex	filename
-  28976	   2200	   1656	  32832	   8040	XYPlotterLPC1549.axf
- 
-16:25:25 **** Incremental Build of configuration Debug for project lpc_board_nxp_lpcxpresso_1549 ****
-make -r all 
-make: Nothing to be done for `all'.
-16:25:27 **** Incremental Build of configuration Debug for project lpc_chip_15xx ****
-make -r all 
-make: Nothing to be done for `all'.
-16:25:28 **** Incremental Build of configuration Debug for project FreeRTOS ****
-make -r all 
-make: Nothing to be done for `all'.
-16:25:30 **** Incremental Build of configuration Debug for project XYPlotterLPC1549 ****
-make -r -j4 all 
-Building file: ../src/XYPlotterLPC1549_new.cpp
-Invoking: MCU C++ Compiler
-arm-none-eabi-c++ -std=c++11 -D__NEWLIB__ -DDEBUG -D__CODE_RED -DCORE_M3 -D__USE_LPCOPEN -DCPP_USE_HEAP -D__LPC15XX__ -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\XYPlotterLPC1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\include" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\portable\GCC\ARM_CM3" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -O0 -fno-common -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions -mcpu=cortex-m3 -mthumb -MMD -MP -MF"src/XYPlotterLPC1549_new.d" -MT"src/XYPlotterLPC1549_new.o" -MT"src/XYPlotterLPC1549_new.d" -o "src/XYPlotterLPC1549_new.o" "../src/XYPlotterLPC1549_new.cpp"
-../src/XYPlotterLPC1549_new.cpp: In function 'void vTaskReceive(void*)':
-../src/XYPlotterLPC1549_new.cpp:66:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
-   for(int i = 0; i < len; i++){
-                  ~~^~~~~
-../src/XYPlotterLPC1549_new.cpp:54:14: warning: unused variable 'START' [-Wunused-variable]
-  const char* START = "M10";
-              ^~~~~
-../src/XYPlotterLPC1549_new.cpp:55:14: warning: unused variable 'XY_TYPE' [-Wunused-variable]
-  const char* XY_TYPE = "XY";
-              ^~~~~~~
-Finished building: ../src/XYPlotterLPC1549_new.cpp
- 
-Building target: XYPlotterLPC1549.axf
-Invoking: MCU C++ Linker
-arm-none-eabi-c++ -nostdlib -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\Debug" -Xlinker -Map="XYPlotterLPC1549.map" -Xlinker --gc-sections -Xlinker -print-memory-usage -mcpu=cortex-m3 -mthumb -T "XYPlotterLPC1549_Debug.ld" -o "XYPlotterLPC1549.axf"  ./src/DigitalIoPin.o ./src/Fmutex.o ./src/ITM_write.o ./src/XYPlotterLPC1549_new.o ./src/cdc_desc.o ./src/cdc_main.o ./src/cdc_vcom.o ./src/cr_cpp_config.o ./src/cr_startup_lpc15xx.o ./src/crp.o ./src/sysinit.o   -lfreertos -llpc_board_nxp_lpcxpresso_1549 -llpc_chip_15xx -lFreeRTOS
-Memory region         Used Size  Region Size  %age Used
-       MFlash256:       31872 B       256 KB     12.16%
-      Ram0_16_32:        3856 B        32 KB     11.77%
-          Ram2_4:          0 GB         4 KB      0.00%
-Finished building target: XYPlotterLPC1549.axf
- 
-make --no-print-directory post-build
-Performing post-build steps
-arm-none-eabi-size "XYPlotterLPC1549.axf"; # arm-none-eabi-objcopy -v -O binary "XYPlotterLPC1549.axf" "XYPlotterLPC1549.bin" ; # checksum -p LPC1549 -d "XYPlotterLPC1549.bin";
-   text	   data	    bss	    dec	    hex	filename
-  29672	   2200	   1656	  33528	   82f8	XYPlotterLPC1549.axf
- 
-16:25:40 **** Incremental Build of configuration Debug for project XYPlotterLPC1549 ****
-make -r -j4 all 
-Building file: ../src/XYPlotterLPC1549_new.cpp
-Invoking: MCU C++ Compiler
-arm-none-eabi-c++ -std=c++11 -D__NEWLIB__ -DDEBUG -D__CODE_RED -DCORE_M3 -D__USE_LPCOPEN -DCPP_USE_HEAP -D__LPC15XX__ -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\XYPlotterLPC1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\include" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\portable\GCC\ARM_CM3" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -O0 -fno-common -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions -mcpu=cortex-m3 -mthumb -MMD -MP -MF"src/XYPlotterLPC1549_new.d" -MT"src/XYPlotterLPC1549_new.o" -MT"src/XYPlotterLPC1549_new.d" -o "src/XYPlotterLPC1549_new.o" "../src/XYPlotterLPC1549_new.cpp"
-../src/XYPlotterLPC1549_new.cpp: In function 'void vTaskReceive(void*)':
-../src/XYPlotterLPC1549_new.cpp:66:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
-   for(int i = 0; i < len; i++){
-                  ~~^~~~~
-../src/XYPlotterLPC1549_new.cpp:54:14: warning: unused variable 'START' [-Wunused-variable]
-  const char* START = "M10";
-              ^~~~~
-../src/XYPlotterLPC1549_new.cpp:55:14: warning: unused variable 'XY_TYPE' [-Wunused-variable]
-  const char* XY_TYPE = "XY";
-              ^~~~~~~
-Finished building: ../src/XYPlotterLPC1549_new.cpp
- 
-Building target: XYPlotterLPC1549.axf
-Invoking: MCU C++ Linker
-arm-none-eabi-c++ -nostdlib -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\Debug" -Xlinker -Map="XYPlotterLPC1549.map" -Xlinker --gc-sections -Xlinker -print-memory-usage -mcpu=cortex-m3 -mthumb -T "XYPlotterLPC1549_Debug.ld" -o "XYPlotterLPC1549.axf"  ./src/DigitalIoPin.o ./src/Fmutex.o ./src/ITM_write.o ./src/XYPlotterLPC1549_new.o ./src/cdc_desc.o ./src/cdc_main.o ./src/cdc_vcom.o ./src/cr_cpp_config.o ./src/cr_startup_lpc15xx.o ./src/crp.o ./src/sysinit.o   -lfreertos -llpc_board_nxp_lpcxpresso_1549 -llpc_chip_15xx -lFreeRTOS
-Memory region         Used Size  Region Size  %age Used
-       MFlash256:       31872 B       256 KB     12.16%
-      Ram0_16_32:        3856 B        32 KB     11.77%
-          Ram2_4:          0 GB         4 KB      0.00%
-Finished building target: XYPlotterLPC1549.axf
- 
-make --no-print-directory post-build
-Performing post-build steps
-arm-none-eabi-size "XYPlotterLPC1549.axf"; # arm-none-eabi-objcopy -v -O binary "XYPlotterLPC1549.axf" "XYPlotterLPC1549.bin" ; # checksum -p LPC1549 -d "XYPlotterLPC1549.bin";
-   text	   data	    bss	    dec	    hex	filename
-  29672	   2200	   1656	  33528	   82f8	XYPlotterLPC1549.axf
- 
-16:27:50 **** Incremental Build of configuration Debug for project lpc_board_nxp_lpcxpresso_1549 ****
-make -r all 
-make: Nothing to be done for `all'.
-16:27:52 **** Incremental Build of configuration Debug for project lpc_chip_15xx ****
-make -r all 
-make: Nothing to be done for `all'.
-16:27:54 **** Incremental Build of configuration Debug for project FreeRTOS ****
-make -r all 
-make: Nothing to be done for `all'.
-16:27:55 **** Incremental Build of configuration Debug for project XYPlotterLPC1549 ****
-make -r -j4 all 
-Building file: ../src/XYPlotterLPC1549_new.cpp
-Invoking: MCU C++ Compiler
-arm-none-eabi-c++ -std=c++11 -D__NEWLIB__ -DDEBUG -D__CODE_RED -DCORE_M3 -D__USE_LPCOPEN -DCPP_USE_HEAP -D__LPC15XX__ -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\XYPlotterLPC1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\include" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\portable\GCC\ARM_CM3" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -O0 -fno-common -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions -mcpu=cortex-m3 -mthumb -MMD -MP -MF"src/XYPlotterLPC1549_new.d" -MT"src/XYPlotterLPC1549_new.o" -MT"src/XYPlotterLPC1549_new.d" -o "src/XYPlotterLPC1549_new.o" "../src/XYPlotterLPC1549_new.cpp"
-../src/XYPlotterLPC1549_new.cpp: In function 'void vTaskReceive(void*)':
-../src/XYPlotterLPC1549_new.cpp:66:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
-   for(int i = 0; i < len; i++){
-                  ~~^~~~~
-../src/XYPlotterLPC1549_new.cpp:54:14: warning: unused variable 'START' [-Wunused-variable]
-  const char* START = "M10";
-              ^~~~~
-../src/XYPlotterLPC1549_new.cpp:55:14: warning: unused variable 'XY_TYPE' [-Wunused-variable]
-  const char* XY_TYPE = "XY";
-              ^~~~~~~
-Finished building: ../src/XYPlotterLPC1549_new.cpp
- 
-Building target: XYPlotterLPC1549.axf
-Invoking: MCU C++ Linker
-arm-none-eabi-c++ -nostdlib -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\Debug" -Xlinker -Map="XYPlotterLPC1549.map" -Xlinker --gc-sections -Xlinker -print-memory-usage -mcpu=cortex-m3 -mthumb -T "XYPlotterLPC1549_Debug.ld" -o "XYPlotterLPC1549.axf"  ./src/DigitalIoPin.o ./src/Fmutex.o ./src/ITM_write.o ./src/XYPlotterLPC1549_new.o ./src/cdc_desc.o ./src/cdc_main.o ./src/cdc_vcom.o ./src/cr_cpp_config.o ./src/cr_startup_lpc15xx.o ./src/crp.o ./src/sysinit.o   -lfreertos -llpc_board_nxp_lpcxpresso_1549 -llpc_chip_15xx -lFreeRTOS
-Memory region         Used Size  Region Size  %age Used
-       MFlash256:       31896 B       256 KB     12.17%
-      Ram0_16_32:        3856 B        32 KB     11.77%
-          Ram2_4:          0 GB         4 KB      0.00%
-Finished building target: XYPlotterLPC1549.axf
- 
-make --no-print-directory post-build
-Performing post-build steps
-arm-none-eabi-size "XYPlotterLPC1549.axf"; # arm-none-eabi-objcopy -v -O binary "XYPlotterLPC1549.axf" "XYPlotterLPC1549.bin" ; # checksum -p LPC1549 -d "XYPlotterLPC1549.bin";
-   text	   data	    bss	    dec	    hex	filename
-  29696	   2200	   1656	  33552	   8310	XYPlotterLPC1549.axf
- 
-16:28:05 **** Incremental Build of configuration Debug for project XYPlotterLPC1549 ****
-make -r -j4 all 
-Building file: ../src/XYPlotterLPC1549_new.cpp
-Invoking: MCU C++ Compiler
-arm-none-eabi-c++ -std=c++11 -D__NEWLIB__ -DDEBUG -D__CODE_RED -DCORE_M3 -D__USE_LPCOPEN -DCPP_USE_HEAP -D__LPC15XX__ -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\XYPlotterLPC1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\include" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\portable\GCC\ARM_CM3" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -O0 -fno-common -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions -mcpu=cortex-m3 -mthumb -MMD -MP -MF"src/XYPlotterLPC1549_new.d" -MT"src/XYPlotterLPC1549_new.o" -MT"src/XYPlotterLPC1549_new.d" -o "src/XYPlotterLPC1549_new.o" "../src/XYPlotterLPC1549_new.cpp"
-../src/XYPlotterLPC1549_new.cpp: In function 'void vTaskReceive(void*)':
-../src/XYPlotterLPC1549_new.cpp:66:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
-   for(int i = 0; i < len; i++){
-                  ~~^~~~~
-../src/XYPlotterLPC1549_new.cpp:54:14: warning: unused variable 'START' [-Wunused-variable]
-  const char* START = "M10";
-              ^~~~~
-../src/XYPlotterLPC1549_new.cpp:55:14: warning: unused variable 'XY_TYPE' [-Wunused-variable]
-  const char* XY_TYPE = "XY";
-              ^~~~~~~
-Finished building: ../src/XYPlotterLPC1549_new.cpp
- 
-Building target: XYPlotterLPC1549.axf
-Invoking: MCU C++ Linker
-arm-none-eabi-c++ -nostdlib -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\Debug" -Xlinker -Map="XYPlotterLPC1549.map" -Xlinker --gc-sections -Xlinker -print-memory-usage -mcpu=cortex-m3 -mthumb -T "XYPlotterLPC1549_Debug.ld" -o "XYPlotterLPC1549.axf"  ./src/DigitalIoPin.o ./src/Fmutex.o ./src/ITM_write.o ./src/XYPlotterLPC1549_new.o ./src/cdc_desc.o ./src/cdc_main.o ./src/cdc_vcom.o ./src/cr_cpp_config.o ./src/cr_startup_lpc15xx.o ./src/crp.o ./src/sysinit.o   -lfreertos -llpc_board_nxp_lpcxpresso_1549 -llpc_chip_15xx -lFreeRTOS
-Memory region         Used Size  Region Size  %age Used
-       MFlash256:       31896 B       256 KB     12.17%
-      Ram0_16_32:        3856 B        32 KB     11.77%
-          Ram2_4:          0 GB         4 KB      0.00%
-Finished building target: XYPlotterLPC1549.axf
- 
-make --no-print-directory post-build
-Performing post-build steps
-arm-none-eabi-size "XYPlotterLPC1549.axf"; # arm-none-eabi-objcopy -v -O binary "XYPlotterLPC1549.axf" "XYPlotterLPC1549.bin" ; # checksum -p LPC1549 -d "XYPlotterLPC1549.bin";
-   text	   data	    bss	    dec	    hex	filename
-  29696	   2200	   1656	  33552	   8310	XYPlotterLPC1549.axf
- 
-16:31:11 **** Incremental Build of configuration Debug for project lpc_board_nxp_lpcxpresso_1549 ****
-make -r all 
-make: Nothing to be done for `all'.
-16:31:13 **** Incremental Build of configuration Debug for project lpc_chip_15xx ****
-make -r all 
-make: Nothing to be done for `all'.
-16:31:14 **** Incremental Build of configuration Debug for project FreeRTOS ****
-make -r all 
-make: Nothing to be done for `all'.
-16:31:16 **** Incremental Build of configuration Debug for project XYPlotterLPC1549 ****
-make -r -j4 all 
-Building file: ../src/XYPlotterLPC1549_new.cpp
-Invoking: MCU C++ Compiler
-arm-none-eabi-c++ -std=c++11 -D__NEWLIB__ -DDEBUG -D__CODE_RED -DCORE_M3 -D__USE_LPCOPEN -DCPP_USE_HEAP -D__LPC15XX__ -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\XYPlotterLPC1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\include" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\portable\GCC\ARM_CM3" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -O0 -fno-common -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions -mcpu=cortex-m3 -mthumb -MMD -MP -MF"src/XYPlotterLPC1549_new.d" -MT"src/XYPlotterLPC1549_new.o" -MT"src/XYPlotterLPC1549_new.d" -o "src/XYPlotterLPC1549_new.o" "../src/XYPlotterLPC1549_new.cpp"
-../src/XYPlotterLPC1549_new.cpp: In function 'void vTaskReceive(void*)':
-../src/XYPlotterLPC1549_new.cpp:66:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
-   for(int i = 0; i < len; i++){
-                  ~~^~~~~
-../src/XYPlotterLPC1549_new.cpp:54:14: warning: unused variable 'START' [-Wunused-variable]
-  const char* START = "M10";
-              ^~~~~
-../src/XYPlotterLPC1549_new.cpp:55:14: warning: unused variable 'XY_TYPE' [-Wunused-variable]
-  const char* XY_TYPE = "XY";
-              ^~~~~~~
-Finished building: ../src/XYPlotterLPC1549_new.cpp
- 
-Building target: XYPlotterLPC1549.axf
-Invoking: MCU C++ Linker
-arm-none-eabi-c++ -nostdlib -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\Debug" -Xlinker -Map="XYPlotterLPC1549.map" -Xlinker --gc-sections -Xlinker -print-memory-usage -mcpu=cortex-m3 -mthumb -T "XYPlotterLPC1549_Debug.ld" -o "XYPlotterLPC1549.axf"  ./src/DigitalIoPin.o ./src/Fmutex.o ./src/ITM_write.o ./src/XYPlotterLPC1549_new.o ./src/cdc_desc.o ./src/cdc_main.o ./src/cdc_vcom.o ./src/cr_cpp_config.o ./src/cr_startup_lpc15xx.o ./src/crp.o ./src/sysinit.o   -lfreertos -llpc_board_nxp_lpcxpresso_1549 -llpc_chip_15xx -lFreeRTOS
-Memory region         Used Size  Region Size  %age Used
-       MFlash256:       31896 B       256 KB     12.17%
-      Ram0_16_32:        3856 B        32 KB     11.77%
-          Ram2_4:          0 GB         4 KB      0.00%
-Finished building target: XYPlotterLPC1549.axf
- 
-make --no-print-directory post-build
-Performing post-build steps
-arm-none-eabi-size "XYPlotterLPC1549.axf"; # arm-none-eabi-objcopy -v -O binary "XYPlotterLPC1549.axf" "XYPlotterLPC1549.bin" ; # checksum -p LPC1549 -d "XYPlotterLPC1549.bin";
-   text	   data	    bss	    dec	    hex	filename
-  29696	   2200	   1656	  33552	   8310	XYPlotterLPC1549.axf
- 
-16:31:25 **** Incremental Build of configuration Debug for project XYPlotterLPC1549 ****
-make -r -j4 all 
-Building file: ../src/XYPlotterLPC1549_new.cpp
-Invoking: MCU C++ Compiler
-arm-none-eabi-c++ -std=c++11 -D__NEWLIB__ -DDEBUG -D__CODE_RED -DCORE_M3 -D__USE_LPCOPEN -DCPP_USE_HEAP -D__LPC15XX__ -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\XYPlotterLPC1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\include" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\portable\GCC\ARM_CM3" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -O0 -fno-common -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions -mcpu=cortex-m3 -mthumb -MMD -MP -MF"src/XYPlotterLPC1549_new.d" -MT"src/XYPlotterLPC1549_new.o" -MT"src/XYPlotterLPC1549_new.d" -o "src/XYPlotterLPC1549_new.o" "../src/XYPlotterLPC1549_new.cpp"
-../src/XYPlotterLPC1549_new.cpp: In function 'void vTaskReceive(void*)':
-../src/XYPlotterLPC1549_new.cpp:66:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
-   for(int i = 0; i < len; i++){
-                  ~~^~~~~
-../src/XYPlotterLPC1549_new.cpp:54:14: warning: unused variable 'START' [-Wunused-variable]
-  const char* START = "M10";
-              ^~~~~
-../src/XYPlotterLPC1549_new.cpp:55:14: warning: unused variable 'XY_TYPE' [-Wunused-variable]
-  const char* XY_TYPE = "XY";
-              ^~~~~~~
-Finished building: ../src/XYPlotterLPC1549_new.cpp
- 
-Building target: XYPlotterLPC1549.axf
-Invoking: MCU C++ Linker
-arm-none-eabi-c++ -nostdlib -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\Debug" -Xlinker -Map="XYPlotterLPC1549.map" -Xlinker --gc-sections -Xlinker -print-memory-usage -mcpu=cortex-m3 -mthumb -T "XYPlotterLPC1549_Debug.ld" -o "XYPlotterLPC1549.axf"  ./src/DigitalIoPin.o ./src/Fmutex.o ./src/ITM_write.o ./src/XYPlotterLPC1549_new.o ./src/cdc_desc.o ./src/cdc_main.o ./src/cdc_vcom.o ./src/cr_cpp_config.o ./src/cr_startup_lpc15xx.o ./src/crp.o ./src/sysinit.o   -lfreertos -llpc_board_nxp_lpcxpresso_1549 -llpc_chip_15xx -lFreeRTOS
-Memory region         Used Size  Region Size  %age Used
-       MFlash256:       31896 B       256 KB     12.17%
-      Ram0_16_32:        3856 B        32 KB     11.77%
-          Ram2_4:          0 GB         4 KB      0.00%
-Finished building target: XYPlotterLPC1549.axf
- 
-make --no-print-directory post-build
-Performing post-build steps
-arm-none-eabi-size "XYPlotterLPC1549.axf"; # arm-none-eabi-objcopy -v -O binary "XYPlotterLPC1549.axf" "XYPlotterLPC1549.bin" ; # checksum -p LPC1549 -d "XYPlotterLPC1549.bin";
-   text	   data	    bss	    dec	    hex	filename
-  29696	   2200	   1656	  33552	   8310	XYPlotterLPC1549.axf
- 
-16:34:38 **** Incremental Build of configuration Debug for project lpc_board_nxp_lpcxpresso_1549 ****
-make -r all 
-make: Nothing to be done for `all'.
-16:34:40 **** Incremental Build of configuration Debug for project lpc_chip_15xx ****
-make -r all 
-make: Nothing to be done for `all'.
-16:34:41 **** Incremental Build of configuration Debug for project FreeRTOS ****
-make -r all 
-make: Nothing to be done for `all'.
-16:34:43 **** Incremental Build of configuration Debug for project XYPlotterLPC1549 ****
-make -r -j4 all 
-Building file: ../src/XYPlotterLPC1549_new.cpp
-Invoking: MCU C++ Compiler
-arm-none-eabi-c++ -std=c++11 -D__NEWLIB__ -DDEBUG -D__CODE_RED -DCORE_M3 -D__USE_LPCOPEN -DCPP_USE_HEAP -D__LPC15XX__ -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\XYPlotterLPC1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\include" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\portable\GCC\ARM_CM3" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -O0 -fno-common -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions -mcpu=cortex-m3 -mthumb -MMD -MP -MF"src/XYPlotterLPC1549_new.d" -MT"src/XYPlotterLPC1549_new.o" -MT"src/XYPlotterLPC1549_new.d" -o "src/XYPlotterLPC1549_new.o" "../src/XYPlotterLPC1549_new.cpp"
-../src/XYPlotterLPC1549_new.cpp: In function 'void vTaskReceive(void*)':
-../src/XYPlotterLPC1549_new.cpp:66:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
-   for(int i = 0; i < len; i++){
-                  ~~^~~~~
-../src/XYPlotterLPC1549_new.cpp:54:14: warning: unused variable 'START' [-Wunused-variable]
-  const char* START = "M10";
-              ^~~~~
-../src/XYPlotterLPC1549_new.cpp:55:14: warning: unused variable 'XY_TYPE' [-Wunused-variable]
-  const char* XY_TYPE = "XY";
-              ^~~~~~~
-Finished building: ../src/XYPlotterLPC1549_new.cpp
- 
-Building target: XYPlotterLPC1549.axf
-Invoking: MCU C++ Linker
-arm-none-eabi-c++ -nostdlib -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\Debug" -Xlinker -Map="XYPlotterLPC1549.map" -Xlinker --gc-sections -Xlinker -print-memory-usage -mcpu=cortex-m3 -mthumb -T "XYPlotterLPC1549_Debug.ld" -o "XYPlotterLPC1549.axf"  ./src/DigitalIoPin.o ./src/Fmutex.o ./src/ITM_write.o ./src/XYPlotterLPC1549_new.o ./src/cdc_desc.o ./src/cdc_main.o ./src/cdc_vcom.o ./src/cr_cpp_config.o ./src/cr_startup_lpc15xx.o ./src/crp.o ./src/sysinit.o   -lfreertos -llpc_board_nxp_lpcxpresso_1549 -llpc_chip_15xx -lFreeRTOS
-Memory region         Used Size  Region Size  %age Used
-       MFlash256:       31912 B       256 KB     12.17%
-      Ram0_16_32:        3856 B        32 KB     11.77%
-          Ram2_4:          0 GB         4 KB      0.00%
-Finished building target: XYPlotterLPC1549.axf
- 
-make --no-print-directory post-build
-Performing post-build steps
-arm-none-eabi-size "XYPlotterLPC1549.axf"; # arm-none-eabi-objcopy -v -O binary "XYPlotterLPC1549.axf" "XYPlotterLPC1549.bin" ; # checksum -p LPC1549 -d "XYPlotterLPC1549.bin";
-   text	   data	    bss	    dec	    hex	filename
-  29712	   2200	   1656	  33568	   8320	XYPlotterLPC1549.axf
- 
-16:34:52 **** Incremental Build of configuration Debug for project XYPlotterLPC1549 ****
-make -r -j4 all 
-Building file: ../src/XYPlotterLPC1549_new.cpp
-Invoking: MCU C++ Compiler
-arm-none-eabi-c++ -std=c++11 -D__NEWLIB__ -DDEBUG -D__CODE_RED -DCORE_M3 -D__USE_LPCOPEN -DCPP_USE_HEAP -D__LPC15XX__ -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\XYPlotterLPC1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\include" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\portable\GCC\ARM_CM3" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -O0 -fno-common -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions -mcpu=cortex-m3 -mthumb -MMD -MP -MF"src/XYPlotterLPC1549_new.d" -MT"src/XYPlotterLPC1549_new.o" -MT"src/XYPlotterLPC1549_new.d" -o "src/XYPlotterLPC1549_new.o" "../src/XYPlotterLPC1549_new.cpp"
-../src/XYPlotterLPC1549_new.cpp: In function 'void vTaskReceive(void*)':
-../src/XYPlotterLPC1549_new.cpp:66:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
-   for(int i = 0; i < len; i++){
-                  ~~^~~~~
-../src/XYPlotterLPC1549_new.cpp:54:14: warning: unused variable 'START' [-Wunused-variable]
-  const char* START = "M10";
-              ^~~~~
-../src/XYPlotterLPC1549_new.cpp:55:14: warning: unused variable 'XY_TYPE' [-Wunused-variable]
-  const char* XY_TYPE = "XY";
-              ^~~~~~~
-Finished building: ../src/XYPlotterLPC1549_new.cpp
- 
-Building target: XYPlotterLPC1549.axf
-Invoking: MCU C++ Linker
-arm-none-eabi-c++ -nostdlib -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\Debug" -Xlinker -Map="XYPlotterLPC1549.map" -Xlinker --gc-sections -Xlinker -print-memory-usage -mcpu=cortex-m3 -mthumb -T "XYPlotterLPC1549_Debug.ld" -o "XYPlotterLPC1549.axf"  ./src/DigitalIoPin.o ./src/Fmutex.o ./src/ITM_write.o ./src/XYPlotterLPC1549_new.o ./src/cdc_desc.o ./src/cdc_main.o ./src/cdc_vcom.o ./src/cr_cpp_config.o ./src/cr_startup_lpc15xx.o ./src/crp.o ./src/sysinit.o   -lfreertos -llpc_board_nxp_lpcxpresso_1549 -llpc_chip_15xx -lFreeRTOS
-Memory region         Used Size  Region Size  %age Used
-       MFlash256:       31912 B       256 KB     12.17%
-      Ram0_16_32:        3856 B        32 KB     11.77%
-          Ram2_4:          0 GB         4 KB      0.00%
-Finished building target: XYPlotterLPC1549.axf
- 
-make --no-print-directory post-build
-Performing post-build steps
-arm-none-eabi-size "XYPlotterLPC1549.axf"; # arm-none-eabi-objcopy -v -O binary "XYPlotterLPC1549.axf" "XYPlotterLPC1549.bin" ; # checksum -p LPC1549 -d "XYPlotterLPC1549.bin";
-   text	   data	    bss	    dec	    hex	filename
-  29712	   2200	   1656	  33568	   8320	XYPlotterLPC1549.axf
- 
-16:57:35 **** Incremental Build of configuration Debug for project lpc_board_nxp_lpcxpresso_1549 ****
-make -r all 
-make: Nothing to be done for `all'.
-16:57:37 **** Incremental Build of configuration Debug for project lpc_chip_15xx ****
-make -r all 
-make: Nothing to be done for `all'.
-16:57:39 **** Incremental Build of configuration Debug for project FreeRTOS ****
-make -r all 
-make: Nothing to be done for `all'.
-16:57:41 **** Incremental Build of configuration Debug for project XYPlotterLPC1549 ****
-make -r -j4 all 
-Building file: ../src/XYPlotterLPC1549_new.cpp
-Invoking: MCU C++ Compiler
-arm-none-eabi-c++ -std=c++11 -D__NEWLIB__ -DDEBUG -D__CODE_RED -DCORE_M3 -D__USE_LPCOPEN -DCPP_USE_HEAP -D__LPC15XX__ -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\XYPlotterLPC1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\include" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\portable\GCC\ARM_CM3" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -O0 -fno-common -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions -mcpu=cortex-m3 -mthumb -MMD -MP -MF"src/XYPlotterLPC1549_new.d" -MT"src/XYPlotterLPC1549_new.o" -MT"src/XYPlotterLPC1549_new.d" -o "src/XYPlotterLPC1549_new.o" "../src/XYPlotterLPC1549_new.cpp"
-../src/XYPlotterLPC1549_new.cpp: In function 'void vTaskReceive(void*)':
-../src/XYPlotterLPC1549_new.cpp:68:29: warning: comparison with string literal results in unspecified behavior [-Waddress]
-   if(gcode_buff[len - 1] == "\n"){
-                             ^~~~
-../src/XYPlotterLPC1549_new.cpp:68:29: error: ISO C++ forbids comparison between pointer and integer [-fpermissive]
-../src/XYPlotterLPC1549_new.cpp:54:14: warning: unused variable 'START' [-Wunused-variable]
-  const char* START = "M10";
-              ^~~~~
-../src/XYPlotterLPC1549_new.cpp:55:14: warning: unused variable 'XY_TYPE' [-Wunused-variable]
-  const char* XY_TYPE = "XY";
-              ^~~~~~~
-make: *** [src/XYPlotterLPC1549_new.o] Error 1
-16:57:47 **** Incremental Build of configuration Debug for project XYPlotterLPC1549 ****
-make -r -j4 all 
-Building file: ../src/XYPlotterLPC1549_new.cpp
-Invoking: MCU C++ Compiler
-arm-none-eabi-c++ -std=c++11 -D__NEWLIB__ -DDEBUG -D__CODE_RED -DCORE_M3 -D__USE_LPCOPEN -DCPP_USE_HEAP -D__LPC15XX__ -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\XYPlotterLPC1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\include" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\portable\GCC\ARM_CM3" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -O0 -fno-common -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions -mcpu=cortex-m3 -mthumb -MMD -MP -MF"src/XYPlotterLPC1549_new.d" -MT"src/XYPlotterLPC1549_new.o" -MT"src/XYPlotterLPC1549_new.d" -o "src/XYPlotterLPC1549_new.o" "../src/XYPlotterLPC1549_new.cpp"
-../src/XYPlotterLPC1549_new.cpp: In function 'void vTaskReceive(void*)':
-../src/XYPlotterLPC1549_new.cpp:68:29: warning: comparison with string literal results in unspecified behavior [-Waddress]
-   if(gcode_buff[len - 1] == "\n"){
-                             ^~~~
-../src/XYPlotterLPC1549_new.cpp:68:29: error: ISO C++ forbids comparison between pointer and integer [-fpermissive]
-../src/XYPlotterLPC1549_new.cpp:54:14: warning: unused variable 'START' [-Wunused-variable]
-  const char* START = "M10";
-              ^~~~~
-../src/XYPlotterLPC1549_new.cpp:55:14: warning: unused variable 'XY_TYPE' [-Wunused-variable]
-  const char* XY_TYPE = "XY";
-              ^~~~~~~
-make: *** [src/XYPlotterLPC1549_new.o] Error 1
-16:58:12 **** Incremental Build of configuration Debug for project lpc_board_nxp_lpcxpresso_1549 ****
-make -r all 
-make: Nothing to be done for `all'.
-16:58:14 **** Incremental Build of configuration Debug for project lpc_chip_15xx ****
-make -r all 
-make: Nothing to be done for `all'.
-16:58:16 **** Incremental Build of configuration Debug for project FreeRTOS ****
-make -r all 
-make: Nothing to be done for `all'.
-16:58:18 **** Incremental Build of configuration Debug for project XYPlotterLPC1549 ****
-make -r -j4 all 
-Building file: ../src/XYPlotterLPC1549_new.cpp
-Invoking: MCU C++ Compiler
-arm-none-eabi-c++ -std=c++11 -D__NEWLIB__ -DDEBUG -D__CODE_RED -DCORE_M3 -D__USE_LPCOPEN -DCPP_USE_HEAP -D__LPC15XX__ -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\XYPlotterLPC1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\include" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\portable\GCC\ARM_CM3" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -O0 -fno-common -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions -mcpu=cortex-m3 -mthumb -MMD -MP -MF"src/XYPlotterLPC1549_new.d" -MT"src/XYPlotterLPC1549_new.o" -MT"src/XYPlotterLPC1549_new.d" -o "src/XYPlotterLPC1549_new.o" "../src/XYPlotterLPC1549_new.cpp"
-../src/XYPlotterLPC1549_new.cpp: In function 'void vTaskReceive(void*)':
-../src/XYPlotterLPC1549_new.cpp:54:14: warning: unused variable 'START' [-Wunused-variable]
-  const char* START = "M10";
-              ^~~~~
-../src/XYPlotterLPC1549_new.cpp:55:14: warning: unused variable 'XY_TYPE' [-Wunused-variable]
-  const char* XY_TYPE = "XY";
-              ^~~~~~~
-Finished building: ../src/XYPlotterLPC1549_new.cpp
- 
-Building target: XYPlotterLPC1549.axf
-Invoking: MCU C++ Linker
-arm-none-eabi-c++ -nostdlib -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\Debug" -Xlinker -Map="XYPlotterLPC1549.map" -Xlinker --gc-sections -Xlinker -print-memory-usage -mcpu=cortex-m3 -mthumb -T "XYPlotterLPC1549_Debug.ld" -o "XYPlotterLPC1549.axf"  ./src/DigitalIoPin.o ./src/Fmutex.o ./src/ITM_write.o ./src/XYPlotterLPC1549_new.o ./src/cdc_desc.o ./src/cdc_main.o ./src/cdc_vcom.o ./src/cr_cpp_config.o ./src/cr_startup_lpc15xx.o ./src/crp.o ./src/sysinit.o   -lfreertos -llpc_board_nxp_lpcxpresso_1549 -llpc_chip_15xx -lFreeRTOS
-Memory region         Used Size  Region Size  %age Used
-       MFlash256:       32000 B       256 KB     12.21%
-      Ram0_16_32:        3856 B        32 KB     11.77%
-          Ram2_4:          0 GB         4 KB      0.00%
-Finished building target: XYPlotterLPC1549.axf
- 
-make --no-print-directory post-build
-Performing post-build steps
-arm-none-eabi-size "XYPlotterLPC1549.axf"; # arm-none-eabi-objcopy -v -O binary "XYPlotterLPC1549.axf" "XYPlotterLPC1549.bin" ; # checksum -p LPC1549 -d "XYPlotterLPC1549.bin";
-   text	   data	    bss	    dec	    hex	filename
-  29800	   2200	   1656	  33656	   8378	XYPlotterLPC1549.axf
- 
-16:58:25 **** Incremental Build of configuration Debug for project XYPlotterLPC1549 ****
-make -r -j4 all 
-Building file: ../src/XYPlotterLPC1549_new.cpp
-Invoking: MCU C++ Compiler
-arm-none-eabi-c++ -std=c++11 -D__NEWLIB__ -DDEBUG -D__CODE_RED -DCORE_M3 -D__USE_LPCOPEN -DCPP_USE_HEAP -D__LPC15XX__ -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\XYPlotterLPC1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\include" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\portable\GCC\ARM_CM3" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -O0 -fno-common -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions -mcpu=cortex-m3 -mthumb -MMD -MP -MF"src/XYPlotterLPC1549_new.d" -MT"src/XYPlotterLPC1549_new.o" -MT"src/XYPlotterLPC1549_new.d" -o "src/XYPlotterLPC1549_new.o" "../src/XYPlotterLPC1549_new.cpp"
-../src/XYPlotterLPC1549_new.cpp: In function 'void vTaskReceive(void*)':
-../src/XYPlotterLPC1549_new.cpp:54:14: warning: unused variable 'START' [-Wunused-variable]
-  const char* START = "M10";
-              ^~~~~
-../src/XYPlotterLPC1549_new.cpp:55:14: warning: unused variable 'XY_TYPE' [-Wunused-variable]
-  const char* XY_TYPE = "XY";
-              ^~~~~~~
-Finished building: ../src/XYPlotterLPC1549_new.cpp
- 
-Building target: XYPlotterLPC1549.axf
-Invoking: MCU C++ Linker
-arm-none-eabi-c++ -nostdlib -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\Debug" -Xlinker -Map="XYPlotterLPC1549.map" -Xlinker --gc-sections -Xlinker -print-memory-usage -mcpu=cortex-m3 -mthumb -T "XYPlotterLPC1549_Debug.ld" -o "XYPlotterLPC1549.axf"  ./src/DigitalIoPin.o ./src/Fmutex.o ./src/ITM_write.o ./src/XYPlotterLPC1549_new.o ./src/cdc_desc.o ./src/cdc_main.o ./src/cdc_vcom.o ./src/cr_cpp_config.o ./src/cr_startup_lpc15xx.o ./src/crp.o ./src/sysinit.o   -lfreertos -llpc_board_nxp_lpcxpresso_1549 -llpc_chip_15xx -lFreeRTOS
-Memory region         Used Size  Region Size  %age Used
-       MFlash256:       32000 B       256 KB     12.21%
-      Ram0_16_32:        3856 B        32 KB     11.77%
-          Ram2_4:          0 GB         4 KB      0.00%
-Finished building target: XYPlotterLPC1549.axf
- 
-make --no-print-directory post-build
-Performing post-build steps
-arm-none-eabi-size "XYPlotterLPC1549.axf"; # arm-none-eabi-objcopy -v -O binary "XYPlotterLPC1549.axf" "XYPlotterLPC1549.bin" ; # checksum -p LPC1549 -d "XYPlotterLPC1549.bin";
-   text	   data	    bss	    dec	    hex	filename
-  29800	   2200	   1656	  33656	   8378	XYPlotterLPC1549.axf
- 
-17:21:17 **** Incremental Build of configuration Debug for project lpc_board_nxp_lpcxpresso_1549 ****
-make -r all 
-make: Nothing to be done for `all'.
-17:21:19 **** Incremental Build of configuration Debug for project lpc_chip_15xx ****
-make -r all 
-make: Nothing to be done for `all'.
-17:21:21 **** Incremental Build of configuration Debug for project FreeRTOS ****
-make -r all 
-make: Nothing to be done for `all'.
-17:21:22 **** Incremental Build of configuration Debug for project XYPlotterLPC1549 ****
-make -r -j4 all 
-Building file: ../src/XYPlotterLPC1549_new.cpp
-Invoking: MCU C++ Compiler
-arm-none-eabi-c++ -std=c++11 -D__NEWLIB__ -DDEBUG -D__CODE_RED -DCORE_M3 -D__USE_LPCOPEN -DCPP_USE_HEAP -D__LPC15XX__ -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\XYPlotterLPC1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\include" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\portable\GCC\ARM_CM3" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -O0 -fno-common -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions -mcpu=cortex-m3 -mthumb -MMD -MP -MF"src/XYPlotterLPC1549_new.d" -MT"src/XYPlotterLPC1549_new.o" -MT"src/XYPlotterLPC1549_new.d" -o "src/XYPlotterLPC1549_new.o" "../src/XYPlotterLPC1549_new.cpp"
-../src/XYPlotterLPC1549_new.cpp: In function 'void vTaskReceive(void*)':
-../src/XYPlotterLPC1549_new.cpp:54:14: warning: unused variable 'START' [-Wunused-variable]
-  const char* START = "M10";
-              ^~~~~
-../src/XYPlotterLPC1549_new.cpp:55:14: warning: unused variable 'XY_TYPE' [-Wunused-variable]
-  const char* XY_TYPE = "XY";
-              ^~~~~~~
-Finished building: ../src/XYPlotterLPC1549_new.cpp
- 
-Building target: XYPlotterLPC1549.axf
-Invoking: MCU C++ Linker
-arm-none-eabi-c++ -nostdlib -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\Debug" -Xlinker -Map="XYPlotterLPC1549.map" -Xlinker --gc-sections -Xlinker -print-memory-usage -mcpu=cortex-m3 -mthumb -T "XYPlotterLPC1549_Debug.ld" -o "XYPlotterLPC1549.axf"  ./src/DigitalIoPin.o ./src/Fmutex.o ./src/ITM_write.o ./src/XYPlotterLPC1549_new.o ./src/cdc_desc.o ./src/cdc_main.o ./src/cdc_vcom.o ./src/cr_cpp_config.o ./src/cr_startup_lpc15xx.o ./src/crp.o ./src/sysinit.o   -lfreertos -llpc_board_nxp_lpcxpresso_1549 -llpc_chip_15xx -lFreeRTOS
-Memory region         Used Size  Region Size  %age Used
-       MFlash256:       32000 B       256 KB     12.21%
-      Ram0_16_32:        3856 B        32 KB     11.77%
-          Ram2_4:          0 GB         4 KB      0.00%
-Finished building target: XYPlotterLPC1549.axf
- 
-make --no-print-directory post-build
-Performing post-build steps
-arm-none-eabi-size "XYPlotterLPC1549.axf"; # arm-none-eabi-objcopy -v -O binary "XYPlotterLPC1549.axf" "XYPlotterLPC1549.bin" ; # checksum -p LPC1549 -d "XYPlotterLPC1549.bin";
-   text	   data	    bss	    dec	    hex	filename
-  29800	   2200	   1656	  33656	   8378	XYPlotterLPC1549.axf
- 
-17:21:31 **** Incremental Build of configuration Debug for project XYPlotterLPC1549 ****
-make -r -j4 all 
-Building file: ../src/XYPlotterLPC1549_new.cpp
-Invoking: MCU C++ Compiler
-arm-none-eabi-c++ -std=c++11 -D__NEWLIB__ -DDEBUG -D__CODE_RED -DCORE_M3 -D__USE_LPCOPEN -DCPP_USE_HEAP -D__LPC15XX__ -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\XYPlotterLPC1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\include" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\portable\GCC\ARM_CM3" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -O0 -fno-common -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions -mcpu=cortex-m3 -mthumb -MMD -MP -MF"src/XYPlotterLPC1549_new.d" -MT"src/XYPlotterLPC1549_new.o" -MT"src/XYPlotterLPC1549_new.d" -o "src/XYPlotterLPC1549_new.o" "../src/XYPlotterLPC1549_new.cpp"
-../src/XYPlotterLPC1549_new.cpp: In function 'void vTaskReceive(void*)':
-../src/XYPlotterLPC1549_new.cpp:54:14: warning: unused variable 'START' [-Wunused-variable]
-  const char* START = "M10";
-              ^~~~~
-../src/XYPlotterLPC1549_new.cpp:55:14: warning: unused variable 'XY_TYPE' [-Wunused-variable]
-  const char* XY_TYPE = "XY";
-              ^~~~~~~
-Finished building: ../src/XYPlotterLPC1549_new.cpp
- 
-Building target: XYPlotterLPC1549.axf
-Invoking: MCU C++ Linker
-arm-none-eabi-c++ -nostdlib -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\Debug" -Xlinker -Map="XYPlotterLPC1549.map" -Xlinker --gc-sections -Xlinker -print-memory-usage -mcpu=cortex-m3 -mthumb -T "XYPlotterLPC1549_Debug.ld" -o "XYPlotterLPC1549.axf"  ./src/DigitalIoPin.o ./src/Fmutex.o ./src/ITM_write.o ./src/XYPlotterLPC1549_new.o ./src/cdc_desc.o ./src/cdc_main.o ./src/cdc_vcom.o ./src/cr_cpp_config.o ./src/cr_startup_lpc15xx.o ./src/crp.o ./src/sysinit.o   -lfreertos -llpc_board_nxp_lpcxpresso_1549 -llpc_chip_15xx -lFreeRTOS
-Memory region         Used Size  Region Size  %age Used
-       MFlash256:       32000 B       256 KB     12.21%
-      Ram0_16_32:        3856 B        32 KB     11.77%
-          Ram2_4:          0 GB         4 KB      0.00%
-Finished building target: XYPlotterLPC1549.axf
- 
-make --no-print-directory post-build
-Performing post-build steps
-arm-none-eabi-size "XYPlotterLPC1549.axf"; # arm-none-eabi-objcopy -v -O binary "XYPlotterLPC1549.axf" "XYPlotterLPC1549.bin" ; # checksum -p LPC1549 -d "XYPlotterLPC1549.bin";
-   text	   data	    bss	    dec	    hex	filename
-  29800	   2200	   1656	  33656	   8378	XYPlotterLPC1549.axf
- 
-13:17:53 **** Incremental Build of configuration Debug for project lpc_board_nxp_lpcxpresso_1549 ****
-make -r all 
-make: Nothing to be done for `all'.
-13:17:59 **** Incremental Build of configuration Debug for project lpc_chip_15xx ****
-make -r all 
-make: Nothing to be done for `all'.
-13:18:02 **** Incremental Build of configuration Debug for project FreeRTOS ****
-make -r all 
-make: Nothing to be done for `all'.
-13:18:06 **** Incremental Build of configuration Debug for project XYPlotterLPC1549 ****
-make -r -j4 all 
-Building file: ../src/XYPlotterLPC1549_new.cpp
-Invoking: MCU C++ Compiler
-arm-none-eabi-c++ -std=c++11 -D__NEWLIB__ -DDEBUG -D__CODE_RED -DCORE_M3 -D__USE_LPCOPEN -DCPP_USE_HEAP -D__LPC15XX__ -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\XYPlotterLPC1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\include" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\portable\GCC\ARM_CM3" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -O0 -fno-common -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions -mcpu=cortex-m3 -mthumb -MMD -MP -MF"src/XYPlotterLPC1549_new.d" -MT"src/XYPlotterLPC1549_new.o" -MT"src/XYPlotterLPC1549_new.d" -o "src/XYPlotterLPC1549_new.o" "../src/XYPlotterLPC1549_new.cpp"
-../src/XYPlotterLPC1549_new.cpp: In function 'void vTaskReceive(void*)':
-../src/XYPlotterLPC1549_new.cpp:54:14: warning: unused variable 'START' [-Wunused-variable]
-  const char* START = "M10";
-              ^~~~~
-../src/XYPlotterLPC1549_new.cpp:55:14: warning: unused variable 'XY_TYPE' [-Wunused-variable]
-  const char* XY_TYPE = "XY";
-              ^~~~~~~
-Finished building: ../src/XYPlotterLPC1549_new.cpp
- 
-Building target: XYPlotterLPC1549.axf
-Invoking: MCU C++ Linker
-arm-none-eabi-c++ -nostdlib -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\Debug" -Xlinker -Map="XYPlotterLPC1549.map" -Xlinker --gc-sections -Xlinker -print-memory-usage -mcpu=cortex-m3 -mthumb -T "XYPlotterLPC1549_Debug.ld" -o "XYPlotterLPC1549.axf"  ./src/DigitalIoPin.o ./src/Fmutex.o ./src/ITM_write.o ./src/XYPlotterLPC1549_new.o ./src/cdc_desc.o ./src/cdc_main.o ./src/cdc_vcom.o ./src/cr_cpp_config.o ./src/cr_startup_lpc15xx.o ./src/crp.o ./src/sysinit.o   -lfreertos -llpc_board_nxp_lpcxpresso_1549 -llpc_chip_15xx -lFreeRTOS
-Memory region         Used Size  Region Size  %age Used
-       MFlash256:       31984 B       256 KB     12.20%
-      Ram0_16_32:        3856 B        32 KB     11.77%
-          Ram2_4:          0 GB         4 KB      0.00%
-Finished building target: XYPlotterLPC1549.axf
- 
-make --no-print-directory post-build
-Performing post-build steps
-arm-none-eabi-size "XYPlotterLPC1549.axf"; # arm-none-eabi-objcopy -v -O binary "XYPlotterLPC1549.axf" "XYPlotterLPC1549.bin" ; # checksum -p LPC1549 -d "XYPlotterLPC1549.bin";
-   text	   data	    bss	    dec	    hex	filename
-  29784	   2200	   1656	  33640	   8368	XYPlotterLPC1549.axf
- 
-13:18:20 **** Incremental Build of configuration Debug for project XYPlotterLPC1549 ****
-make -r -j4 all 
-Building file: ../src/XYPlotterLPC1549_new.cpp
-Invoking: MCU C++ Compiler
-arm-none-eabi-c++ -std=c++11 -D__NEWLIB__ -DDEBUG -D__CODE_RED -DCORE_M3 -D__USE_LPCOPEN -DCPP_USE_HEAP -D__LPC15XX__ -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\XYPlotterLPC1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\include" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\portable\GCC\ARM_CM3" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -O0 -fno-common -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions -mcpu=cortex-m3 -mthumb -MMD -MP -MF"src/XYPlotterLPC1549_new.d" -MT"src/XYPlotterLPC1549_new.o" -MT"src/XYPlotterLPC1549_new.d" -o "src/XYPlotterLPC1549_new.o" "../src/XYPlotterLPC1549_new.cpp"
-../src/XYPlotterLPC1549_new.cpp: In function 'void vTaskReceive(void*)':
-../src/XYPlotterLPC1549_new.cpp:54:14: warning: unused variable 'START' [-Wunused-variable]
-  const char* START = "M10";
-              ^~~~~
-../src/XYPlotterLPC1549_new.cpp:55:14: warning: unused variable 'XY_TYPE' [-Wunused-variable]
-  const char* XY_TYPE = "XY";
-              ^~~~~~~
-Finished building: ../src/XYPlotterLPC1549_new.cpp
- 
-Building target: XYPlotterLPC1549.axf
-Invoking: MCU C++ Linker
-arm-none-eabi-c++ -nostdlib -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\Debug" -Xlinker -Map="XYPlotterLPC1549.map" -Xlinker --gc-sections -Xlinker -print-memory-usage -mcpu=cortex-m3 -mthumb -T "XYPlotterLPC1549_Debug.ld" -o "XYPlotterLPC1549.axf"  ./src/DigitalIoPin.o ./src/Fmutex.o ./src/ITM_write.o ./src/XYPlotterLPC1549_new.o ./src/cdc_desc.o ./src/cdc_main.o ./src/cdc_vcom.o ./src/cr_cpp_config.o ./src/cr_startup_lpc15xx.o ./src/crp.o ./src/sysinit.o   -lfreertos -llpc_board_nxp_lpcxpresso_1549 -llpc_chip_15xx -lFreeRTOS
-Memory region         Used Size  Region Size  %age Used
-       MFlash256:       31984 B       256 KB     12.20%
-      Ram0_16_32:        3856 B        32 KB     11.77%
-          Ram2_4:          0 GB         4 KB      0.00%
-Finished building target: XYPlotterLPC1549.axf
- 
-make --no-print-directory post-build
-Performing post-build steps
-arm-none-eabi-size "XYPlotterLPC1549.axf"; # arm-none-eabi-objcopy -v -O binary "XYPlotterLPC1549.axf" "XYPlotterLPC1549.bin" ; # checksum -p LPC1549 -d "XYPlotterLPC1549.bin";
-   text	   data	    bss	    dec	    hex	filename
-  29784	   2200	   1656	  33640	   8368	XYPlotterLPC1549.axf
- 
-13:20:06 **** Incremental Build of configuration Debug for project lpc_board_nxp_lpcxpresso_1549 ****
-make -r all 
-make: Nothing to be done for `all'.
-13:20:07 **** Incremental Build of configuration Debug for project lpc_chip_15xx ****
-make -r all 
-make: Nothing to be done for `all'.
-13:20:09 **** Incremental Build of configuration Debug for project FreeRTOS ****
-make -r all 
-make: Nothing to be done for `all'.
-13:20:11 **** Incremental Build of configuration Debug for project XYPlotterLPC1549 ****
-make -r -j4 all 
-Building file: ../src/XYPlotterLPC1549_new.cpp
-Invoking: MCU C++ Compiler
-arm-none-eabi-c++ -std=c++11 -D__NEWLIB__ -DDEBUG -D__CODE_RED -DCORE_M3 -D__USE_LPCOPEN -DCPP_USE_HEAP -D__LPC15XX__ -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\XYPlotterLPC1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\include" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\portable\GCC\ARM_CM3" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -O0 -fno-common -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions -mcpu=cortex-m3 -mthumb -MMD -MP -MF"src/XYPlotterLPC1549_new.d" -MT"src/XYPlotterLPC1549_new.o" -MT"src/XYPlotterLPC1549_new.d" -o "src/XYPlotterLPC1549_new.o" "../src/XYPlotterLPC1549_new.cpp"
-../src/XYPlotterLPC1549_new.cpp: In function 'void vTaskReceive(void*)':
-../src/XYPlotterLPC1549_new.cpp:54:14: warning: unused variable 'START' [-Wunused-variable]
-  const char* START = "M10";
-              ^~~~~
-../src/XYPlotterLPC1549_new.cpp:55:14: warning: unused variable 'XY_TYPE' [-Wunused-variable]
-  const char* XY_TYPE = "XY";
-              ^~~~~~~
-Finished building: ../src/XYPlotterLPC1549_new.cpp
- 
-Building target: XYPlotterLPC1549.axf
-Invoking: MCU C++ Linker
-arm-none-eabi-c++ -nostdlib -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\Debug" -Xlinker -Map="XYPlotterLPC1549.map" -Xlinker --gc-sections -Xlinker -print-memory-usage -mcpu=cortex-m3 -mthumb -T "XYPlotterLPC1549_Debug.ld" -o "XYPlotterLPC1549.axf"  ./src/DigitalIoPin.o ./src/Fmutex.o ./src/ITM_write.o ./src/XYPlotterLPC1549_new.o ./src/cdc_desc.o ./src/cdc_main.o ./src/cdc_vcom.o ./src/cr_cpp_config.o ./src/cr_startup_lpc15xx.o ./src/crp.o ./src/sysinit.o   -lfreertos -llpc_board_nxp_lpcxpresso_1549 -llpc_chip_15xx -lFreeRTOS
-Memory region         Used Size  Region Size  %age Used
-       MFlash256:       31984 B       256 KB     12.20%
-      Ram0_16_32:        3856 B        32 KB     11.77%
-          Ram2_4:          0 GB         4 KB      0.00%
-Finished building target: XYPlotterLPC1549.axf
- 
-make --no-print-directory post-build
-Performing post-build steps
-arm-none-eabi-size "XYPlotterLPC1549.axf"; # arm-none-eabi-objcopy -v -O binary "XYPlotterLPC1549.axf" "XYPlotterLPC1549.bin" ; # checksum -p LPC1549 -d "XYPlotterLPC1549.bin";
-   text	   data	    bss	    dec	    hex	filename
-  29784	   2200	   1656	  33640	   8368	XYPlotterLPC1549.axf
- 
-13:20:19 **** Incremental Build of configuration Debug for project XYPlotterLPC1549 ****
-make -r -j4 all 
-Building file: ../src/XYPlotterLPC1549_new.cpp
-Invoking: MCU C++ Compiler
-arm-none-eabi-c++ -std=c++11 -D__NEWLIB__ -DDEBUG -D__CODE_RED -DCORE_M3 -D__USE_LPCOPEN -DCPP_USE_HEAP -D__LPC15XX__ -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\XYPlotterLPC1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\include" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\portable\GCC\ARM_CM3" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -O0 -fno-common -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions -mcpu=cortex-m3 -mthumb -MMD -MP -MF"src/XYPlotterLPC1549_new.d" -MT"src/XYPlotterLPC1549_new.o" -MT"src/XYPlotterLPC1549_new.d" -o "src/XYPlotterLPC1549_new.o" "../src/XYPlotterLPC1549_new.cpp"
-../src/XYPlotterLPC1549_new.cpp: In function 'void vTaskReceive(void*)':
-../src/XYPlotterLPC1549_new.cpp:54:14: warning: unused variable 'START' [-Wunused-variable]
-  const char* START = "M10";
-              ^~~~~
-../src/XYPlotterLPC1549_new.cpp:55:14: warning: unused variable 'XY_TYPE' [-Wunused-variable]
-  const char* XY_TYPE = "XY";
-              ^~~~~~~
-Finished building: ../src/XYPlotterLPC1549_new.cpp
- 
-Building target: XYPlotterLPC1549.axf
-Invoking: MCU C++ Linker
-arm-none-eabi-c++ -nostdlib -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\Debug" -Xlinker -Map="XYPlotterLPC1549.map" -Xlinker --gc-sections -Xlinker -print-memory-usage -mcpu=cortex-m3 -mthumb -T "XYPlotterLPC1549_Debug.ld" -o "XYPlotterLPC1549.axf"  ./src/DigitalIoPin.o ./src/Fmutex.o ./src/ITM_write.o ./src/XYPlotterLPC1549_new.o ./src/cdc_desc.o ./src/cdc_main.o ./src/cdc_vcom.o ./src/cr_cpp_config.o ./src/cr_startup_lpc15xx.o ./src/crp.o ./src/sysinit.o   -lfreertos -llpc_board_nxp_lpcxpresso_1549 -llpc_chip_15xx -lFreeRTOS
-Memory region         Used Size  Region Size  %age Used
-       MFlash256:       31984 B       256 KB     12.20%
-      Ram0_16_32:        3856 B        32 KB     11.77%
-          Ram2_4:          0 GB         4 KB      0.00%
-Finished building target: XYPlotterLPC1549.axf
- 
-make --no-print-directory post-build
-Performing post-build steps
-arm-none-eabi-size "XYPlotterLPC1549.axf"; # arm-none-eabi-objcopy -v -O binary "XYPlotterLPC1549.axf" "XYPlotterLPC1549.bin" ; # checksum -p LPC1549 -d "XYPlotterLPC1549.bin";
-   text	   data	    bss	    dec	    hex	filename
-  29784	   2200	   1656	  33640	   8368	XYPlotterLPC1549.axf
- 
-13:24:10 **** Incremental Build of configuration Debug for project lpc_board_nxp_lpcxpresso_1549 ****
-make -r all 
-make: Nothing to be done for `all'.
-13:24:12 **** Incremental Build of configuration Debug for project lpc_chip_15xx ****
-make -r all 
-make: Nothing to be done for `all'.
-13:24:13 **** Incremental Build of configuration Debug for project FreeRTOS ****
-make -r all 
-make: Nothing to be done for `all'.
-13:24:15 **** Incremental Build of configuration Debug for project XYPlotterLPC1549 ****
-make -r -j4 all 
-Building file: ../src/XYPlotterLPC1549_new.cpp
-Invoking: MCU C++ Compiler
-arm-none-eabi-c++ -std=c++11 -D__NEWLIB__ -DDEBUG -D__CODE_RED -DCORE_M3 -D__USE_LPCOPEN -DCPP_USE_HEAP -D__LPC15XX__ -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\XYPlotterLPC1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\include" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\portable\GCC\ARM_CM3" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -O0 -fno-common -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions -mcpu=cortex-m3 -mthumb -MMD -MP -MF"src/XYPlotterLPC1549_new.d" -MT"src/XYPlotterLPC1549_new.o" -MT"src/XYPlotterLPC1549_new.d" -o "src/XYPlotterLPC1549_new.o" "../src/XYPlotterLPC1549_new.cpp"
-../src/XYPlotterLPC1549_new.cpp: In function 'void vTaskReceive(void*)':
-../src/XYPlotterLPC1549_new.cpp:54:14: warning: unused variable 'START' [-Wunused-variable]
-  const char* START = "M10";
-              ^~~~~
-../src/XYPlotterLPC1549_new.cpp:55:14: warning: unused variable 'XY_TYPE' [-Wunused-variable]
-  const char* XY_TYPE = "XY";
-              ^~~~~~~
-Finished building: ../src/XYPlotterLPC1549_new.cpp
- 
-Building target: XYPlotterLPC1549.axf
-Invoking: MCU C++ Linker
-arm-none-eabi-c++ -nostdlib -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\Debug" -Xlinker -Map="XYPlotterLPC1549.map" -Xlinker --gc-sections -Xlinker -print-memory-usage -mcpu=cortex-m3 -mthumb -T "XYPlotterLPC1549_Debug.ld" -o "XYPlotterLPC1549.axf"  ./src/DigitalIoPin.o ./src/Fmutex.o ./src/ITM_write.o ./src/XYPlotterLPC1549_new.o ./src/cdc_desc.o ./src/cdc_main.o ./src/cdc_vcom.o ./src/cr_cpp_config.o ./src/cr_startup_lpc15xx.o ./src/crp.o ./src/sysinit.o   -lfreertos -llpc_board_nxp_lpcxpresso_1549 -llpc_chip_15xx -lFreeRTOS
-Memory region         Used Size  Region Size  %age Used
-       MFlash256:       31984 B       256 KB     12.20%
-      Ram0_16_32:        3856 B        32 KB     11.77%
-          Ram2_4:          0 GB         4 KB      0.00%
-Finished building target: XYPlotterLPC1549.axf
- 
-make --no-print-directory post-build
-Performing post-build steps
-arm-none-eabi-size "XYPlotterLPC1549.axf"; # arm-none-eabi-objcopy -v -O binary "XYPlotterLPC1549.axf" "XYPlotterLPC1549.bin" ; # checksum -p LPC1549 -d "XYPlotterLPC1549.bin";
-   text	   data	    bss	    dec	    hex	filename
-  29784	   2200	   1656	  33640	   8368	XYPlotterLPC1549.axf
- 
-13:24:23 **** Incremental Build of configuration Debug for project XYPlotterLPC1549 ****
-make -r -j4 all 
-Building file: ../src/XYPlotterLPC1549_new.cpp
-Invoking: MCU C++ Compiler
-arm-none-eabi-c++ -std=c++11 -D__NEWLIB__ -DDEBUG -D__CODE_RED -DCORE_M3 -D__USE_LPCOPEN -DCPP_USE_HEAP -D__LPC15XX__ -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\XYPlotterLPC1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\include" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\portable\GCC\ARM_CM3" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -O0 -fno-common -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions -mcpu=cortex-m3 -mthumb -MMD -MP -MF"src/XYPlotterLPC1549_new.d" -MT"src/XYPlotterLPC1549_new.o" -MT"src/XYPlotterLPC1549_new.d" -o "src/XYPlotterLPC1549_new.o" "../src/XYPlotterLPC1549_new.cpp"
-../src/XYPlotterLPC1549_new.cpp: In function 'void vTaskReceive(void*)':
-../src/XYPlotterLPC1549_new.cpp:54:14: warning: unused variable 'START' [-Wunused-variable]
-  const char* START = "M10";
-              ^~~~~
-../src/XYPlotterLPC1549_new.cpp:55:14: warning: unused variable 'XY_TYPE' [-Wunused-variable]
-  const char* XY_TYPE = "XY";
-              ^~~~~~~
-Finished building: ../src/XYPlotterLPC1549_new.cpp
- 
-Building target: XYPlotterLPC1549.axf
-Invoking: MCU C++ Linker
-arm-none-eabi-c++ -nostdlib -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\Debug" -Xlinker -Map="XYPlotterLPC1549.map" -Xlinker --gc-sections -Xlinker -print-memory-usage -mcpu=cortex-m3 -mthumb -T "XYPlotterLPC1549_Debug.ld" -o "XYPlotterLPC1549.axf"  ./src/DigitalIoPin.o ./src/Fmutex.o ./src/ITM_write.o ./src/XYPlotterLPC1549_new.o ./src/cdc_desc.o ./src/cdc_main.o ./src/cdc_vcom.o ./src/cr_cpp_config.o ./src/cr_startup_lpc15xx.o ./src/crp.o ./src/sysinit.o   -lfreertos -llpc_board_nxp_lpcxpresso_1549 -llpc_chip_15xx -lFreeRTOS
-Memory region         Used Size  Region Size  %age Used
-       MFlash256:       31984 B       256 KB     12.20%
-      Ram0_16_32:        3856 B        32 KB     11.77%
-          Ram2_4:          0 GB         4 KB      0.00%
-Finished building target: XYPlotterLPC1549.axf
- 
-make --no-print-directory post-build
-Performing post-build steps
-arm-none-eabi-size "XYPlotterLPC1549.axf"; # arm-none-eabi-objcopy -v -O binary "XYPlotterLPC1549.axf" "XYPlotterLPC1549.bin" ; # checksum -p LPC1549 -d "XYPlotterLPC1549.bin";
-   text	   data	    bss	    dec	    hex	filename
-  29784	   2200	   1656	  33640	   8368	XYPlotterLPC1549.axf
+  59356	   2564	   1660	  63580	   f85c	XYPlotterLPC1549.axf
  

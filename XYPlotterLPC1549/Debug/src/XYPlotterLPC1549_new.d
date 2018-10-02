@@ -63,7 +63,8 @@ src/XYPlotterLPC1549_new.o src/XYPlotterLPC1549_new.d: \
  C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\XYPlotterLPC1549\inc/Fmutex.h \
  C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\include/semphr.h \
  C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\include/queue.h \
- C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\XYPlotterLPC1549\inc/user_vcom.h
+ C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\XYPlotterLPC1549\inc/user_vcom.h \
+ C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\include/queue.h
 
 C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\inc/board.h:
 
@@ -192,3 +193,5 @@ C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\Free
 C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\include/queue.h:
 
 C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\XYPlotterLPC1549\inc/user_vcom.h:
+
+C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\include/queue.h:
