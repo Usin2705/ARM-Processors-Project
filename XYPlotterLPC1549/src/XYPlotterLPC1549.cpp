@@ -22,18 +22,39 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "ITM_write.h"
-#include <cstring>
-#include "DigitalIoPin.h"
-
 #include <mutex>
 #include "Fmutex.h"
-
-#include "stdio.h"
 #include "user_vcom.h"
-#include <map>
+#include <string.h>
+#include "queue.h"
 
 
-// TODO: insert other definitions and declarations here
+// structure for holding the G-code
+typedef struct {
+
+	char cmd_type[3];			/*command type of the G-code*/
+
+	float x_pos;				/*goto x position value*/
+	float y_pos;				/*goto y position value*/
+
+	int pen_pos;				/*pen position(servo value)*/
+	int pen_up;					/*pen down value*/
+	int pen_dw;					/*pen up value*/
+
+	int x_dir;					/*stepper x-axis direction*/
+	int y_dir;					/*stepper y-axis direction*/
+
+	int speed;					/*speed of the stepper motor*/
+
+	int plot_area_h;			/*height of the plotting area*/
+	int plot_area_w;			/*width of the plotting area*/
+
+	int abs;					/*coordinates absolute or relative(absolute: abs = 1)*/
+
+}Gcode;
+
+// Queue for Gcode structs
+QueueHandle_t cmdQueue;
 
 
 /* the following is required if runtime statistics are to be collected */
@@ -44,63 +65,143 @@ void vConfigureTimerForRunTimeStats( void ) {
 	LPC_SCTSMALL1->CONFIG = SCT_CONFIG_32BIT_COUNTER;
 	LPC_SCTSMALL1->CTRL_U = SCT_CTRL_PRE_L(255) | SCT_CTRL_CLRCTR_L; // set prescaler to 256 (255 + 1), and start timer
 }
+
 }
 /* end runtime statictics collection */
 
 /* Sets up system hardware */
-static void prvSetupHardware(void)
-{
+static void prvSetupHardware(void){
+
 	SystemCoreClockUpdate();
 	Board_Init();
-
 	/* Initial LED0 state is off */
 	Board_LED_Set(0, false);
-
-	ITM_init();
-
-	// initialize RIT (= enable clocking etc.)
-	Chip_RIT_Init(LPC_RITIMER);
-	// set the priority level of the interrupt
-	// The level must be equal or lower than the maximum priority specified in FreeRTOS config
-	// Note that in a Cortex-M3 a higher number indicates lower interrupt priority
-	NVIC_SetPriority( RITIMER_IRQn, configMAX_SYSCALL_INTERRUPT_PRIORITY + 1);
 }
 
-/* send data and toggle thread */
-static void test(void *xSemaphore) {
-	USB_send((uint8_t *)"USB putty running. Program started \r\n", strlen("USB putty running. Program started \r\n"));
-	char myBuffer[60] = {'\0'};
-	USB_send((uint8_t *) "M10\r\n", strlen("M10\r\n"));
-	int X = 380;
-	int Y = 310;
-	while (1) {
-		sprintf(myBuffer, "M10 XY %d %d 0.00 0.00", X,Y);
-		USB_send((uint8_t *) myBuffer, 60);
-		USB_send((uint8_t *) "A0 B0 H0 S80 U160 D90 \r\nOK\r\n", strlen("A0 B0 H0 S80 U160 D90 \r\nOK\r\n"));
-		X= X+ 20;
-		Y= Y+ 20;
-		if (X>=450) {
-			X= 10;
+/*sends Gcode struct to the queue*/
+static void send_gcode(Gcode gcode){
+
+	if(xQueueSendToBack(cmdQueue, &gcode, portMAX_DELAY)){
+
+	}
+	else{
+		ITM_write("Cannot Send to the Queue\n\r");
+	}
+}
+
+/*function for parsing the G-code*/
+static void parse_gcode(const char* buffer){
+
+	Gcode gcode;
+	char cmd[3] = {0};
+
+	sscanf(buffer, "%s ", cmd);
+
+	/*M1: set pen position*/
+	if(strcmp(cmd, "M1")){
+
+		sscanf(buffer, "M1 %d", &gcode.pen_pos);
+	}
+	/*M2: save pen up/down position*/
+	if(strcmp(cmd, "M2")){
+
+		sscanf(buffer, "M2 U%d D%d ", &gcode.pen_up, &gcode.pen_dw);
+	}
+	/*M5: save the stepper directions, plot area and plotting speed*/
+	if(strcmp(cmd, "M5")){
+
+		sscanf(buffer, "M5 A%d B%d H%d W%d S%d", &gcode.x_dir, &gcode.y_dir, &gcode.plot_area_h, &gcode.plot_area_w, &gcode.speed);
+	}
+	/*M10: Log opening in mDraw*/
+	if(strcmp(cmd, "M10") == 0){
+	}
+	/*M11: Limit Status Query*/
+	if(strcmp(cmd, "M11") == 0){
+
+	}
+	/*G1: Go to position*/
+	if(strcmp(cmd, "G1") == 0){
+
+		sscanf(buffer, "G1 X%f Y%f A%d", &gcode.x_pos, &gcode.y_pos, &gcode.abs);
+	}
+	strcpy(gcode.cmd_type, cmd);
+
+	send_gcode(gcode);
+}
+
+/*Task receives Gcode commands from mDraw program via USB*/
+void static vTaskReceive(void* pvParamters){
+
+	const char* OK = "\r\nOK\n\r";
+
+	std::string gcode_str = "";
+	char gcode_buff[60] = {0};
+	uint32_t len = 0;
+
+	bool full_gcode = false;
+
+	while(1){
+
+		len = USB_receive((uint8_t *)gcode_buff, 79);
+
+		if(gcode_buff[len - 1] == '\n'){
+			gcode_str += gcode_buff;
+			gcode_str[gcode_str.length() - 1] = '\0';
+			full_gcode = true;
 		}
-		if (Y>=450) {
-			Y= 10;
+		else{
+			gcode_str += gcode_buff;
+		}
+		/*the full g-code has been received*/
+		if(full_gcode){
+
+			parse_gcode(gcode_str.c_str());
+
+			ITM_write(gcode_str.c_str());
+			ITM_write("\n");
+			USB_send((uint8_t *)OK, strlen(OK));
+			memset(gcode_buff, '\0', 60);
+			gcode_str = "";
+			full_gcode = false;
 		}
 		vTaskDelay(10);
+	}
+}
+
+void static vTaskMotor(void* pvParamters){
+	Gcode gcode;
+	char gcode_buff[60] = {0};
+	while(1) {
+		if(xQueueReceive(cmdQueue, (void*) &gcode, (TickType_t) 10)) {
+			if ((gcode.cmd_type[0] == 'G') && (gcode.cmd_type[1] == '1')) {
+
+			} else {
+				//snprintf (gcode_buff, 60, "G1 XY %.2f %.2f 0.00 0.00 A0 B0 H0 S80 U160 90\r\n", gcode.x_pos, gcode.ypos);
+			}
+		}
 	}
 }
 
 int main(void) {
 
 	prvSetupHardware();
+	ITM_init();
 
-	/* LED1 toggle thread */
-	xTaskCreate(test, "test",
-			configMINIMAL_STACK_SIZE*2, NULL, (tskIDLE_PRIORITY + 1UL),
+	cmdQueue = xQueueCreate(10, sizeof(Gcode));
+
+	xTaskCreate(vTaskReceive, "vTaksReceive",
+			configMINIMAL_STACK_SIZE + 128, NULL, (tskIDLE_PRIORITY + 1UL),
 			(TaskHandle_t *) NULL);
 
+	xTaskCreate(vTaskMotor, "vTaskMotor",
+				configMINIMAL_STACK_SIZE + 128, NULL, (tskIDLE_PRIORITY + 1UL),
+				(TaskHandle_t *) NULL);
+
+	/* LED2 toggle thread */
 	xTaskCreate(cdc_task, "CDC",
-			300, NULL, (tskIDLE_PRIORITY + 1UL),
+			configMINIMAL_STACK_SIZE + 128, NULL, (tskIDLE_PRIORITY + 1UL),
 			(TaskHandle_t *) NULL);
+
 
 	/* Start the scheduler */
 	vTaskStartScheduler();
