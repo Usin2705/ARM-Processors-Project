@@ -5,7 +5,7 @@
  * Generated linker script file for LPC1549
  * Created from memory.ldt by FMCreateLinkMemory
  * Using Freemarker v2.3.23
- * MCUXpresso IDE v10.2.1 [Build 795] [2018-07-25]  on 2.10.2018 16:44:29
+ * MCUXpresso IDE v10.2.1 [Build 795] [2018-07-25]  on 3.10.2018 15:42:10
  */
 
 MEMORY

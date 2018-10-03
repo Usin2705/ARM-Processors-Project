@@ -17,41 +17,14 @@
 #endif
 
 #include <cr_section_macros.h>
-
-// TODO: insert other include files here
 #include "FreeRTOS.h"
-#include "task.h"
+#include "Parser.h"
 #include "ITM_write.h"
+#include "task.h"
 #include <mutex>
 #include "Fmutex.h"
 #include "user_vcom.h"
-#include <string.h>
 #include "queue.h"
-
-
-// structure for holding the G-code
-typedef struct {
-
-	char cmd_type[3];			/*command type of the G-code*/
-
-	float x_pos;				/*goto x position value*/
-	float y_pos;				/*goto y position value*/
-
-	int pen_pos;				/*pen position(servo value)*/
-	int pen_up;					/*pen down value*/
-	int pen_dw;					/*pen up value*/
-
-	int x_dir;					/*stepper x-axis direction*/
-	int y_dir;					/*stepper y-axis direction*/
-
-	int speed;					/*speed of the stepper motor*/
-
-	int plot_area_h;			/*height of the plotting area*/
-	int plot_area_w;			/*width of the plotting area*/
-
-	int abs;					/*coordinates absolute or relative(absolute: abs = 1)*/
-
-}Gcode;
 
 // Queue for Gcode structs
 QueueHandle_t cmdQueue;
@@ -79,9 +52,9 @@ static void prvSetupHardware(void){
 }
 
 /*sends Gcode struct to the queue*/
-static void send_gcode(Gcode gcode){
+static void send_to_queue(Gstruct gstruct_to_send){
 
-	if(xQueueSendToBack(cmdQueue, &gcode, portMAX_DELAY)){
+	if(xQueueSendToBack(cmdQueue, &gstruct_to_send, portMAX_DELAY)){
 
 	}
 	else{
@@ -89,51 +62,32 @@ static void send_gcode(Gcode gcode){
 	}
 }
 
-/*function for parsing the G-code*/
-static void parse_gcode(const char* buffer){
+// Sends reply code to plotter
+void send_reply(const char* cmd_type){
 
-	Gcode gcode;
-	char cmd[3] = {0};
+	const char* reply_M10 = "M10 XY 380 310 0.00 0.00 A0 B0 H0 S80 U160 D90\r\n";		// reply code for M10 command
+	const char* reply_M11 = "M11 1 1 1 1\r\n";												// reply code for M11 command
+	const char* reply_OK = "OK\r\n";													// reply code for the rest of the commands
 
-	sscanf(buffer, "%s ", cmd);
-
-	/*M1: set pen position*/
-	if(strcmp(cmd, "M1")){
-
-		sscanf(buffer, "M1 %d", &gcode.pen_pos);
+	if(strcmp(cmd_type, "M10")){
+		USB_send((uint8_t *)reply_M10, strlen(reply_M10));
+		USB_send((uint8_t *)reply_OK, strlen(reply_OK));
 	}
-	/*M2: save pen up/down position*/
-	if(strcmp(cmd, "M2")){
-
-		sscanf(buffer, "M2 U%d D%d ", &gcode.pen_up, &gcode.pen_dw);
+	if(strcmp(cmd_type, "M11")){
+		USB_send((uint8_t *)reply_M11, strlen(reply_M11));
+		USB_send((uint8_t *)reply_OK, strlen(reply_OK));
 	}
-	/*M5: save the stepper directions, plot area and plotting speed*/
-	if(strcmp(cmd, "M5")){
-
-		sscanf(buffer, "M5 A%d B%d H%d W%d S%d", &gcode.x_dir, &gcode.y_dir, &gcode.plot_area_h, &gcode.plot_area_w, &gcode.speed);
+	else{
+		USB_send((uint8_t *)reply_OK, strlen(reply_OK));
 	}
-	/*M10: Log opening in mDraw*/
-	if(strcmp(cmd, "M10") == 0){
-	}
-	/*M11: Limit Status Query*/
-	if(strcmp(cmd, "M11") == 0){
-
-	}
-	/*G1: Go to position*/
-	if(strcmp(cmd, "G1") == 0){
-
-		sscanf(buffer, "G1 X%f Y%f A%d", &gcode.x_pos, &gcode.y_pos, &gcode.abs);
-	}
-	strcpy(gcode.cmd_type, cmd);
-
-	send_gcode(gcode);
-
 }
+
 
 /*Task receives Gcode commands from mDraw program via USB*/
 void static vTaskReceive(void* pvParamters){
 
-	const char* OK = "\r\nOK\n\r";
+	Parser parser;
+	Gstruct gstruct_to_send;
 
 	std::string gcode_str = "";
 	char gcode_buff[60] = {0};
@@ -156,11 +110,12 @@ void static vTaskReceive(void* pvParamters){
 		/*the full g-code has been received*/
 		if(full_gcode){
 
-			parse_gcode(gcode_str.c_str());
+			gstruct_to_send = parser.parse_gcode(gcode_str.c_str());
+			send_reply(gstruct_to_send.cmd_type);
 
 			ITM_write(gcode_str.c_str());
 			ITM_write("\n\r");
-			USB_send((uint8_t *)OK, strlen(OK));
+
 			memset(gcode_buff, '\0', 60);
 			gcode_str = "";
 			full_gcode = false;
@@ -174,7 +129,7 @@ int main(void) {
 	prvSetupHardware();
 	ITM_init();
 
-	cmdQueue = xQueueCreate(10, sizeof(Gcode));
+	cmdQueue = xQueueCreate(10, sizeof(Gstruct));
 
 	xTaskCreate(vTaskReceive, "vTaksReceive",
 			configMINIMAL_STACK_SIZE + 128, NULL, (tskIDLE_PRIORITY + 1UL),
