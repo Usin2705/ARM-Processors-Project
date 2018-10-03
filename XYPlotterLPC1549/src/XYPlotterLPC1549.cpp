@@ -21,12 +21,12 @@
 // TODO: insert other include files here
 #include "FreeRTOS.h"
 #include "task.h"
-#include "ITM_write.h"
 #include <mutex>
 #include "Fmutex.h"
 #include "user_vcom.h"
 #include <string.h>
 #include "queue.h"
+#include "Motor.h"
 
 
 // structure for holding the G-code
@@ -66,6 +66,8 @@ void vConfigureTimerForRunTimeStats( void ) {
 	LPC_SCTSMALL1->CTRL_U = SCT_CTRL_PRE_L(255) | SCT_CTRL_CLRCTR_L; // set prescaler to 256 (255 + 1), and start timer
 }
 
+
+
 }
 /* end runtime statictics collection */
 
@@ -76,6 +78,13 @@ static void prvSetupHardware(void){
 	Board_Init();
 	/* Initial LED0 state is off */
 	Board_LED_Set(0, false);
+
+	// initialize RIT (= enable clocking etc.)
+		Chip_RIT_Init(LPC_RITIMER);
+		// set the priority level of the interrupt
+		// The level must be equal or lower than the maximum priority specified in FreeRTOS config
+		// Note that in a Cortex-M3 a higher number indicates lower interrupt priority
+	NVIC_SetPriority( RITIMER_IRQn, configMAX_SYSCALL_INTERRUPT_PRIORITY + 1);
 }
 
 /*sends Gcode struct to the queue*/
@@ -168,15 +177,158 @@ void static vTaskReceive(void* pvParamters){
 	}
 }
 
+
+volatile uint32_t RIT_count;
+xSemaphoreHandle sbRIT = xSemaphoreCreateBinary();
+char direction;
+
+extern "C" {
+
+void RIT_IRQHandler(void) {
+	static DigitalIoPin bthStepX(0,24, DigitalIoPin::output, true);
+	static DigitalIoPin bthStepY(0,27, DigitalIoPin::output, true);
+
+	// This used to check if a context switch is required
+	portBASE_TYPE xHigherPriorityWoken = pdFALSE;
+	// Tell timer that we have processed the interrupt.
+	// Timer then removes the IRQ until next match occurs
+	Chip_RIT_ClearIntStatus(LPC_RITIMER); // clear IRQ flag
+	if(RIT_count > 0) {
+		RIT_count--;
+		if (direction == 'X') {
+			bthStepX.write(RIT_count%2==0);
+		} else {
+			bthStepY.write(RIT_count%2==0);
+		}
+	}
+	else {
+		Chip_RIT_Disable(LPC_RITIMER); // disable timer
+		// Give semaphore and set context switch flag if a higher priority task was woken up
+		xSemaphoreGiveFromISR(sbRIT, &xHigherPriorityWoken);
+	}
+	// End the ISR and (possibly) do a context switch
+	portEND_SWITCHING_ISR(xHigherPriorityWoken);
+}
+}
+
+void RIT_start(int count, int us)
+{
+	uint64_t cmp_value;
+	// Determine approximate compare value based on clock rate and passed interval
+	cmp_value = (uint64_t) Chip_Clock_GetSystemClockRate() * (uint64_t) us / 1000000;
+	// disable timer during configuration
+	Chip_RIT_Disable(LPC_RITIMER);
+	RIT_count = count;
+	// enable automatic clear on when compare value==timer value
+	// this makes interrupts trigger periodically
+	Chip_RIT_EnableCompClear(LPC_RITIMER);
+	// reset the counter
+	Chip_RIT_SetCounter(LPC_RITIMER, 0);
+	Chip_RIT_SetCompareValue(LPC_RITIMER, cmp_value);
+	// start counting
+	Chip_RIT_Enable(LPC_RITIMER);
+	// Enable the interrupt signal in NVIC (the interrupt controller)
+	NVIC_EnableIRQ(RITIMER_IRQn);
+	// wait for ISR to tell that we're done
+	if(xSemaphoreTake(sbRIT, portMAX_DELAY) == pdTRUE) {
+		// Disable the interrupt signal in NVIC (the interrupt controller)
+		NVIC_DisableIRQ(RITIMER_IRQn);
+	}
+	else {
+		// unexpected error
+	}
+}
+
 void static vTaskMotor(void* pvParamters){
+	DigitalIoPin bthStepX(0,24, DigitalIoPin::output, true);
+	DigitalIoPin bthStepY(0,27, DigitalIoPin::output, true);
 	Gcode gcode;
 	char gcode_buff[60] = {0};
+	Motor motor;
+	ITM_write("---------------------------    CALIBRATE X  -------------------------\r\n");
+	vTaskDelay(2000);
+	int maxSteps = 0;
+	motor.setDirection('X', ISLEFTU);
+	bool limitread = motor.readLimit('x');
+
+	while (!limitread){
+		limitread = motor.readLimit('x');
+		bthStepX.write(true);
+		vTaskDelay(1);
+		bthStepX.write(false);
+		vTaskDelay(1);
+	}
+
+	motor.setDirection('X', !ISLEFTU);
+
+	limitread = motor.readLimit('X');
+	while (!limitread){
+		limitread = motor.readLimit('X');
+		bthStepX.write(maxSteps%2==0);
+		maxSteps++;
+		vTaskDelay(1);
+	}
+
+	maxSteps++; // the last step in RIT just don't work.
+
+	motor.setLength('X', maxSteps);
+	motor.setPos('X', 0);
+
+	ITM_write("---------------------------    CALIBRATE Y  -------------------------\r\n");
+	maxSteps = 0;
+	motor.setDirection('Y', !ISLEFTU);
+	limitread = motor.readLimit('Y');
+	while (!limitread){
+		limitread = motor.readLimit('Y');
+		bthStepY.write(true);
+		vTaskDelay(1);
+		bthStepY.write(false);
+		vTaskDelay(1);
+	}
+
+	motor.setDirection('Y', ISLEFTU);
+
+	limitread = motor.readLimit('y');
+	while (!limitread){
+		limitread = motor.readLimit('y');
+		bthStepY.write(maxSteps%2==0);
+		maxSteps++;
+		vTaskDelay(1);
+	}
+
+	maxSteps++; // the last step in RIT just don't work.
+
+	motor.setLength('Y', maxSteps);
+	motor.setPos('Y', 0);
+
+	motor.setDirection('X', ISLEFTU);
+	direction = 'X';
+	RIT_start((int) (50*motor.getLength('X'))/310, 250);
+	direction = 'Y';
+	motor.setDirection('Y', !ISLEFTU);
+	RIT_start((int) 50*motor.getLength('Y')/310, 250);
+	direction = 'X';
+	RIT_start((int) 50*motor.getLength('X')/310, 250);
+
+
+
+	direction = 'Y';
+	RIT_start((int) 50*motor.getLength('Y')/310, 250);
+
+	direction = 'X';
+	motor.setDirection('X', !ISLEFTU);
+	RIT_start((int) 50*motor.getLength('X')/310, 250);
+
+	direction = 'Y';
+	motor.setDirection('Y', ISLEFTU);
+	RIT_start((int) 50*motor.getLength('Y')/310, 250);
+
 	while(1) {
 		if(xQueueReceive(cmdQueue, (void*) &gcode, (TickType_t) 10)) {
 			if ((gcode.cmd_type[0] == 'G') && (gcode.cmd_type[1] == '1')) {
 
 			} else {
-				//snprintf (gcode_buff, 60, "G1 XY %.2f %.2f 0.00 0.00 A0 B0 H0 S80 U160 90\r\n", gcode.x_pos, gcode.ypos);
+
 			}
 		}
 	}
@@ -189,18 +341,19 @@ int main(void) {
 
 	cmdQueue = xQueueCreate(10, sizeof(Gcode));
 
+	/*
 	xTaskCreate(vTaskReceive, "vTaksReceive",
 			configMINIMAL_STACK_SIZE + 128, NULL, (tskIDLE_PRIORITY + 1UL),
 			(TaskHandle_t *) NULL);
+	 */
 
 	xTaskCreate(vTaskMotor, "vTaskMotor",
-				configMINIMAL_STACK_SIZE + 128, NULL, (tskIDLE_PRIORITY + 1UL),
-				(TaskHandle_t *) NULL);
-
-	/* LED2 toggle thread */
-	xTaskCreate(cdc_task, "CDC",
 			configMINIMAL_STACK_SIZE + 128, NULL, (tskIDLE_PRIORITY + 1UL),
 			(TaskHandle_t *) NULL);
+	/*
+	xTaskCreate(cdc_task, "CDC",
+			configMINIMAL_STACK_SIZE + 128, NULL, (tskIDLE_PRIORITY + 1UL),
+			(TaskHandle_t *) NULL);*/
 
 
 	/* Start the scheduler */
