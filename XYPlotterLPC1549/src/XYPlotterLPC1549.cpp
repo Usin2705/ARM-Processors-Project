@@ -347,19 +347,21 @@ void static vTaskMotor(void* pvParamters){
 				motor.setDirection('X', (newPositionX - motor.getPos('X'))>=0); // if newPositionX is large then move left
 				motor.setDirection('Y', (newPositionY - motor.getPos('Y'))>=0); // if newPositionY is large then move down
 				absX = abs(newPositionX - motor.getPos('X'));
-				absX = abs(newPositionY - motor.getPos('Y'));
-				snprintf(buffer, 100, "absX %d, curPosX: %d, newPosX: %d \r\n", absX, motor.getPos('X'), newPositionX);
+				absY = abs(newPositionY - motor.getPos('Y'));
+				snprintf(buffer, 100, "absX %d, curPosX: %d, newPosX: %lld \r\n", absX, motor.getPos('X'), newPositionX);
 				ITM_write(buffer);
 				while (moveX < absX) {
 					bthStepX.write(moveX%2==0);
 					moveX++;
 					vTaskDelay(1);
 				}
+				motor.setPos('X', newPositionX);
 				while (moveY < absY) {
 					bthStepY.write(moveY%2==0);
 					moveY++;
 					vTaskDelay(1);
 				}
+				motor.setPos('Y', newPositionY);
 
 			} else {
 
