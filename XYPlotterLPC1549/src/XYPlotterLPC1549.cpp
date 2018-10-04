@@ -24,34 +24,9 @@
 #include <mutex>
 #include "Fmutex.h"
 #include "user_vcom.h"
-#include <string.h>
 #include "queue.h"
 #include "Motor.h"
-
-
-// structure for holding the G-code
-typedef struct {
-
-	char cmd_type[3];			/*command type of the G-code*/
-
-	float x_pos;				/*goto x position value*/
-	float y_pos;				/*goto y position value*/
-
-	int pen_pos;				/*pen position(servo value)*/
-	int pen_up;					/*pen down value*/
-	int pen_dw;					/*pen up value*/
-
-	int x_dir;					/*stepper x-axis direction*/
-	int y_dir;					/*stepper y-axis direction*/
-
-	int speed;					/*speed of the stepper motor*/
-
-	int plot_area_h;			/*height of the plotting area*/
-	int plot_area_w;			/*width of the plotting area*/
-
-	int abs;					/*coordinates absolute or relative(absolute: abs = 1)*/
-
-}Gcode;
+#include "Parser.h"
 
 // Queue for Gcode structs
 QueueHandle_t cmdQueue;
@@ -80,17 +55,17 @@ static void prvSetupHardware(void){
 	Board_LED_Set(0, false);
 
 	// initialize RIT (= enable clocking etc.)
-		Chip_RIT_Init(LPC_RITIMER);
-		// set the priority level of the interrupt
-		// The level must be equal or lower than the maximum priority specified in FreeRTOS config
-		// Note that in a Cortex-M3 a higher number indicates lower interrupt priority
+	Chip_RIT_Init(LPC_RITIMER);
+	// set the priority level of the interrupt
+	// The level must be equal or lower than the maximum priority specified in FreeRTOS config
+	// Note that in a Cortex-M3 a higher number indicates lower interrupt priority
 	NVIC_SetPriority( RITIMER_IRQn, configMAX_SYSCALL_INTERRUPT_PRIORITY + 1);
 }
 
 /*sends Gcode struct to the queue*/
-static void send_gcode(Gcode gcode){
+static void send_to_queue(Gstruct gstruct_to_send){
 
-	if(xQueueSendToBack(cmdQueue, &gcode, portMAX_DELAY)){
+	if(xQueueSendToBack(cmdQueue, &gstruct_to_send, portMAX_DELAY)){
 
 	}
 	else{
@@ -98,56 +73,39 @@ static void send_gcode(Gcode gcode){
 	}
 }
 
-/*function for parsing the G-code*/
-static void parse_gcode(const char* buffer){
+// Sends reply code to plotter
+void send_reply(const char* cmd_type){
 
-	Gcode gcode;
-	char cmd[3] = {0};
+	const char* reply_M10 = "M10 XY 380 310 0.00 0.00 A0 B0 H0 S80 U160 D90\r\n";		// reply code for M10 command
+	const char* reply_M11 = "M11 1 1 1 1\r\n";												// reply code for M11 command
+	const char* reply_OK = "OK\r\n";													// reply code for the rest of the commands
 
-	sscanf(buffer, "%s ", cmd);
-
-	/*M1: set pen position*/
-	if(strcmp(cmd, "M1")){
-
-		sscanf(buffer, "M1 %d", &gcode.pen_pos);
+	if(strcmp(cmd_type, "M10")){
+		USB_send((uint8_t *)reply_M10, strlen(reply_M10));
+		USB_send((uint8_t *)reply_OK, strlen(reply_OK));
 	}
-	/*M2: save pen up/down position*/
-	if(strcmp(cmd, "M2")){
-
-		sscanf(buffer, "M2 U%d D%d ", &gcode.pen_up, &gcode.pen_dw);
+	if(strcmp(cmd_type, "M11")){
+		USB_send((uint8_t *)reply_M11, strlen(reply_M11));
+		USB_send((uint8_t *)reply_OK, strlen(reply_OK));
 	}
-	/*M5: save the stepper directions, plot area and plotting speed*/
-	if(strcmp(cmd, "M5")){
-
-		sscanf(buffer, "M5 A%d B%d H%d W%d S%d", &gcode.x_dir, &gcode.y_dir, &gcode.plot_area_h, &gcode.plot_area_w, &gcode.speed);
+	else{
+		USB_send((uint8_t *)reply_OK, strlen(reply_OK));
 	}
-	/*M10: Log opening in mDraw*/
-	if(strcmp(cmd, "M10") == 0){
-	}
-	/*M11: Limit Status Query*/
-	if(strcmp(cmd, "M11") == 0){
-
-	}
-	/*G1: Go to position*/
-	if(strcmp(cmd, "G1") == 0){
-
-		sscanf(buffer, "G1 X%f Y%f A%d", &gcode.x_pos, &gcode.y_pos, &gcode.abs);
-	}
-	strcpy(gcode.cmd_type, cmd);
-
-	send_gcode(gcode);
 }
+
 
 /*Task receives Gcode commands from mDraw program via USB*/
 void static vTaskReceive(void* pvParamters){
 
-	const char* OK = "\r\nOK\n\r";
+	Parser parser;
+	Gstruct gstruct_to_send;
 
 	std::string gcode_str = "";
 	char gcode_buff[60] = {0};
 	uint32_t len = 0;
 
 	bool full_gcode = false;
+	vTaskDelay(200);
 
 	while(1){
 
@@ -164,16 +122,19 @@ void static vTaskReceive(void* pvParamters){
 		/*the full g-code has been received*/
 		if(full_gcode){
 
-			parse_gcode(gcode_str.c_str());
+			gstruct_to_send = parser.parse_gcode(gcode_str.c_str());
+			send_to_queue(gstruct_to_send);
+			send_reply(gstruct_to_send.cmd_type);
+
 
 			ITM_write(gcode_str.c_str());
-			ITM_write("\n");
-			USB_send((uint8_t *)OK, strlen(OK));
+			ITM_write("\n\r");
+
 			memset(gcode_buff, '\0', 60);
 			gcode_str = "";
 			full_gcode = false;
 		}
-		vTaskDelay(10);
+		vTaskDelay(500);
 	}
 }
 
@@ -242,13 +203,13 @@ void RIT_start(int count, int us)
 void static vTaskMotor(void* pvParamters){
 	DigitalIoPin bthStepX(0,24, DigitalIoPin::output, true);
 	DigitalIoPin bthStepY(0,27, DigitalIoPin::output, true);
-	Gcode gcode;
+	Gstruct gstruct;
 	char gcode_buff[60] = {0};
 	Motor motor;
 	ITM_write("---------------------------    CALIBRATE X  -------------------------\r\n");
 	vTaskDelay(2000);
 	int maxSteps = 0;
-	motor.setDirection('X', ISLEFTU);
+	motor.setDirection('X', ISLEFTD);
 	bool limitread = motor.readLimit('x');
 
 	while (!limitread){
@@ -259,7 +220,7 @@ void static vTaskMotor(void* pvParamters){
 		vTaskDelay(1);
 	}
 
-	motor.setDirection('X', !ISLEFTU);
+	motor.setDirection('X', !ISLEFTD);
 
 	limitread = motor.readLimit('X');
 	while (!limitread){
@@ -276,7 +237,7 @@ void static vTaskMotor(void* pvParamters){
 
 	ITM_write("---------------------------    CALIBRATE Y  -------------------------\r\n");
 	maxSteps = 0;
-	motor.setDirection('Y', !ISLEFTU);
+	motor.setDirection('Y', ISLEFTD);
 	limitread = motor.readLimit('Y');
 	while (!limitread){
 		limitread = motor.readLimit('Y');
@@ -286,8 +247,7 @@ void static vTaskMotor(void* pvParamters){
 		vTaskDelay(1);
 	}
 
-	motor.setDirection('Y', ISLEFTU);
-
+	motor.setDirection('Y', !ISLEFTD);
 	limitread = motor.readLimit('y');
 	while (!limitread){
 		limitread = motor.readLimit('y');
@@ -301,31 +261,59 @@ void static vTaskMotor(void* pvParamters){
 	motor.setLength('Y', maxSteps);
 	motor.setPos('Y', 0);
 
-	motor.setDirection('X', ISLEFTU);
-	direction = 'X';
-	RIT_start((int) (50*motor.getLength('X'))/310, 250);
-	direction = 'Y';
-	motor.setDirection('Y', !ISLEFTU);
-	RIT_start((int) 50*motor.getLength('Y')/310, 250);
-	direction = 'X';
-	RIT_start((int) 50*motor.getLength('X')/310, 250);
+	//Set both length to be smaller
+	if (motor.getLength('X') <= motor.getLength('Y')) {
+		motor.setLength('Y', motor.getLength('X'));
+	} else {
+		motor.setLength('X', motor.getLength('Y'));
+	}
 
+	//Move to middle
+	maxSteps = 0;
+	motor.setDirection('X', ISLEFTD);
+	motor.setDirection('Y', ISLEFTD);
+	while (maxSteps < (motor.getLength('X')/2)){
+		bthStepX.write(maxSteps%2==0);
+		maxSteps++;
+		vTaskDelay(1);
+	}
+	maxSteps = 0;
+	while (maxSteps < (motor.getLength('Y')/2)){
+		bthStepY.write(maxSteps%2==0);
+		maxSteps++;
+		vTaskDelay(1);
+	}
+	motor.setPos('X', (motor.getLength('X')/2)); // Set position in scale with mDraw
+	motor.setPos('Y', (motor.getLength('Y')/2)); // Set position in scale with mDraw
 
-
-	direction = 'Y';
-	RIT_start((int) 50*motor.getLength('Y')/310, 250);
-
-	direction = 'X';
-	motor.setDirection('X', !ISLEFTU);
-	RIT_start((int) 50*motor.getLength('X')/310, 250);
-
-	direction = 'Y';
-	motor.setDirection('Y', ISLEFTU);
-	RIT_start((int) 50*motor.getLength('Y')/310, 250);
-
+	int64_t newPositionX = 0;
+	int64_t newPositionY = 0;
+	char buffer[100] = {'\0'};
 	while(1) {
-		if(xQueueReceive(cmdQueue, (void*) &gcode, (TickType_t) 10)) {
-			if ((gcode.cmd_type[0] == 'G') && (gcode.cmd_type[1] == '1')) {
+		if(xQueueReceive(cmdQueue, (void*) &gstruct, (TickType_t) 10)) {
+			if ((gstruct.cmd_type[0] == 'G') && (gstruct.cmd_type[1] == '1')) {
+				int moveX = 0;
+				int moveY = 0;
+				int absX = 0;
+				int absY = 0;
+				newPositionX = gstruct.x_pos*100*motor.getLength('X')/38000;
+				newPositionY = gstruct.y_pos*100*motor.getLength('Y')/31000;
+				motor.setDirection('X', (newPositionX - motor.getPos('X'))>=0); // if newPositionX is large then move left
+				motor.setDirection('Y', (newPositionY - motor.getPos('Y'))>=0); // if newPositionY is large then move down
+				absX = abs(newPositionX - motor.getPos('X'));
+				absX = abs(newPositionY - motor.getPos('Y'));
+				snprintf(buffer, 100, "absX %d, curPosX: %d, newPosX: %d \r\n", absX, motor.getPos('X'), newPositionX);
+				ITM_write(buffer);
+				while (moveX < absX) {
+					bthStepX.write(moveX%2==0);
+					moveX++;
+					vTaskDelay(1);
+				}
+				while (moveY < absY) {
+					bthStepY.write(moveY%2==0);
+					moveY++;
+					vTaskDelay(1);
+				}
 
 			} else {
 
@@ -339,21 +327,21 @@ int main(void) {
 	prvSetupHardware();
 	ITM_init();
 
-	cmdQueue = xQueueCreate(10, sizeof(Gcode));
+	cmdQueue = xQueueCreate(10, sizeof(Gstruct));
 
-	/*
+
 	xTaskCreate(vTaskReceive, "vTaksReceive",
-			configMINIMAL_STACK_SIZE + 128, NULL, (tskIDLE_PRIORITY + 1UL),
+			configMINIMAL_STACK_SIZE + 350, NULL, (tskIDLE_PRIORITY + 1UL),
 			(TaskHandle_t *) NULL);
-	 */
+
 
 	xTaskCreate(vTaskMotor, "vTaskMotor",
-			configMINIMAL_STACK_SIZE + 128, NULL, (tskIDLE_PRIORITY + 1UL),
+			configMINIMAL_STACK_SIZE + 300, NULL, (tskIDLE_PRIORITY + 1UL),
 			(TaskHandle_t *) NULL);
-	/*
+
 	xTaskCreate(cdc_task, "CDC",
 			configMINIMAL_STACK_SIZE + 128, NULL, (tskIDLE_PRIORITY + 1UL),
-			(TaskHandle_t *) NULL);*/
+			(TaskHandle_t *) NULL);
 
 
 	/* Start the scheduler */

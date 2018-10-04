@@ -8,10 +8,12 @@
 #ifndef MOTOR_H_
 #define MOTOR_H_
 
-#define ISLEFTU true
+#define ISLEFTD true
+#define MDRAWSCALE 31000
 
 #include "DigitalIoPin.h"
 #include "ITM_write.h"
+#include <stdint.h>
 
 class Motor {
 public:
@@ -33,8 +35,8 @@ private:
 	DigitalIoPin directionY;
 	int stepLengthX;
 	int stepLengthY;
-	int currentPosX;
-	int currentPosY;
+	int64_t currentPosX;
+	int64_t currentPosY;
 };
 
 #endif /* MOTOR_H_ */
