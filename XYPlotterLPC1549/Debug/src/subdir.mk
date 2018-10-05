@@ -6,8 +6,9 @@
 CPP_SRCS += \
 ../src/DigitalIoPin.cpp \
 ../src/Fmutex.cpp \
+../src/Motor.cpp \
 ../src/Parser.cpp \
-../src/XYPlotterLPC1549_new.cpp \
+../src/XYPlotterLPC1549.cpp \
 ../src/cr_cpp_config.cpp \
 ../src/cr_startup_lpc15xx.cpp 
 
@@ -23,8 +24,9 @@ OBJS += \
 ./src/DigitalIoPin.o \
 ./src/Fmutex.o \
 ./src/ITM_write.o \
+./src/Motor.o \
 ./src/Parser.o \
-./src/XYPlotterLPC1549_new.o \
+./src/XYPlotterLPC1549.o \
 ./src/cdc_desc.o \
 ./src/cdc_main.o \
 ./src/cdc_vcom.o \
@@ -36,8 +38,9 @@ OBJS += \
 CPP_DEPS += \
 ./src/DigitalIoPin.d \
 ./src/Fmutex.d \
+./src/Motor.d \
 ./src/Parser.d \
-./src/XYPlotterLPC1549_new.d \
+./src/XYPlotterLPC1549.d \
 ./src/cr_cpp_config.d \
 ./src/cr_startup_lpc15xx.d 
 

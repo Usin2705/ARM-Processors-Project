@@ -3,7 +3,7 @@
  Name        : main.c
  Author      : $(author)
  Version     :
- Copyright   : $(copyright)
+ Copyright   : PN Technologies Inc.
  Description : main definition
 ===============================================================================
  */
@@ -94,6 +94,8 @@ void static vTaskReceive(void* pvParamters){
 	uint32_t len = 0;
 
 	bool full_gcode = false;
+
+	vTaskDelay(100);
 
 	while(1){
 

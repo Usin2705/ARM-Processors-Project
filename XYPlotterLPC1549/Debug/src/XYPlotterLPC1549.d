@@ -1,5 +1,5 @@
-src/XYPlotterLPC1549_new.o src/XYPlotterLPC1549_new.d: \
- ../src/XYPlotterLPC1549_new.cpp \
+src/XYPlotterLPC1549.o src/XYPlotterLPC1549.d: \
+ ../src/XYPlotterLPC1549.cpp \
  C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\inc/board.h \
  C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc/chip.h \
  C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc/lpc_types.h \
@@ -57,15 +57,16 @@ src/XYPlotterLPC1549_new.o src/XYPlotterLPC1549_new.d: \
  C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\include/deprecated_definitions.h \
  C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\portable\GCC\ARM_CM3/portmacro.h \
  C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\include/mpu_wrappers.h \
- ../src/Parser.h ../src/gstruct.h \
- C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\XYPlotterLPC1549\inc/ITM_write.h \
  C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\include/task.h \
  C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\include/list.h \
  C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\XYPlotterLPC1549\inc/Fmutex.h \
  C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\include/semphr.h \
  C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\include/queue.h \
  C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\XYPlotterLPC1549\inc/user_vcom.h \
- C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\include/queue.h
+ C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\include/queue.h \
+ ../src/Motor.h ../src/DigitalIoPin.h \
+ C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\XYPlotterLPC1549\inc/ITM_write.h \
+ ../src/Parser.h ../src/gstruct.h
 
 C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\inc/board.h:
 
@@ -181,12 +182,6 @@ C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\Free
 
 C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\include/mpu_wrappers.h:
 
-../src/Parser.h:
-
-../src/gstruct.h:
-
-C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\XYPlotterLPC1549\inc/ITM_write.h:
-
 C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\include/task.h:
 
 C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\include/list.h:
@@ -200,3 +195,13 @@ C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\Free
 C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\XYPlotterLPC1549\inc/user_vcom.h:
 
 C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\include/queue.h:
+
+../src/Motor.h:
+
+../src/DigitalIoPin.h:
+
+C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\XYPlotterLPC1549\inc/ITM_write.h:
+
+../src/Parser.h:
+
+../src/gstruct.h:

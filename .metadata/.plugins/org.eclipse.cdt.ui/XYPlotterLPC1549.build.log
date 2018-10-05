@@ -1,11 +1,28 @@
-15:42:10 **** Incremental Build of configuration Debug for project XYPlotterLPC1549 ****
+16:07:50 **** Incremental Build of configuration Debug for project XYPlotterLPC1549 ****
 make -r -j4 all 
+Building file: ../src/Motor.cpp
+Building file: ../src/XYPlotterLPC1549.cpp
+Invoking: MCU C++ Compiler
+arm-none-eabi-c++ -std=c++11 -D__NEWLIB__ -DDEBUG -D__CODE_RED -DCORE_M3 -D__USE_LPCOPEN -DCPP_USE_HEAP -D__LPC15XX__ -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\XYPlotterLPC1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\include" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\portable\GCC\ARM_CM3" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -O0 -fno-common -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions -mcpu=cortex-m3 -mthumb -MMD -MP -MF"src/Motor.d" -MT"src/Motor.o" -MT"src/Motor.d" -o "src/Motor.o" "../src/Motor.cpp"
+Invoking: MCU C++ Compiler
+arm-none-eabi-c++ -std=c++11 -D__NEWLIB__ -DDEBUG -D__CODE_RED -DCORE_M3 -D__USE_LPCOPEN -DCPP_USE_HEAP -D__LPC15XX__ -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\XYPlotterLPC1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\inc" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\include" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\src\portable\GCC\ARM_CM3" -I"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\inc\usbd" -O0 -fno-common -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions -mcpu=cortex-m3 -mthumb -MMD -MP -MF"src/XYPlotterLPC1549.d" -MT"src/XYPlotterLPC1549.o" -MT"src/XYPlotterLPC1549.d" -o "src/XYPlotterLPC1549.o" "../src/XYPlotterLPC1549.cpp"
+Finished building: ../src/Motor.cpp
+ 
+../src/XYPlotterLPC1549.cpp: In function 'void vTaskMotor(void*)':
+../src/XYPlotterLPC1549.cpp:352:106: warning: format '%d' expects argument of type 'int', but argument 5 has type 'int64_t {aka long long int}' [-Wformat=]
+     snprintf(buffer, 100, "absX %d, curPosX: %d, newPosX: %lld \r\n", absX, motor.getPosX(), newPositionX);
+                                                                             ~~~~~~~~~~~~~~~              ^
+../src/XYPlotterLPC1549.cpp:320:7: warning: unused variable 'gcode_buff' [-Wunused-variable]
+  char gcode_buff[60] = {0};
+       ^~~~~~~~~~
+Finished building: ../src/XYPlotterLPC1549.cpp
+ 
 Building target: XYPlotterLPC1549.axf
 Invoking: MCU C++ Linker
-arm-none-eabi-c++ -nostdlib -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\Debug" -Xlinker -Map="XYPlotterLPC1549.map" -Xlinker --gc-sections -Xlinker -print-memory-usage -mcpu=cortex-m3 -mthumb -T "XYPlotterLPC1549_Debug.ld" -o "XYPlotterLPC1549.axf"  ./src/DigitalIoPin.o ./src/Fmutex.o ./src/ITM_write.o ./src/Parser.o ./src/XYPlotterLPC1549_new.o ./src/cdc_desc.o ./src/cdc_main.o ./src/cdc_vcom.o ./src/cr_cpp_config.o ./src/cr_startup_lpc15xx.o ./src/crp.o ./src/sysinit.o   -lfreertos -llpc_board_nxp_lpcxpresso_1549 -llpc_chip_15xx -lFreeRTOS
+arm-none-eabi-c++ -nostdlib -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_board_nxp_lpcxpresso_1549\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\lpc_chip_15xx\Debug" -L"C:\Users\pavel\Desktop\koulu\Emdedded_Systems_Project\Plotter_Project\sorsa\FreeRTOS\Debug" -Xlinker -Map="XYPlotterLPC1549.map" -Xlinker --gc-sections -Xlinker -print-memory-usage -mcpu=cortex-m3 -mthumb -T "XYPlotterLPC1549_Debug.ld" -o "XYPlotterLPC1549.axf"  ./src/DigitalIoPin.o ./src/Fmutex.o ./src/ITM_write.o ./src/Motor.o ./src/Parser.o ./src/XYPlotterLPC1549.o ./src/cdc_desc.o ./src/cdc_main.o ./src/cdc_vcom.o ./src/cr_cpp_config.o ./src/cr_startup_lpc15xx.o ./src/crp.o ./src/sysinit.o   -lfreertos -llpc_board_nxp_lpcxpresso_1549 -llpc_chip_15xx -lFreeRTOS
 Memory region         Used Size  Region Size  %age Used
-       MFlash256:       62208 B       256 KB     23.73%
-      Ram0_16_32:        4224 B        32 KB     12.89%
+       MFlash256:       68088 B       256 KB     25.97%
+      Ram0_16_32:        4272 B        32 KB     13.04%
           Ram2_4:          0 GB         4 KB      0.00%
 Finished building target: XYPlotterLPC1549.axf
  
@@ -13,8 +30,8 @@ make --no-print-directory post-build
 Performing post-build steps
 arm-none-eabi-size "XYPlotterLPC1549.axf"; # arm-none-eabi-objcopy -v -O binary "XYPlotterLPC1549.axf" "XYPlotterLPC1549.bin" ; # checksum -p LPC1549 -d "XYPlotterLPC1549.bin";
    text	   data	    bss	    dec	    hex	filename
-  59644	   2564	   1660	  63868	   f97c	XYPlotterLPC1549.axf
+  65520	   2568	   1704	  69792	  110a0	XYPlotterLPC1549.axf
  
 
-15:42:12 Build Finished (took 1s.590ms)
+16:07:54 Build Finished (took 3s.684ms)
 
