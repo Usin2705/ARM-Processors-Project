@@ -18,12 +18,11 @@ Gstruct Parser::parse_gcode(const char* buffer){
 	sscanf(buffer, "%s ", cmd);			// scan for command type of the G-code
 
 	/*M1: set pen position*/
-	if(strcmp(cmd, "M1")){
-
+	if(strcmp(cmd, "M1") == 0){
 		sscanf(buffer, "M1 %d", &gstruct.pen_pos);
 	}
 	/*M2: save pen up/down position*/
-	if(strcmp(cmd, "M2")){
+	if(strcmp(cmd, "M2") == 0){
 
 		sscanf(buffer, "M2 U%d D%d ", &gstruct.pen_up, &gstruct.pen_dw);
 	}

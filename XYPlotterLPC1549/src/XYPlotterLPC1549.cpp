@@ -65,7 +65,7 @@ static void prvSetupHardware(void){
 /*sends Gcode struct to the queue*/
 static void send_to_queue(Gstruct gstruct_to_send){
 
-	if(xQueueSendToBack(cmdQueue, &gstruct_to_send, portMAX_DELAY)){
+	if(xQueueSendToBack(cmdQueue, &gstruct_to_send, portMAX_DELAY) == pdPASS){
 
 	}
 	else{
@@ -76,15 +76,15 @@ static void send_to_queue(Gstruct gstruct_to_send){
 // Sends reply code to plotter
 void send_reply(const char* cmd_type){
 
-	const char* reply_M10 = "M10 XY 380 310 0.00 0.00 A0 B0 H0 S80 U160 D90\r\n";		// reply code for M10 command
+	const char* reply_M10 = "M10 XY 380 310 0.00 0.00 A0 B0 H0 S80 U160 D0\r\n";		// reply code for M10 command
 	const char* reply_M11 = "M11 1 1 1 1\r\n";												// reply code for M11 command
 	const char* reply_OK = "OK\r\n";													// reply code for the rest of the commands
 
-	if(strcmp(cmd_type, "M10")){
+	if(strcmp(cmd_type, "M10") == 0){
 		USB_send((uint8_t *)reply_M10, strlen(reply_M10));
 		USB_send((uint8_t *)reply_OK, strlen(reply_OK));
 	}
-	if(strcmp(cmd_type, "M11")){
+	if(strcmp(cmd_type, "M11") == 0){
 		USB_send((uint8_t *)reply_M11, strlen(reply_M11));
 		USB_send((uint8_t *)reply_OK, strlen(reply_OK));
 	}
@@ -134,14 +134,14 @@ void static vTaskReceive(void* pvParamters){
 			gcode_str = "";
 			full_gcode = false;
 		}
-		vTaskDelay(500);
 	}
 }
 
 
 volatile uint32_t RIT_count;
 xSemaphoreHandle sbRIT = xSemaphoreCreateBinary();
-char direction;
+char axis = 'X';
+int pps = 80;
 
 extern "C" {
 
@@ -156,7 +156,7 @@ void RIT_IRQHandler(void) {
 	Chip_RIT_ClearIntStatus(LPC_RITIMER); // clear IRQ flag
 	if(RIT_count > 0) {
 		RIT_count--;
-		if (direction == 'X') {
+		if (axis == 'X') {
 			bthStepX.write(RIT_count%2==0);
 		} else {
 			bthStepY.write(RIT_count%2==0);
@@ -200,6 +200,10 @@ void RIT_start(int count, int us)
 	}
 }
 
+void penMove(int penPos){
+	LPC_SCT0->MATCHREL[1].L = 1000 + penPos*1000/255;
+}
+
 void static vTaskMotor(void* pvParamters){
 	DigitalIoPin bthStepX(0,24, DigitalIoPin::output, true);
 	DigitalIoPin bthStepY(0,27, DigitalIoPin::output, true);
@@ -207,17 +211,15 @@ void static vTaskMotor(void* pvParamters){
 	char gcode_buff[60] = {0};
 	Motor motor;
 	ITM_write("---------------------------    CALIBRATE X  -------------------------\r\n");
-	vTaskDelay(2000);
+	vTaskDelay(1000);
+	penMove(255);
 	int maxSteps = 0;
 	motor.setDirection('X', ISLEFTD);
 	bool limitread = motor.readLimit('x');
-
+	axis = 'X';
 	while (!limitread){
 		limitread = motor.readLimit('x');
-		bthStepX.write(true);
-		vTaskDelay(1);
-		bthStepX.write(false);
-		vTaskDelay(1);
+		RIT_start(4,pps);
 	}
 
 	motor.setDirection('X', !ISLEFTD);
@@ -225,12 +227,9 @@ void static vTaskMotor(void* pvParamters){
 	limitread = motor.readLimit('X');
 	while (!limitread){
 		limitread = motor.readLimit('X');
-		bthStepX.write(maxSteps%2==0);
-		maxSteps++;
-		vTaskDelay(1);
+		RIT_start(4,pps);
+		maxSteps =  maxSteps + 4;
 	}
-
-	maxSteps++; // the last step in RIT just don't work.
 
 	motor.setLength('X', maxSteps);
 	motor.setPos('X', 0);
@@ -239,24 +238,18 @@ void static vTaskMotor(void* pvParamters){
 	maxSteps = 0;
 	motor.setDirection('Y', ISLEFTD);
 	limitread = motor.readLimit('Y');
+	axis = 'Y';
 	while (!limitread){
 		limitread = motor.readLimit('Y');
-		bthStepY.write(true);
-		vTaskDelay(1);
-		bthStepY.write(false);
-		vTaskDelay(1);
+		RIT_start(4,pps);
 	}
-
 	motor.setDirection('Y', !ISLEFTD);
 	limitread = motor.readLimit('y');
 	while (!limitread){
 		limitread = motor.readLimit('y');
-		bthStepY.write(maxSteps%2==0);
-		maxSteps++;
-		vTaskDelay(1);
+		RIT_start(4,pps);
+		maxSteps =  maxSteps + 4;
 	}
-
-	maxSteps++; // the last step in RIT just don't work.
 
 	motor.setLength('Y', maxSteps);
 	motor.setPos('Y', 0);
@@ -272,26 +265,24 @@ void static vTaskMotor(void* pvParamters){
 	maxSteps = 0;
 	motor.setDirection('X', ISLEFTD);
 	motor.setDirection('Y', ISLEFTD);
-	while (maxSteps < (motor.getLength('X')/2)){
-		bthStepX.write(maxSteps%2==0);
-		maxSteps++;
-		vTaskDelay(1);
-	}
-	maxSteps = 0;
-	while (maxSteps < (motor.getLength('Y')/2)){
-		bthStepY.write(maxSteps%2==0);
-		maxSteps++;
-		vTaskDelay(1);
-	}
+	axis = 'X';
+	RIT_start(motor.getLength('X')/2,pps);
+	axis = 'Y';
+	RIT_start(motor.getLength('X')/2,pps);
+
 	motor.setPos('X', (motor.getLength('X')/2)); // Set position in scale with mDraw
 	motor.setPos('Y', (motor.getLength('Y')/2)); // Set position in scale with mDraw
 
 	int64_t newPositionX = 0;
 	int64_t newPositionY = 0;
 	char buffer[100] = {'\0'};
+	uint8_t penUpValue = 255;
+	uint8_t penDownValue = 0;
 	while(1) {
+
 		if(xQueueReceive(cmdQueue, (void*) &gstruct, (TickType_t) 10)) {
-			if ((gstruct.cmd_type[0] == 'G') && (gstruct.cmd_type[1] == '1')) {
+			//if ((gstruct.cmd_type[0] == 'G') && (gstruct.cmd_type[1] == '1')) {
+			if (strcmp(gstruct.cmd_type, "G1") == 0) {
 				int moveX = 0;
 				int moveY = 0;
 				int absX = 0;
@@ -317,16 +308,60 @@ void static vTaskMotor(void* pvParamters){
 				}
 				motor.setPos('Y', newPositionY);
 
-			} else {
+			} else if(strcmp(gstruct.cmd_type,"M1") == 0){
+				penMove(gstruct.pen_pos);
+			} else if (strcmp(gstruct.cmd_type,"M2") == 0){
 
 			}
+
+
+			vTaskDelay(1);//
 		}
 	}
+}
+
+
+
+static void SCT_Init(){
+	Chip_SCT_Init(LPC_SCTLARGE0);
+	Chip_SCT_Init(LPC_SCTLARGE1);
+
+	Chip_SWM_MovablePortPinAssign(SWM_SCT0_OUT0_O, 0,10); //pen
+	Chip_SWM_MovablePortPinAssign(SWM_SCT1_OUT0_O, 0,12); // laser
+
+	LPC_SCTLARGE0->CONFIG |= (1 << 17); // two 16-bit timers, auto limit
+
+	LPC_SCTLARGE0->CTRL_L |= (72-1) << 5; // set prescaler, SCTimer/PWM clock = 1 MHz
+
+	LPC_SCTLARGE0->MATCHREL[0].L = 20000-1; // match 0 @ 10/1MHz = 10 usec (100 kHz PWM freq) (1MHz/20000)
+	LPC_SCTLARGE0->MATCHREL[1].L = 1999; // match 1 used for duty cycle (in 10 steps)
+	LPC_SCTLARGE0->EVENT[0].STATE = 0xFFFFFFFF; // event 0 happens in all states
+	LPC_SCTLARGE0->EVENT[0].CTRL = (1 << 12); // match 0 condition only
+	LPC_SCTLARGE0->EVENT[1].STATE = 0xFFFFFFFF; // event 1 happens in all states
+	LPC_SCTLARGE0->EVENT[1].CTRL = (1 << 0) | (1 << 12); // match 1 condition only
+	LPC_SCTLARGE0->OUT[0].SET = (1 << 0); // event 0 will set SCTx_OUT0
+	LPC_SCTLARGE0->OUT[0].CLR = (1 << 1); // event 1 will clear SCTx_OUT0
+	LPC_SCTLARGE0->CTRL_L &= ~(1 << 2); // unhalt it by clearing bit 2 of CTRL reg
+
+
+	//LPC_SCRLARGE1
+	LPC_SCTLARGE1->CONFIG |= (1 << 17); // two 16-bit timers, auto limit
+	LPC_SCTLARGE1->CTRL_L |= (72-1) << 5; // set prescaler, SCTimer/PWM clock = 1 MHz
+	LPC_SCTLARGE1->MATCHREL[0].L = 1000-1; // match 0 @ 10/1MHz = 10 usec (100 kHz PWM freq) (1MHz/1000)
+	LPC_SCTLARGE1->MATCHREL[1].L = 999; // match 1 used for duty cycle (in 10 steps)
+	LPC_SCTLARGE1->EVENT[0].STATE = 0xFFFFFFFF; // event 0 happens in all states
+	LPC_SCTLARGE1->EVENT[0].CTRL = (1 << 12); // match 0 condition only
+	LPC_SCTLARGE1->EVENT[1].STATE = 0xFFFFFFFF; // event 1 happens in all states
+	LPC_SCTLARGE1->EVENT[1].CTRL = (1 << 0) | (1 << 12); // match 1 condition only
+	LPC_SCTLARGE1->OUT[0].SET = (1 << 0); // event 0 will set SCTx_OUT0
+	LPC_SCTLARGE1->OUT[0].CLR = (1 << 1); // event 1 will clear SCTx_OUT0
+	LPC_SCTLARGE1->CTRL_L &= ~(1 << 2); // unhalt it by clearing bit 2 of CTRL reg
 }
 
 int main(void) {
 
 	prvSetupHardware();
+	SCT_Init();
 	ITM_init();
 
 	cmdQueue = xQueueCreate(10, sizeof(Gstruct));
