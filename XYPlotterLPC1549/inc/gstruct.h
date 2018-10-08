@@ -12,8 +12,8 @@ typedef struct {
 
 	char cmd_type[3];			/*command type of the G-code*/
 
-	float x_pos;				/*goto x position value*/
-	float y_pos;				/*goto y position value*/
+	int x_pos;				/*goto x position value*/
+	int y_pos;				/*goto y position value*/
 
 	int pen_pos;				/*pen position(servo value)*/
 	int pen_up;					/*pen up value*/

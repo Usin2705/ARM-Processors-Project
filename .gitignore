@@ -8,3 +8,4 @@ lpc_chip_15xx/.cproject
 lpc_board_nxp_lpcxpresso_1549/.cproject
 XYPlotterLPC1549/Debug/
 XYPlotterLPC1549/XYPlotterLPC1549 LinkServer Debug.launch
+FreeRTOS/Debug/

@@ -46,8 +46,11 @@ Gstruct Parser::parse_gcode(const char* buffer){
 	}
 	/*G1: Go to position*/
 	if(strcmp(cmd, "G1") == 0){
-
-		sscanf(buffer, "G1 X%f Y%f A%d", &gstruct.x_pos, &gstruct.y_pos, &gstruct.abs);
+		float xcord = 0;
+		float ycord = 0;
+		sscanf(buffer, "G1 X%f Y%f A%d", &xcord, &ycord, &gstruct.abs);
+		gstruct.x_pos = xcord*100;
+		gstruct.y_pos = ycord*100;
 	}
 	strcpy(gstruct.cmd_type, cmd);
 

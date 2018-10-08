@@ -65,7 +65,7 @@ static void send_to_queue(Gstruct gstruct_to_send){
 // Sends reply code to plotter
 void send_reply(const char* cmd_type){
 
-	const char* reply_M10 = "M10 XY 400 400 0.00 0.00 A0 B0 H0 S80 U160 D0\r\n";		// reply code for M10 command
+	const char* reply_M10 = "M10 XY 380 310 0.00 0.00 A0 B0 H0 S80 U160 D0\r\n";		// reply code for M10 command
 	const char* reply_M11 = "M11 1 1 1 1\r\n";												// reply code for M11 command
 	const char* reply_OK = "OK\r\n";													// reply code for the rest of the commands
 
@@ -82,6 +82,105 @@ void send_reply(const char* cmd_type){
 	}
 }
 
+extern "C"{
+
+// interrupt handler for interrupt pin 0 (swY0)
+void PIN_INT0_IRQHandler(void){
+
+	// This used to check if a context switch is required
+	portBASE_TYPE xHigherPriorityWoken = pdFALSE;
+
+	// clears falling edge detection
+	LPC_GPIO_PIN_INT->IST &= ~(1UL << 1);
+
+	// loops infinitely
+	while(1);
+
+	// End the ISR and (possibly) do a context switch
+	portEND_SWITCHING_ISR(xHigherPriorityWoken);
+}
+
+// interrupt handler for interrupt pin 1 (swY1)
+void PIN_INT1_IRQHandler(void){
+
+	// This used to check if a context switch is required
+	portBASE_TYPE xHigherPriorityWoken = pdFALSE;
+
+	// clears falling edge detection
+	LPC_GPIO_PIN_INT->IST &= ~(1UL << 2);
+
+	// loops infinitely
+	while(1);
+
+	// End the ISR and (possibly) do a context switch
+	portEND_SWITCHING_ISR(xHigherPriorityWoken);
+}
+
+// interrupt handler for interrupt pin 2 (swX0)
+void PIN_INT2_IRQHandler(void){
+
+	// This used to check if a context switch is required
+	portBASE_TYPE xHigherPriorityWoken = pdFALSE;
+
+	// clears falling edge detection
+	LPC_GPIO_PIN_INT->IST &= ~(1UL << 3);
+
+	// loops infinitely
+	while(1);
+
+	// End the ISR and (possibly) do a context switch
+	portEND_SWITCHING_ISR(xHigherPriorityWoken);
+}
+
+// interrupt handler for interrupt pin 3 (swX1)
+void PIN_INT3_IRQHandler(void){
+
+	// This used to check if a context switch is required
+	portBASE_TYPE xHigherPriorityWoken = pdFALSE;
+
+	// clears falling edge detection
+	LPC_GPIO_PIN_INT->IST &= ~(1UL << 4);
+
+	// loops infinitely
+	while(1);
+
+	// End the ISR and (possibly) do a context switch
+	portEND_SWITCHING_ISR(xHigherPriorityWoken);
+}
+
+}
+
+/* function for initializing limit switches as interrupt pins */
+static void interrupt_pins_init(){
+
+	Chip_PININT_Init(LPC_GPIO_PIN_INT);
+
+	DigitalIoPin swY0(0,0, DigitalIoPin::pullup, true);
+	DigitalIoPin swY1 (1,3, DigitalIoPin::pullup, true);
+	DigitalIoPin swX0 (0,9, DigitalIoPin::pullup, true);
+	DigitalIoPin swX1 (0,29, DigitalIoPin::pullup, true);
+
+	/*configuring pins as interrupt pins*/
+	LPC_INMUX->PINTSEL[0] = 0; 				// select pin 0_0(swY0) as interrupt pin 0
+	LPC_INMUX->PINTSEL[1] = 35; 			// select pin 1_3((swY1)(32 + 3 = 35)) as interrupt pin 1
+	LPC_INMUX->PINTSEL[2] = 9;				// select pin 0_9 (swX0) as interrupt pin 2
+	LPC_INMUX->PINTSEL[3] = 29;				// select pin 0_29 (swX1) as interrupt pin 3
+
+	LPC_GPIO_PIN_INT->SIENF = 7; // enables falling edge interrupts
+	LPC_GPIO_PIN_INT->ISEL = 0; // configures pin interrupts as edge sensitive(0)
+
+	/*Sets priorities for pin interrupts*/
+	NVIC_SetPriority(PIN_INT0_IRQn, configMAX_SYSCALL_INTERRUPT_PRIORITY + 1);
+	NVIC_SetPriority(PIN_INT1_IRQn, configMAX_SYSCALL_INTERRUPT_PRIORITY + 1);
+	NVIC_SetPriority(PIN_INT2_IRQn, configMAX_SYSCALL_INTERRUPT_PRIORITY + 1);
+	NVIC_SetPriority(PIN_INT3_IRQn, configMAX_SYSCALL_INTERRUPT_PRIORITY + 1);
+
+	/*Enables interrupt signals for the pin interrupts*/
+	NVIC_EnableIRQ(PIN_INT0_IRQn);
+	NVIC_EnableIRQ(PIN_INT1_IRQn);
+	NVIC_EnableIRQ(PIN_INT2_IRQn);
+	NVIC_EnableIRQ(PIN_INT3_IRQn);
+}
 
 
 /*Task receives Gcode commands from mDraw program via USB*/
@@ -132,53 +231,68 @@ void static vTaskMotor(void* pvParamters){
 
 	int64_t newPositionX = 0;
 	int64_t newPositionY = 0;
+	int moveX = 0;
+	int moveY = 0;
+	int absX = 0;
+	int absY = 0;
 	char buffer[100] = {'\0'};
+	interrupt_pins_init();
 	while(1) {
 
+		//if(xQueueReceive(cmdQueue, (void*) &gstruct, portMAX_DELAY)) {
 		if(xQueueReceive(cmdQueue, (void*) &gstruct, (TickType_t) 10)) {
-			//if ((gstruct.cmd_type[0] == 'G') && (gstruct.cmd_type[1] == '1')) {
 			if (strcmp(gstruct.cmd_type, "G1") == 0) {
-				int moveX = 0;
-				int moveY = 0;
-				int absX = 0;
-				int absY = 0;
-				newPositionX = gstruct.x_pos*100*motor.getLimDist('X')/MDRAWSCALE;
-				newPositionY = gstruct.y_pos*100*motor.getLimDist('Y')/MDRAWSCALE;
-				motor.setDirection('X', (newPositionX - motor.getPos('X'))>=0); // if newPositionX is large then move left
-				motor.setDirection('Y', (newPositionY - motor.getPos('Y'))>=0); // if newPositionY is large then move down
-				absX = abs(newPositionX - motor.getPos('X'));
-				absY = abs(newPositionY - motor.getPos('Y'));
-				snprintf(buffer, 100, "absX %d, curPosX: %d, newPosX: %lld \r\n", absX, motor.getPos('X'), newPositionX);
+				//if (true){
+				//if (true){
+				moveX = 0;
+				moveY = 0;
+				absX = 0;
+				absY = 0;
+
+				newPositionX = gstruct.x_pos*motor.getLimDist(XAXIS)/38000;
+				//newPositionX = xcord*100*motor.getLimDist(XAXIS)/38000;
+				newPositionY = gstruct.y_pos*motor.getLimDist(YAXIS)/31000;
+				//newPositionY = ycord*100*motor.getLimDist(YAXIS)/31000;
+
+				motor.setDirection(XAXIS, (newPositionX - motor.getPos(XAXIS))>=0); // if newPositionX is large then move left
+				motor.setDirection(YAXIS, (newPositionY - motor.getPos(YAXIS))>=0); // if newPositionY is large then move down
+
+				absX = abs(newPositionX - motor.getPos(XAXIS));
+				absY = abs(newPositionY - motor.getPos(YAXIS));
+
+				snprintf(buffer, 100, "\nabsX %d, curPosX: %d, newPosX: %lld \r\n", absX, motor.getPos(XAXIS), newPositionX);
 				ITM_write(buffer);
-				motor.setRITaxis('X');
+
+				//Move motor in X axis
+				motor.setRITaxis(XAXIS);
 				if (moveX < absX) {
-					RIT_start(absX-moveX, 500000/motor.getPPS());
+					RIT_start((absX-moveX)*2, 500000/motor.getPPS()); //All motor movement/RIT step must be multiplied by 2
 				}
-				motor.setPos('X', newPositionX);
+				motor.setPos(XAXIS, newPositionX);
 
-				motor.setRITaxis('Y');
+				//Move motor in Y axis
+				motor.setRITaxis(YAXIS);
 				if (moveY < absY) {
-					RIT_start(absY-moveY, 500000/motor.getPPS());
+					RIT_start((absY-moveY)*2, 500000/motor.getPPS()); //All motor movement/RIT step must be multiplied by 2
 				}
-				motor.setPos('Y', newPositionY);
+				motor.setPos(YAXIS, newPositionY);
 
+				// Control pen servo
 			} else if(strcmp(gstruct.cmd_type,"M1") == 0){
 				penMove(gstruct.pen_pos);
+
+				// Control laser power
 			} else if (strcmp(gstruct.cmd_type,"M4") == 0){
 				setLaserPower(gstruct.laserPower);
 				ITM_write("Set laser power \r\n");
 			}
 
-
-			vTaskDelay(1);//
+			//xcord = xcord + 0.01;
+			//ycord = ycord + 0.01;
+			//vTaskDelay(1);//
 		}
 	}
 }
-
-
-
-
-
 
 int main(void) {
 

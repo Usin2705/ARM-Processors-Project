@@ -6,7 +6,7 @@
  */
 
 #include <Motor.h>
-volatile char RITaxis = 'X';
+volatile Axis RITaxis = XAXIS;
 volatile uint32_t RIT_count;
 xSemaphoreHandle sbRIT = xSemaphoreCreateBinary();
 
@@ -59,7 +59,7 @@ void RIT_IRQHandler(void) {
 	Chip_RIT_ClearIntStatus(LPC_RITIMER); // clear IRQ flag
 	if(RIT_count > 0) {
 		RIT_count--;
-		if (RITaxis == 'X') {
+		if (RITaxis == XAXIS) {
 			bthStepX.write(RIT_count%2==0);
 		} else {
 			bthStepY.write(RIT_count%2==0);
@@ -74,8 +74,8 @@ void RIT_IRQHandler(void) {
 	portEND_SWITCHING_ISR(xHigherPriorityWoken);
 }
 }
-/* All move must call Motor.setRITaxis(char cord) to set which motor to move
- * All move must mutiple count by 2 (up and down count as 1 step)
+/* All move must call Motor.setRITaxis(Axis axis) to set which motor to move
+ * All motor movement/RIT step must be multiplied by 2 (up and down count as 1 step)
  *
  */
 void RIT_start(int count, int us) {
@@ -112,8 +112,9 @@ swX1 (0,29, DigitalIoPin::pullup, true),
 directionX(1,0, DigitalIoPin::output, true),
 directionY(0,28, DigitalIoPin::output, true)
 {
-	motorPPS = 500000/100; //6250
-	RITaxis = 'X';
+	//motorPPS = 500000/80; //6250
+	motorPPS = 500000/400; //6250
+	RITaxis = XAXIS;
 	penMove(160);	//Move pen up
 	setLaserPower(255);	//Turn laser off
 }
@@ -127,8 +128,8 @@ Motor::~Motor() {
  * Otherwise set for Y
  *
  */
-void Motor::setLimDist(char cord, int length) {
-	(cord=='X'? limDistX: limDistY) = length;
+void Motor::setLimDist(Axis axis, int length) {
+	(axis==XAXIS? limDistX: limDistY) = length;
 }
 
 /* Get the distance of limit (measure by steps)
@@ -136,8 +137,8 @@ void Motor::setLimDist(char cord, int length) {
  * Otherwise get distance of Y
  *
  */
-int Motor::getLimDist(char cord) {
-	return (cord=='X'?limDistX:limDistY);
+int Motor::getLimDist(Axis axis) {
+	return (axis==XAXIS?limDistX:limDistY);
 }
 
 /* Set the direction of Motor
@@ -145,8 +146,8 @@ int Motor::getLimDist(char cord) {
  * If cord = Y, True = Down, False = Up
  *
  */
-void Motor::setDirection(char cord, bool isLeftD) {
-	if (cord=='X') {
+void Motor::setDirection(Axis axis, bool isLeftD) {
+	if (axis==XAXIS) {
 		directionX.write(isLeftD);
 	} else {
 		directionY.write(isLeftD);
@@ -158,29 +159,29 @@ void Motor::setDirection(char cord, bool isLeftD) {
  * Otherwise set for Y
  *
  */
-void Motor::setPos(char cord, int currentPos) {
-	(cord=='X'?currentPosX:currentPosY) = currentPos;
+void Motor::setPos(Axis axis, int currentPos) {
+	(axis==XAXIS?currentPosX:currentPosY) = currentPos;
 }
 
-int Motor::getPos(char cord) {
-	return (cord=='X'?currentPosX:currentPosY);
+int Motor::getPos(Axis axis) {
+	return (axis==XAXIS?currentPosX:currentPosY);
 }
 
 /* Read the limit switch
- * x = limit switch X0 (at 0)
- * X = limit switch X1 (at maximum range of X)
- * y = limit switch y0 (at 0)
- * Y = limit switch Y1 (at maximum range of Y)
+ * Xlimit0 = limit switch X0 (at 0)
+ * Xlimit1 = limit switch X1 (at maximum range of X)
+ * Ylimit0 = limit switch y0 (at 0)
+ * Ylimit1 = limit switch Y1 (at maximum range of Y)
  *
  */
-bool Motor::readLimit(char cord) {
-	if (cord=='x') {
+bool Motor::readLimit(Limit limit) {
+	if (limit==Xlimit0) {
 		return swX0.read();
-	} else if (cord=='X'){
+	} else if (limit==Xlimit1){
 		return swX1.read();
-	} else if (cord=='y'){
+	} else if (limit==Ylimit0){
 		return swY0.read();
-	} else if (cord=='Y'){
+	} else if (limit==Ylimit1){
 		return swY1.read();
 	} else {
 		ITM_write("Button read can't regconize the limit char code\r\n");
@@ -204,7 +205,7 @@ int Motor::getPPS() {
 	return motorPPS;
 }
 
-void Motor::setRITaxis(char axis) {
+void Motor::setRITaxis(Axis axis) {
 	RITaxis = axis;
 }
 
@@ -224,49 +225,49 @@ void Motor::calibrate() {
 	setLaserPower(255);	//Turn laser off
 	ITM_write("---------------------------    CALIBRATE X  -------------------------\r\n");
 	int maxSteps = 0;
-	RITaxis = 'X';
-	bool limitread = readLimit('x');
+	RITaxis = XAXIS;
+	bool limitread = readLimit(Xlimit0);
 	char buffer[80] = {'\0'};
 	for (uint8_t i = 0; i < 2; i++) {
-		//Move to left (or down if cord == Y), without couting step
+		//Move to left (or down if cord == Y), without counting step
 		setDirection(RITaxis, ISLEFTD);
-		limitread = readLimit(tolower(RITaxis));
+		limitread = readLimit(i==0?Xlimit0:Ylimit0);
 		while (!limitread){
-			limitread = readLimit(tolower(RITaxis));
+			limitread = readLimit(i==0?Xlimit0:Ylimit0);
 			RIT_start(5, 500000/motorPPS);
 		}
 
 		//	When move back to right (or up if cord == Y), count step
 		setDirection(RITaxis, !ISLEFTD);
-		limitread = readLimit(RITaxis);
+		limitread = readLimit(i==0?Xlimit1:Ylimit1);
 		while (!limitread){
-			limitread = readLimit(RITaxis);
+			limitread = readLimit(i==0?Xlimit1:Ylimit1);
 			RIT_start(5,500000/motorPPS);
 			maxSteps =  maxSteps + 2; //last RIT step doesn't  count
 		}
 		setLimDist(RITaxis, maxSteps);
 		setPos(RITaxis, 0);
-		snprintf(buffer, 80, "Max steps of axis %c is: %d \r\n", RITaxis, maxSteps);
+		snprintf(buffer, 80, "Max steps of axis %d is: %d \r\n", RITaxis, maxSteps);
 		ITM_write(buffer);
 		//If 'X' then change to Y, do the loop again
-		if (RITaxis == 'X') {
+		if (RITaxis == XAXIS) {
 			ITM_write("---------------------------    CALIBRATE Y  -------------------------\r\n");
 		}
 		maxSteps = 0;
-		RITaxis = 'Y';
+		RITaxis = YAXIS;
 	}
 
 	//Move to middle
-	setDirection('X', ISLEFTD);
-	setDirection('Y', ISLEFTD);
-	RITaxis = 'X';
-	RIT_start(getLimDist(RITaxis),500000/motorPPS); //All move must mutiple by 2
-	RITaxis = 'Y';
+	setDirection(XAXIS, ISLEFTD);
+	setDirection(YAXIS, ISLEFTD);
+	RITaxis = XAXIS;
+	RIT_start(getLimDist(RITaxis),500000/motorPPS); //All motor movement/RIT step must be multiplied by 2
+	RITaxis = YAXIS;
 	//vTaskDelay(5); // delay
-	RIT_start(getLimDist(RITaxis),500000/motorPPS); //All move must mutiple by 2
+	RIT_start(getLimDist(RITaxis),500000/motorPPS); //All motor movement/RIT step must be multiplied by 2
 
-	setPos('X', (getLimDist('X')/2)); // Set position in scale with mDraw
-	setPos('Y', (getLimDist('Y')/2)); // Set position in scale with mDraw
+	setPos(XAXIS, (getLimDist(XAXIS)/2)); // Set position in scale with mDraw
+	setPos(YAXIS, (getLimDist(YAXIS)/2)); // Set position in scale with mDraw
 }
 
 
