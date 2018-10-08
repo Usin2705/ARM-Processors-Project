@@ -75,7 +75,6 @@ void RIT_IRQHandler(void) {
 }
 }
 /* All move must call Motor.setRITaxis(Axis axis) to set which motor to move
- * All motor movement/RIT step must be multiplied by 2 (up and down count as 1 step)
  *
  */
 void RIT_start(int count, int us) {
@@ -112,8 +111,8 @@ swX1 (0,29, DigitalIoPin::pullup, true),
 directionX(1,0, DigitalIoPin::output, true),
 directionY(0,28, DigitalIoPin::output, true)
 {
-	//motorPPS = 500000/80; //6250
-	motorPPS = 500000/400; //6250
+	motorPPS = 500000/60; //8333
+	//motorPPS = 500000/200; //simulator
 	RITaxis = XAXIS;
 	penMove(160);	//Move pen up
 	setLaserPower(255);	//Turn laser off
@@ -221,7 +220,7 @@ void setLaserPower(int laserPower){
 
 
 void Motor::calibrate() {
-	penMove(160);	//Move pen up
+	penMove(0);	//Move pen up
 	setLaserPower(255);	//Turn laser off
 	ITM_write("---------------------------    CALIBRATE X  -------------------------\r\n");
 	int maxSteps = 0;
@@ -263,11 +262,10 @@ void Motor::calibrate() {
 	RITaxis = XAXIS;
 	RIT_start(getLimDist(RITaxis),500000/motorPPS); //All motor movement/RIT step must be multiplied by 2
 	RITaxis = YAXIS;
-	//vTaskDelay(5); // delay
 	RIT_start(getLimDist(RITaxis),500000/motorPPS); //All motor movement/RIT step must be multiplied by 2
 
-	setPos(XAXIS, (getLimDist(XAXIS)/2)); // Set position in scale with mDraw
-	setPos(YAXIS, (getLimDist(YAXIS)/2)); // Set position in scale with mDraw
+	setPos(XAXIS, (getLimDist(XAXIS)/2)-1); // Set position in scale with mDraw
+	setPos(YAXIS, (getLimDist(YAXIS)/2)-1); // Set position in scale with mDraw
 }
 
 

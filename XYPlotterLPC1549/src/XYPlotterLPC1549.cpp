@@ -48,7 +48,7 @@ static void prvSetupHardware(void){
 	// set the priority level of the interrupt
 	// The level must be equal or lower than the maximum priority specified in FreeRTOS config
 	// Note that in a Cortex-M3 a higher number indicates lower interrupt priority
-	NVIC_SetPriority( RITIMER_IRQn, configMAX_SYSCALL_INTERRUPT_PRIORITY + 1);
+	NVIC_SetPriority( RITIMER_IRQn, 5);
 }
 
 /*sends Gcode struct to the queue*/
@@ -65,6 +65,7 @@ static void send_to_queue(Gstruct gstruct_to_send){
 // Sends reply code to plotter
 void send_reply(const char* cmd_type){
 
+	//const char* reply_M10 = "M10 XY 380 310 0.00 0.00 A0 B0 H0 S80 U0 D255\r\n";		// reply code for M10 command
 	const char* reply_M10 = "M10 XY 380 310 0.00 0.00 A0 B0 H0 S80 U160 D0\r\n";		// reply code for M10 command
 	const char* reply_M11 = "M11 1 1 1 1\r\n";												// reply code for M11 command
 	const char* reply_OK = "OK\r\n";													// reply code for the rest of the commands
@@ -222,12 +223,31 @@ void static vTaskReceive(void* pvParamters){
 		}
 	}
 }
+void moveSquare(Motor *motor){
+	while(1) {
+		//Move to middle
+		motor->setDirection(XAXIS, ISLEFTD);
+		motor->setDirection(YAXIS, ISLEFTD);
+		motor->setRITaxis(XAXIS);
+		RIT_start(50,500000/motor->getPPS()); //All motor movement/RIT step must be multiplied by 2
+		motor->setRITaxis(YAXIS);
+		RIT_start(50,500000/motor->getPPS()); //All motor movement/RIT step must be multiplied by 2
+		motor->setDirection(XAXIS, !ISLEFTD);
+		motor->setDirection(YAXIS, !ISLEFTD);
+		motor->setRITaxis(XAXIS);
+		RIT_start(50,500000/motor->getPPS()); //All motor movement/RIT step must be multiplied by 2
+		motor->setRITaxis(YAXIS);
+		RIT_start(50,500000/motor->getPPS()); //All motor movement/RIT step must be multiplied by 2
+		vTaskDelay(100);
+	}
+}
 
 void static vTaskMotor(void* pvParamters){
 	Gstruct gstruct;
 	Motor motor;
 
 	motor.calibrate();
+	//moveSquare(&motor);
 
 	int64_t newPositionX = 0;
 	int64_t newPositionY = 0;
@@ -242,8 +262,7 @@ void static vTaskMotor(void* pvParamters){
 		//if(xQueueReceive(cmdQueue, (void*) &gstruct, portMAX_DELAY)) {
 		if(xQueueReceive(cmdQueue, (void*) &gstruct, (TickType_t) 10)) {
 			if (strcmp(gstruct.cmd_type, "G1") == 0) {
-				//if (true){
-				//if (true){
+
 				moveX = 0;
 				moveY = 0;
 				absX = 0;
@@ -304,12 +323,12 @@ int main(void) {
 
 
 	xTaskCreate(vTaskReceive, "vTaksReceive",
-			configMINIMAL_STACK_SIZE + 350, NULL, (tskIDLE_PRIORITY + 1UL),
+			configMINIMAL_STACK_SIZE + 400, NULL, (tskIDLE_PRIORITY + 1UL),
 			(TaskHandle_t *) NULL);
 
 
 	xTaskCreate(vTaskMotor, "vTaskMotor",
-			configMINIMAL_STACK_SIZE + 300, NULL, (tskIDLE_PRIORITY + 1UL),
+			configMINIMAL_STACK_SIZE + 350, NULL, (tskIDLE_PRIORITY + 1UL),
 			(TaskHandle_t *) NULL);
 
 	xTaskCreate(cdc_task, "CDC",
