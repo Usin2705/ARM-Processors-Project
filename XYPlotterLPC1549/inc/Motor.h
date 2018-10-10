@@ -41,6 +41,7 @@ class Motor {
 public:
 
 	Motor();
+	void move(Axis axis, int count, int pps);
 
 	void setLimDist(Axis axis, int newDist);
 	int getLimDist(Axis axis);
@@ -53,7 +54,6 @@ public:
 	void setPPS(int PPS);
 	int getPPS();
 
-	void setRITaxis(Axis axis);
 	bool readLimit(Limit limit);
 	void calibrate();
 

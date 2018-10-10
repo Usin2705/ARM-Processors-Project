@@ -9,3 +9,10 @@ lpc_board_nxp_lpcxpresso_1549/.cproject
 XYPlotterLPC1549/Debug/
 XYPlotterLPC1549/XYPlotterLPC1549 LinkServer Debug.launch
 FreeRTOS/Debug/
+mDraw old/mSpider.hex
+mDraw old/mScara.hex
+mDraw old/mEggBot.hex
+mDraw old/mCar.hex
+mDraw old/avrdude.conf
+mDraw old/XY.hex
+mDraw old/Readme.txt

@@ -9,12 +9,12 @@
  */
 
 
+#include <bresenham.h>
 #include <cr_section_macros.h>
 
 // TODO: insert other include files here
 
 #include "user_vcom.h"
-#include "Motor.h"
 #include "Parser.h"
 
 // Queue for Gcode structs
@@ -58,7 +58,7 @@ static void send_to_queue(Gstruct gstruct_to_send){
 
 	}
 	else{
-		ITM_write("Cannot Send to the Queue\n\r");
+		ITM_write("Cannot Send to the Queue\r\n");
 	}
 }
 
@@ -66,7 +66,7 @@ static void send_to_queue(Gstruct gstruct_to_send){
 void send_reply(const char* cmd_type){
 
 	//const char* reply_M10 = "M10 XY 380 310 0.00 0.00 A0 B0 H0 S80 U0 D255\r\n";		// reply code for M10 command
-	const char* reply_M10 = "M10 XY 380 310 0.00 0.00 A0 B0 H0 S80 U160 D0\r\n";		// reply code for M10 command
+	const char* reply_M10 = "M10 XY 380 310 0.00 0.00 A0 B0 H0 S80 U160 D90\r\n";		// reply code for M10 command
 	const char* reply_M11 = "M11 1 1 1 1\r\n";												// reply code for M11 command
 	const char* reply_OK = "OK\r\n";													// reply code for the rest of the commands
 
@@ -216,6 +216,7 @@ void static vTaskReceive(void* pvParamters){
 			send_reply(gstruct_to_send.cmd_type);
 
 			ITM_write(gcode_str.c_str());
+			ITM_write("\r\n");
 
 			memset(gcode_buff, '\0', 60);
 			gcode_str = "";
@@ -223,39 +224,23 @@ void static vTaskReceive(void* pvParamters){
 		}
 	}
 }
-void moveSquare(Motor *motor){
-	while(1) {
-		//Move to middle
-		motor->setDirection(XAXIS, ISLEFTD);
-		motor->setDirection(YAXIS, ISLEFTD);
-		motor->setRITaxis(XAXIS);
-		RIT_start(50,500000/motor->getPPS()); //All motor movement/RIT step must be multiplied by 2
-		motor->setRITaxis(YAXIS);
-		RIT_start(50,500000/motor->getPPS()); //All motor movement/RIT step must be multiplied by 2
-		motor->setDirection(XAXIS, !ISLEFTD);
-		motor->setDirection(YAXIS, !ISLEFTD);
-		motor->setRITaxis(XAXIS);
-		RIT_start(50,500000/motor->getPPS()); //All motor movement/RIT step must be multiplied by 2
-		motor->setRITaxis(YAXIS);
-		RIT_start(50,500000/motor->getPPS()); //All motor movement/RIT step must be multiplied by 2
-		vTaskDelay(100);
-	}
-}
+
+
 
 void static vTaskMotor(void* pvParamters){
 	Gstruct gstruct;
 	Motor motor;
 
+	penMove(160);	//Move pen up
+	setLaserPower(255);	//Turn laser off
+
 	motor.calibrate();
 	//moveSquare(&motor);
+	//moveRhombus(&motor);
+	//moveTrapezoid(&motor);
 
 	int64_t newPositionX = 0;
 	int64_t newPositionY = 0;
-	int moveX = 0;
-	int moveY = 0;
-	int absX = 0;
-	int absY = 0;
-	char buffer[100] = {'\0'};
 	interrupt_pins_init();
 	while(1) {
 
@@ -263,38 +248,12 @@ void static vTaskMotor(void* pvParamters){
 		if(xQueueReceive(cmdQueue, (void*) &gstruct, (TickType_t) 10)) {
 			if (strcmp(gstruct.cmd_type, "G1") == 0) {
 
-				moveX = 0;
-				moveY = 0;
-				absX = 0;
-				absY = 0;
-
 				newPositionX = gstruct.x_pos*motor.getLimDist(XAXIS)/38000;
 				//newPositionX = xcord*100*motor.getLimDist(XAXIS)/38000;
 				newPositionY = gstruct.y_pos*motor.getLimDist(YAXIS)/31000;
 				//newPositionY = ycord*100*motor.getLimDist(YAXIS)/31000;
 
-				motor.setDirection(XAXIS, (newPositionX - motor.getPos(XAXIS))>=0); // if newPositionX is large then move left
-				motor.setDirection(YAXIS, (newPositionY - motor.getPos(YAXIS))>=0); // if newPositionY is large then move down
-
-				absX = abs(newPositionX - motor.getPos(XAXIS));
-				absY = abs(newPositionY - motor.getPos(YAXIS));
-
-				snprintf(buffer, 100, "\nabsX %d, curPosX: %d, newPosX: %lld \r\n", absX, motor.getPos(XAXIS), newPositionX);
-				ITM_write(buffer);
-
-				//Move motor in X axis
-				motor.setRITaxis(XAXIS);
-				if (moveX < absX) {
-					RIT_start((absX-moveX)*2, 500000/motor.getPPS()); //All motor movement/RIT step must be multiplied by 2
-				}
-				motor.setPos(XAXIS, newPositionX);
-
-				//Move motor in Y axis
-				motor.setRITaxis(YAXIS);
-				if (moveY < absY) {
-					RIT_start((absY-moveY)*2, 500000/motor.getPPS()); //All motor movement/RIT step must be multiplied by 2
-				}
-				motor.setPos(YAXIS, newPositionY);
+				bresenham(&motor, motor.getPos(XAXIS), motor.getPos(YAXIS), newPositionX, newPositionY);
 
 				// Control pen servo
 			} else if(strcmp(gstruct.cmd_type,"M1") == 0){

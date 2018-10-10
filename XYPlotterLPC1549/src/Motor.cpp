@@ -127,6 +127,16 @@ Motor::~Motor() {
  * Otherwise set for Y
  *
  */
+void Motor::move(Axis axis, int count, int pps) {
+	RITaxis = axis;
+	RIT_start(count, 500000/pps);
+}
+
+/* Set the distance of limit (measure by steps)
+ * if cord = 'X' then set the distance for X
+ * Otherwise set for Y
+ *
+ */
 void Motor::setLimDist(Axis axis, int length) {
 	(axis==XAXIS? limDistX: limDistY) = length;
 }
@@ -204,10 +214,6 @@ int Motor::getPPS() {
 	return motorPPS;
 }
 
-void Motor::setRITaxis(Axis axis) {
-	RITaxis = axis;
-}
-
 void penMove(int penPos){
 	int value = penPos*999/255;
 	LPC_SCT0->MATCHREL[1].L = 1000 + value;
@@ -220,8 +226,7 @@ void setLaserPower(int laserPower){
 
 
 void Motor::calibrate() {
-	penMove(0);	//Move pen up
-	setLaserPower(255);	//Turn laser off
+
 	ITM_write("---------------------------    CALIBRATE X  -------------------------\r\n");
 	int maxSteps = 0;
 	RITaxis = XAXIS;
