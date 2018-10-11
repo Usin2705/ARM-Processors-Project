@@ -35,8 +35,8 @@ void SCT_init(){
 	//LPC_SCRLARGE1
 	LPC_SCTLARGE1->CONFIG |= (1 << 17); // two 16-bit timers, auto limit
 	LPC_SCTLARGE1->CTRL_L |= (72-1) << 5; // set prescaler, SCTimer/PWM clock = 1 MHz
-	LPC_SCTLARGE1->MATCHREL[0].L = 1000-1; // match 0 @ 10/1MHz = 10 usec (100 kHz PWM freq) (1MHz/1000)
-	LPC_SCTLARGE1->MATCHREL[1].L = 999; // match 1 used for duty cycle (in 10 steps)
+	LPC_SCTLARGE1->MATCHREL[0].L = 255-1; // match 0 @ 10/1MHz = 10 usec (100 kHz PWM freq) (1MHz/1000)
+	LPC_SCTLARGE1->MATCHREL[1].L = 0; // match 1 used for duty cycle (in 10 steps)
 	LPC_SCTLARGE1->EVENT[0].STATE = 0xFFFFFFFF; // event 0 happens in all states
 	LPC_SCTLARGE1->EVENT[0].CTRL = (1 << 12); // match 0 condition only
 	LPC_SCTLARGE1->EVENT[1].STATE = 0xFFFFFFFF; // event 1 happens in all states
@@ -220,7 +220,7 @@ void penMove(int penPos){
 }
 
 void setLaserPower(int laserPower){
-	int value = laserPower*999/255;
+	int value = laserPower;
 	LPC_SCT1->MATCHREL[1].L = value;
 }
 
@@ -260,6 +260,7 @@ void Motor::calibrate() {
 		maxSteps = 0;
 		RITaxis = YAXIS;
 	}
+	setLimDist(XAXIS, getLimDist(YAXIS));  //TESTING SET THE SAME RATIO
 
 	//Move to middle
 	setDirection(XAXIS, ISLEFTD);

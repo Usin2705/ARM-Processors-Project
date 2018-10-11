@@ -65,8 +65,8 @@ static void send_to_queue(Gstruct gstruct_to_send){
 // Sends reply code to plotter
 void send_reply(const char* cmd_type){
 
-	//const char* reply_M10 = "M10 XY 380 310 0.00 0.00 A0 B0 H0 S80 U0 D255\r\n";		// reply code for M10 command
-	const char* reply_M10 = "M10 XY 380 310 0.00 0.00 A0 B0 H0 S80 U160 D90\r\n";		// reply code for M10 command
+	const char* reply_M10 = "M10 XY 310 310 0.00 0.00 A0 B0 H0 S80 U0 D180\r\n";		// reply code for M10 command
+	//const char* reply_M10 = "M10 XY 310 310 0.00 0.00 A0 B0 H0 S80 U160 D90\r\n";		// reply code for M10 command
 	const char* reply_M11 = "M11 1 1 1 1\r\n";												// reply code for M11 command
 	const char* reply_OK = "OK\r\n";													// reply code for the rest of the commands
 
@@ -231,8 +231,8 @@ void static vTaskMotor(void* pvParamters){
 	Gstruct gstruct;
 	Motor motor;
 
-	penMove(160);	//Move pen up
-	setLaserPower(255);	//Turn laser off
+	penMove(0);	//Move pen up
+	setLaserPower(0);	//Turn laser off
 
 	motor.calibrate();
 	//moveSquare(&motor);
@@ -248,7 +248,7 @@ void static vTaskMotor(void* pvParamters){
 		if(xQueueReceive(cmdQueue, (void*) &gstruct, (TickType_t) 10)) {
 			if (strcmp(gstruct.cmd_type, "G1") == 0) {
 
-				newPositionX = gstruct.x_pos*motor.getLimDist(XAXIS)/38000;
+				newPositionX = gstruct.x_pos*motor.getLimDist(XAXIS)/31000;
 				//newPositionX = xcord*100*motor.getLimDist(XAXIS)/38000;
 				newPositionY = gstruct.y_pos*motor.getLimDist(YAXIS)/31000;
 				//newPositionY = ycord*100*motor.getLimDist(YAXIS)/31000;
