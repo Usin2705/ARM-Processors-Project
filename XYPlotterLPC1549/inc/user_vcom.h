@@ -5,6 +5,8 @@
  *      Author: krl
  */
 
+#include <stdint.h>
+
 #ifndef USER_VCOM_H_
 #define USER_VCOM_H_
 

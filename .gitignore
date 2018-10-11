@@ -6,10 +6,16 @@ GcodeParser/.vs/GcodeParser/v15/Browse.VC.db
 mDraw/
 lpc_chip_15xx/.cproject
 lpc_board_nxp_lpcxpresso_1549/.cproject
-mDraw old/
 XYPlotterLPC1549/Debug/
-<<<<<<< HEAD
-=======
 XYPlotterLPC1549/XYPlotterLPC1549 LinkServer Debug.launch
 FreeRTOS/Debug/
->>>>>>> feat: added basic code (without bresenham)
+mDraw old/mSpider.hex
+mDraw old/mScara.hex
+mDraw old/mEggBot.hex
+mDraw old/mCar.hex
+mDraw old/avrdude.conf
+mDraw old/XY.hex
+mDraw old/Readme.txt
+GcodeParser/.metadata/
+GcodeParser/GcodeParser/Debug/
+usb_cdc/Debug/

@@ -4,6 +4,7 @@
  */
 
 #include "Parser.h"
+#include "ITM_write.h"
 
 Parser::Parser() {
 
@@ -11,6 +12,9 @@ Parser::Parser() {
 
 // parsers G-code into Gcode structure
 Gstruct Parser::parse_gcode(const char* buffer){
+	ITM_write("mDraw: ");
+	ITM_write(buffer);
+	ITM_write("\r\n");
 
 	Gstruct gstruct;
 	char cmd[3] = {0};

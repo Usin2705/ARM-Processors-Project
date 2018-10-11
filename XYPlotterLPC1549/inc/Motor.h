@@ -8,7 +8,6 @@
 #ifndef MOTOR_H_
 #define MOTOR_H_
 
-
 #if defined (__USE_LPCOPEN)
 #if defined(NO_BOARD_LIB)
 #include "chip.h"
@@ -27,8 +26,11 @@
 #include "ITM_write.h"
 
 
+#define SIMULATOR
+#define PLOTTER1
+
+
 #define ISLEFTD true
-#define MDRAWSCALE 40000
 
 typedef enum {XAXIS , YAXIS} Axis;
 typedef enum {Xlimit0, Xlimit1, Ylimit0, Ylimit1} Limit;
@@ -72,8 +74,8 @@ private:
 	int limDistX;			// Step Length of X
 	int limDistY;			// Step Length of Y
 
-	int64_t currentPosX;		//current position of X
-	int64_t currentPosY;		//current position of Y
+	int32_t currentPosX;		//current position of X, measured in steps
+	int32_t currentPosY;		//current position of Y, measured in steps
 
 	int motorPPS;	//Pulse per second, delay = 500,000/pps. Maximum without acceleration = 6250 not finalized
 };

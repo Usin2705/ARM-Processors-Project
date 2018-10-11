@@ -7,15 +7,17 @@
  Description : main definition
 ===============================================================================
  */
-
-
 #include <bresenham.h>
 #include <cr_section_macros.h>
 
 // TODO: insert other include files here
-
 #include "user_vcom.h"
 #include "Parser.h"
+#include <math.h>
+
+#define SIMULATOR
+//#define PLOTTER1
+
 
 // Queue for Gcode structs
 QueueHandle_t cmdQueue;
@@ -66,7 +68,9 @@ static void send_to_queue(Gstruct gstruct_to_send){
 void send_reply(const char* cmd_type){
 
 	//const char* reply_M10 = "M10 XY 380 310 0.00 0.00 A0 B0 H0 S80 U0 D255\r\n";		// reply code for M10 command
-	const char* reply_M10 = "M10 XY 380 310 0.00 0.00 A0 B0 H0 S80 U160 D90\r\n";		// reply code for M10 command
+#ifdef SIMULATOR
+	const char* reply_M10 = "M10 XY 500 500 0.00 0.00 A0 B0 H0 S80 U160 D90\r\n";		// reply code for M10 command
+#endif
 	const char* reply_M11 = "M11 1 1 1 1\r\n";												// reply code for M11 command
 	const char* reply_OK = "OK\r\n";													// reply code for the rest of the commands
 
@@ -225,30 +229,44 @@ void static vTaskReceive(void* pvParamters){
 	}
 }
 
+
+
 void static vTaskMotor(void* pvParamters){
 	Gstruct gstruct;
 	Motor motor;
 
 	penMove(160);	//Move pen up
-	setLaserPower(0);	//Turn laser off
+	setLaserPower(255);	//Turn laser off
+
+#ifdef SIMULATOR
+	motor.setPPS(2500);
+#endif
 
 	motor.calibrate();
 	//moveSquare(&motor);
 	//moveRhombus(&motor);
 	//moveTrapezoid(&motor);
-
-	int64_t newPositionX = 0;
-	int64_t newPositionY = 0;
+	int32_t newPositionX = 0;
+	int32_t newPositionY = 0;
 	interrupt_pins_init();
+	char buffer[80] = {'\0'};
+
+#ifdef SIMULATOR
+	double umToStepX = (double) motor.getLimDist(XAXIS)/50000;
+	double umToStepY = (double) motor.getLimDist(YAXIS)/50000;
+	double stepPerUmX = (double) 50000/motor.getLimDist(XAXIS);
+	double stepPerUmY = (double) 50000/motor.getLimDist(YAXIS);
+#endif
+
+
 	while(1) {
 
-		//if(xQueueReceive(cmdQueue, (void*) &gstruct, portMAX_DELAY)) {
-		if(xQueueReceive(cmdQueue, (void*) &gstruct, (TickType_t) 10)) {
+		if(xQueueReceive(cmdQueue, (void*) &gstruct, portMAX_DELAY)) {
 			if (strcmp(gstruct.cmd_type, "G1") == 0) {
-
-				newPositionX = gstruct.x_pos*motor.getLimDist(XAXIS)/31000;
-				newPositionY = gstruct.y_pos*motor.getLimDist(YAXIS)/31000;
-
+				newPositionX = gstruct.x_pos*umToStepX;
+				newPositionY = gstruct.y_pos*umToStepY;
+				snprintf(buffer, 80, "G1 X%ld Y%ld \r\n", newPositionX, newPositionY);
+				ITM_write(buffer);
 				bresenham(&motor, motor.getPos(XAXIS), motor.getPos(YAXIS), newPositionX, newPositionY);
 
 				// Control pen servo
@@ -260,7 +278,6 @@ void static vTaskMotor(void* pvParamters){
 				setLaserPower(gstruct.laserPower);
 				ITM_write("Set laser power \r\n");
 			}
-
 		}
 	}
 }
