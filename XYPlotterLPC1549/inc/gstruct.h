@@ -16,8 +16,10 @@ typedef struct {
 	int y_pos;				/*goto y position value*/
 
 	int pen_pos;				/*pen position(servo value)*/
-	int pen_up;					/*pen down value*/
-	int pen_dw;					/*pen up value*/
+	int pen_up;					/*pen up value*/
+	int pen_dw;					/*pen down value*/
+
+	int laserPower;					/*laser power (inverse)*/
 
 	int x_dir;					/*stepper x-axis direction*/
 	int y_dir;					/*stepper y-axis direction*/

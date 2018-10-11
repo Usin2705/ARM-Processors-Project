@@ -6,11 +6,6 @@
  */
 
 #include <Motor.h>
-<<<<<<< HEAD
-
-Motor::Motor() 	: 	swY0(1,3, DigitalIoPin::pullup, true),
-swY1 (0,0, DigitalIoPin::pullup, true),
-=======
 volatile Axis RITaxis = XAXIS;
 volatile uint32_t RIT_count;
 xSemaphoreHandle sbRIT = xSemaphoreCreateBinary();
@@ -40,8 +35,8 @@ void SCT_init(){
 	//LPC_SCRLARGE1
 	LPC_SCTLARGE1->CONFIG |= (1 << 17); // two 16-bit timers, auto limit
 	LPC_SCTLARGE1->CTRL_L |= (72-1) << 5; // set prescaler, SCTimer/PWM clock = 1 MHz
-	LPC_SCTLARGE1->MATCHREL[0].L = 1000-1; // match 0 @ 10/1MHz = 10 usec (100 kHz PWM freq) (1MHz/1000)
-	LPC_SCTLARGE1->MATCHREL[1].L = 999; // match 1 used for duty cycle (in 10 steps)
+	LPC_SCTLARGE1->MATCHREL[0].L = 100-1; // match 0 @ 10/1MHz = 10 usec (100 kHz PWM freq) (1MHz/1000)
+	LPC_SCTLARGE1->MATCHREL[1].L = 0; // match 1 used for duty cycle (in 10 steps)
 	LPC_SCTLARGE1->EVENT[0].STATE = 0xFFFFFFFF; // event 0 happens in all states
 	LPC_SCTLARGE1->EVENT[0].CTRL = (1 << 12); // match 0 condition only
 	LPC_SCTLARGE1->EVENT[1].STATE = 0xFFFFFFFF; // event 1 happens in all states
@@ -56,6 +51,9 @@ extern "C" {
 void RIT_IRQHandler(void) {
 	static DigitalIoPin bthStepX(0,24, DigitalIoPin::output, true);
 	static DigitalIoPin bthStepY(0,27, DigitalIoPin::output, true);
+	static bool isHighX = true;
+	static bool isHighY = true;
+
 
 	// This used to check if a context switch is required
 	portBASE_TYPE xHigherPriorityWoken = pdFALSE;
@@ -65,9 +63,12 @@ void RIT_IRQHandler(void) {
 	if(RIT_count > 0) {
 		RIT_count--;
 		if (RITaxis == XAXIS) {
-			bthStepX.write(RIT_count%2==0);
+			isHighX = !isHighX;
+			bthStepX.write(isHighX);
+
 		} else {
-			bthStepY.write(RIT_count%2==0);
+			isHighY = !isHighY;
+			bthStepY.write(isHighY);
 		}
 	}
 	else {
@@ -80,7 +81,6 @@ void RIT_IRQHandler(void) {
 }
 }
 /* All move must call Motor.setRITaxis(Axis axis) to set which motor to move
- * All motor movement/RIT step must be multiplied by 2 (up and down count as 1 step)
  *
  */
 void RIT_start(int count, int us) {
@@ -111,46 +111,31 @@ void RIT_start(int count, int us) {
 }
 
 Motor::Motor() 	: 	swY0(0,0, DigitalIoPin::pullup, true),
-swY1 (1,3, DigitalIoPin::pullup, true),
->>>>>>> feat: added basic code (without bresenham)
-swX0 (0,9, DigitalIoPin::pullup, true),
-swX1 (0,29, DigitalIoPin::pullup, true),
-directionX(1,0, DigitalIoPin::output, true),
-directionY(0,28, DigitalIoPin::output, true)
+		swY1 (1,3, DigitalIoPin::pullup, true),
+		swX0 (0,9, DigitalIoPin::pullup, true),
+		swX1 (0,29, DigitalIoPin::pullup, true),
+		directionX(1,0, DigitalIoPin::output, true),
+		directionY(0,28, DigitalIoPin::output, true)
 {
-<<<<<<< HEAD
-
-=======
-	//motorPPS = 500000/80; //6250
-	motorPPS = 500000/400; //6250
+	//motorPPS = 500000/60; //8333
+	motorPPS = 500000/200; //simulator
 	RITaxis = XAXIS;
-	penMove(160);	//Move pen up
-	setLaserPower(255);	//Turn laser off
->>>>>>> feat: added basic code (without bresenham)
 }
 
 Motor::~Motor() {
 	// TODO Auto-generated destructor stub
 }
 
-<<<<<<< HEAD
-void Motor::setLength(char cord, int length) {
-	(cord=='X'? stepLengthX: stepLengthY) = length;
-
-	if (cord == 'X') {
-		stepLengthX = length;
-	} else {
-		stepLengthY = length;
-	}
+/* Set the distance of limit (measure by steps)
+ * if cord = 'X' then set the distance for X
+ * Otherwise set for Y
+ *
+ */
+void Motor::move(Axis axis, int count, int pps) {
+	RITaxis = axis;
+	RIT_start(count, 500000/pps);
 }
 
-int Motor::getLength(char cord) {
-	return (cord=='X'?stepLengthX:stepLengthY);
-}
-
-void Motor::setDirection(char cord, bool isLeftD) {
-	if (cord=='X') {
-=======
 /* Set the distance of limit (measure by steps)
  * if cord = 'X' then set the distance for X
  * Otherwise set for Y
@@ -176,17 +161,12 @@ int Motor::getLimDist(Axis axis) {
  */
 void Motor::setDirection(Axis axis, bool isLeftD) {
 	if (axis==XAXIS) {
->>>>>>> feat: added basic code (without bresenham)
 		directionX.write(isLeftD);
 	} else {
 		directionY.write(isLeftD);
 	}
 }
 
-<<<<<<< HEAD
-void Motor::setPos(char cord, int currentPos) {
-	(cord=='X'?currentPosX:currentPosY) = currentPos;
-=======
 /* Set the position of the motor (measured by steps)
  * if cord = 'X' then set the position for X
  * Otherwise set for Y
@@ -194,18 +174,12 @@ void Motor::setPos(char cord, int currentPos) {
  */
 void Motor::setPos(Axis axis, int currentPos) {
 	(axis==XAXIS?currentPosX:currentPosY) = currentPos;
->>>>>>> feat: added basic code (without bresenham)
 }
 
 int Motor::getPos(Axis axis) {
 	return (axis==XAXIS?currentPosX:currentPosY);
 }
 
-<<<<<<< HEAD
-
-bool Motor::readLimit(char cord) {
-	if (cord=='x') {
-=======
 /* Read the limit switch
  * Xlimit0 = limit switch X0 (at 0)
  * Xlimit1 = limit switch X1 (at maximum range of X)
@@ -215,7 +189,6 @@ bool Motor::readLimit(char cord) {
  */
 bool Motor::readLimit(Limit limit) {
 	if (limit==Xlimit0) {
->>>>>>> feat: added basic code (without bresenham)
 		return swX0.read();
 	} else if (limit==Xlimit1){
 		return swX1.read();
@@ -229,8 +202,6 @@ bool Motor::readLimit(Limit limit) {
 	}
 }
 
-<<<<<<< HEAD
-=======
 /* Set the PPS of motor
  * delay = 500000/PPS
  *
@@ -247,24 +218,18 @@ int Motor::getPPS() {
 	return motorPPS;
 }
 
-void Motor::setRITaxis(Axis axis) {
-	RITaxis = axis;
-}
-
 void penMove(int penPos){
 	int value = penPos*999/255;
 	LPC_SCT0->MATCHREL[1].L = 1000 + value;
 }
 
 void setLaserPower(int laserPower){
-	int value = laserPower*999/255;
-	LPC_SCT1->MATCHREL[1].L = value;
+	LPC_SCT1->MATCHREL[1].L = laserPower;
 }
 
 
 void Motor::calibrate() {
-	penMove(160);	//Move pen up
-	setLaserPower(255);	//Turn laser off
+
 	ITM_write("---------------------------    CALIBRATE X  -------------------------\r\n");
 	int maxSteps = 0;
 	RITaxis = XAXIS;
@@ -276,7 +241,7 @@ void Motor::calibrate() {
 		limitread = readLimit(i==0?Xlimit0:Ylimit0);
 		while (!limitread){
 			limitread = readLimit(i==0?Xlimit0:Ylimit0);
-			RIT_start(5, 500000/motorPPS);
+			RIT_start(1, 500000/motorPPS);
 		}
 
 		//	When move back to right (or up if cord == Y), count step
@@ -284,8 +249,8 @@ void Motor::calibrate() {
 		limitread = readLimit(i==0?Xlimit1:Ylimit1);
 		while (!limitread){
 			limitread = readLimit(i==0?Xlimit1:Ylimit1);
-			RIT_start(5,500000/motorPPS);
-			maxSteps =  maxSteps + 2; //last RIT step doesn't  count
+			RIT_start(1,500000/motorPPS);
+			maxSteps =  maxSteps + 1; //last RIT step doesn't  count
 		}
 		setLimDist(RITaxis, maxSteps);
 		setPos(RITaxis, 0);
@@ -303,14 +268,10 @@ void Motor::calibrate() {
 	setDirection(XAXIS, ISLEFTD);
 	setDirection(YAXIS, ISLEFTD);
 	RITaxis = XAXIS;
-	RIT_start(getLimDist(RITaxis),500000/motorPPS); //All motor movement/RIT step must be multiplied by 2
+	RIT_start(getLimDist(RITaxis)/2,500000/motorPPS); //All motor movement/RIT step must be multiplied by 2
 	RITaxis = YAXIS;
-	//vTaskDelay(5); // delay
-	RIT_start(getLimDist(RITaxis),500000/motorPPS); //All motor movement/RIT step must be multiplied by 2
+	RIT_start(getLimDist(RITaxis)/2,500000/motorPPS); //All motor movement/RIT step must be multiplied by 2
 
 	setPos(XAXIS, (getLimDist(XAXIS)/2)); // Set position in scale with mDraw
 	setPos(YAXIS, (getLimDist(YAXIS)/2)); // Set position in scale with mDraw
 }
-
->>>>>>> feat: added basic code (without bresenham)
-

@@ -15,12 +15,12 @@ void drawplot(Motor *motor, int64_t x0, int64_t y0, int64_t x1, int64_t y1) {
 
 	//Move motor in X axis
 	if (absX > 0) {
-		motor->move(XAXIS, absX*2+1, motor->getPPS()); //All motor movement/RIT step must be multiplied by 2
+		motor->move(XAXIS, absX, motor->getPPS()); //All motor movement/RIT step must be multiplied by 2
 	}
 
 	//Move motor in Y axis
 	if (absY > 0) {
-		motor->move(YAXIS, absY*2+1, motor->getPPS()); //All motor movement/RIT step must be multiplied by 2
+		motor->move(YAXIS, absY, motor->getPPS()); //All motor movement/RIT step must be multiplied by 2
 	}
 }
 
@@ -110,12 +110,12 @@ void bresenham(Motor *motor, int64_t x0, int64_t y0, int64_t x1, int64_t y1) {
 
 		//Move motor in X axis
 		if (absX > 0) {
-			motor->move(XAXIS, absX*2 +1, motor->getPPS()); //All motor movement/RIT step must be multiplied by 2
+			motor->move(XAXIS, absX, motor->getPPS()); //All motor movement/RIT step must be multiplied by 2
 		}
 
 		//Move motor in Y axis
 		if (absY > 0) {
-			motor->move(YAXIS, absY*2 + 1, motor->getPPS()); //All motor movement/RIT step must be multiplied by 2
+			motor->move(YAXIS, absY, motor->getPPS()); //All motor movement/RIT step must be multiplied by 2
 		}
 
 	}

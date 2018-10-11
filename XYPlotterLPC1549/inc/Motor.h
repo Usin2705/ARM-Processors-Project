@@ -8,14 +8,23 @@
 #ifndef MOTOR_H_
 #define MOTOR_H_
 
-#define ISLEFTD true
-#define MDRAWSCALE 31000
+
+#if defined (__USE_LPCOPEN)
+#if defined(NO_BOARD_LIB)
+#include "chip.h"
+#else
+#include "board.h"
+#endif
+#endif
+#include "FreeRTOS.h"
+#include "task.h"
+#include "queue.h"
+#include "semphr.h"
+#include <mutex>
 
 #include "DigitalIoPin.h"
-#include "ITM_write.h"
-<<<<<<< HEAD
 #include <stdint.h>
-=======
+#include "ITM_write.h"
 
 
 #define ISLEFTD true
@@ -26,22 +35,13 @@ typedef enum {Xlimit0, Xlimit1, Ylimit0, Ylimit1} Limit;
 
 void RIT_start(int count, int us);
 void SCT_init();
->>>>>>> feat: added basic code (without bresenham)
 
 class Motor {
 
 public:
 
 	Motor();
-<<<<<<< HEAD
-	virtual ~Motor();
-	void setLength(char cord, int length);
-	void setDirection(char cord, bool isLeftD);
-	void setPos(char cord, int currentPos);
-	int getPos(char cord);
-	int getLength(char cord);
-	bool readLimit(char cord);
-=======
+	void move(Axis axis, int count, int pps);
 
 	void setLimDist(Axis axis, int newDist);
 	int getLimDist(Axis axis);
@@ -54,26 +54,12 @@ public:
 	void setPPS(int PPS);
 	int getPPS();
 
-	void setRITaxis(Axis axis);
 	bool readLimit(Limit limit);
 	void calibrate();
->>>>>>> feat: added basic code (without bresenham)
 
 	virtual ~Motor();
 
 private:
-<<<<<<< HEAD
-	DigitalIoPin swY0;
-	DigitalIoPin swY1;
-	DigitalIoPin swX0;
-	DigitalIoPin swX1;
-	DigitalIoPin directionX;
-	DigitalIoPin directionY;
-	int stepLengthX;
-	int stepLengthY;
-	int64_t currentPosX;
-	int64_t currentPosY;
-=======
 
 	DigitalIoPin swY0;	//Limit of Y at 0
 	DigitalIoPin swY1;	//Limit of Y at max Y
@@ -90,8 +76,10 @@ private:
 	int64_t currentPosY;		//current position of Y
 
 	int motorPPS;	//Pulse per second, delay = 500,000/pps. Maximum without acceleration = 6250 not finalized
->>>>>>> feat: added basic code (without bresenham)
 };
 
-#endif /* MOTOR_H_ */
 
+void penMove(int penPos);
+void setLaserPower(int laserPower);
+
+#endif /* MOTOR_H_ */

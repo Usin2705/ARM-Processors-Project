@@ -213,6 +213,7 @@ void cdc_task(void *pvParameters)
 		/* Init VCOM interface */
 		ret = vcom_init(g_hUsb, &desc, &usb_param);
 		if (ret == LPC_OK) {
+			NVIC_SetPriority(USB0_IRQn, 6);
 			/*  enable USB interrupts */
 			NVIC_EnableIRQ(USB0_IRQn);
 			/* now connect */
