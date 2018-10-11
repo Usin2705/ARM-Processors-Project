@@ -8,3 +8,8 @@ lpc_chip_15xx/.cproject
 lpc_board_nxp_lpcxpresso_1549/.cproject
 mDraw old/
 XYPlotterLPC1549/Debug/
+<<<<<<< HEAD
+=======
+XYPlotterLPC1549/XYPlotterLPC1549 LinkServer Debug.launch
+FreeRTOS/Debug/
+>>>>>>> feat: added basic code (without bresenham)
