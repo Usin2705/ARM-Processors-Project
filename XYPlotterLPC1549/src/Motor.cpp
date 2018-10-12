@@ -36,7 +36,7 @@ void SCT_init(){
 	LPC_SCTLARGE1->CONFIG |= (1 << 17); // two 16-bit timers, auto limit
 	LPC_SCTLARGE1->CTRL_L |= (72-1) << 5; // set prescaler, SCTimer/PWM clock = 1 MHz
 	LPC_SCTLARGE1->MATCHREL[0].L = 1000-1; // match 0 @ 10/1MHz = 10 usec (100 kHz PWM freq) (1MHz/1000)
-	LPC_SCTLARGE1->MATCHREL[1].L = 999; // match 1 used for duty cycle (in 10 steps)
+	LPC_SCTLARGE1->MATCHREL[1].L = 0; // match 1 used for duty cycle (in 10 steps)
 	LPC_SCTLARGE1->EVENT[0].STATE = 0xFFFFFFFF; // event 0 happens in all states
 	LPC_SCTLARGE1->EVENT[0].CTRL = (1 << 12); // match 0 condition only
 	LPC_SCTLARGE1->EVENT[1].STATE = 0xFFFFFFFF; // event 1 happens in all states
@@ -60,8 +60,6 @@ void RIT_IRQHandler(void) {
 	// Timer then removes the IRQ until next match occurs
 	Chip_RIT_ClearIntStatus(LPC_RITIMER); // clear IRQ flag
 	if(RIT_count > 0) {
-		RIT_count--;
-
 		if (RITaxis == XAXIS) {
 			isHighX = !(bool)isHighX;
 			bthStepX.write(isHighX);
@@ -69,6 +67,8 @@ void RIT_IRQHandler(void) {
 			isHighY = !(bool)isHighY;
 			bthStepY.write(isHighY);
 		}
+
+		RIT_count--;
 	}
 	else {
 		Chip_RIT_Disable(LPC_RITIMER); // disable timer
@@ -116,7 +116,7 @@ swX1 (0,29, DigitalIoPin::pullup, true),
 directionX(1,0, DigitalIoPin::output, true),
 directionY(0,28, DigitalIoPin::output, true)
 {
-	motorPPS = 500000/200; //simulator
+	//motorPPS = 120; //simulator
 }
 
 Motor::~Motor() {
@@ -233,22 +233,23 @@ void Motor::calibrate() {
 	RITaxis = XAXIS;
 	bool limitread = readLimit(Xlimit0);
 	char buffer[80] = {'\0'};
+	uint8_t step = 8;
 	for (uint8_t i = 0; i < 2; i++) {
 		//Move to left (or down if cord == Y), without counting step
 		setDirection(RITaxis, ISLEFTD);
-		limitread = readLimit(i==0?Xlimit0:Ylimit0);
+		limitread = readLimit(RITaxis==XAXIS?Xlimit0:Ylimit0);
 		while (!limitread){
-			limitread = readLimit(i==0?Xlimit0:Ylimit0);
-			RIT_start(1, 500000/motorPPS);
+			limitread = readLimit(RITaxis==XAXIS?Xlimit0:Ylimit0);
+			RIT_start(step, 500000/motorPPS);
 		}
 
 		//	When move back to right (or up if cord == Y), count step
 		setDirection(RITaxis, !ISLEFTD);
-		limitread = readLimit(i==0?Xlimit1:Ylimit1);
+		limitread = readLimit(RITaxis==XAXIS?Xlimit1:Ylimit1);
 		while (!limitread){
-			limitread = readLimit(i==0?Xlimit1:Ylimit1);
-			RIT_start(1,500000/motorPPS);
-			maxSteps++;
+			limitread = readLimit(RITaxis==XAXIS?Xlimit1:Ylimit1);
+			RIT_start(step,500000/motorPPS);
+			maxSteps= maxSteps + step/2;
 		}
 		setLimDist(RITaxis, maxSteps);
 		setPos(RITaxis, 0);
@@ -266,9 +267,9 @@ void Motor::calibrate() {
 	setDirection(XAXIS, ISLEFTD);
 	setDirection(YAXIS, ISLEFTD);
 	RITaxis = XAXIS;
-	RIT_start(getLimDist(RITaxis)/2,500000/motorPPS);
+	RIT_start(getLimDist(RITaxis),500000/motorPPS);
 	RITaxis = YAXIS;
-	RIT_start(getLimDist(RITaxis)/2,500000/motorPPS);
+	RIT_start(getLimDist(RITaxis),500000/motorPPS);
 
 	setPos(XAXIS, getLimDist(XAXIS)/2); // Set position in scale with mDraw
 	setPos(YAXIS, getLimDist(YAXIS)/2); // Set position in scale with mDraw

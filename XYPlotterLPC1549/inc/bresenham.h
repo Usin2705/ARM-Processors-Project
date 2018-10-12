@@ -15,12 +15,12 @@ void drawplot(Motor *motor, int32_t x0, int32_t y0, int32_t x1, int32_t y1) {
 
 	//Move motor in X axis
 	if (absX > 0) {
-		motor->move(XAXIS, absX, motor->getPPS());
+		motor->move(XAXIS, absX*2, motor->getPPS());
 	}
 
 	//Move motor in Y axis
 	if (absY > 0) {
-		motor->move(YAXIS, absY, motor->getPPS());
+		motor->move(YAXIS, absY*2, motor->getPPS());
 	}
 }
 
@@ -110,17 +110,20 @@ void bresenham(Motor *motor, int32_t x0, int32_t y0, int32_t x1, int32_t y1) {
 
 		//Move motor in X axis
 		if (absX > 0) {
-			motor->move(XAXIS, absX, motor->getPPS());
+			motor->move(XAXIS, absX*2, motor->getPPS());
 		}
 
 		//Move motor in Y axis
 		if (absY > 0) {
-			motor->move(YAXIS, absY, motor->getPPS()); //All motor movement/RIT step must be multiplied by 2
+			motor->move(YAXIS, absY*2, motor->getPPS()); //All motor movement/RIT step must be multiplied by 2
 		}
 	}
 
 	motor->setPos(XAXIS, x1);
 	motor->setPos(YAXIS, y1);
+	char buffer[80];
+	snprintf(buffer, 80, "BSH G1 X%ld Y%ld \r\n", x1, y1);
+	ITM_write(buffer);
 }
 
 

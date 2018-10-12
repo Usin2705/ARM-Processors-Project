@@ -19,3 +19,5 @@ mDraw old/Readme.txt
 GcodeParser/.metadata/
 GcodeParser/GcodeParser/Debug/
 usb_cdc/Debug/
+lpc_chip_15xx/version.txt
+XYPlotterLPC1549/XYPlotterLPC1549 LinkServer Release.launch

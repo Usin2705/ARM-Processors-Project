@@ -15,9 +15,10 @@
 #include "Parser.h"
 #include <math.h>
 
-#define SIMULATOR
-//#define PLOTTER1
-
+//#define SIMULATOR
+#define PLOTTER1
+//#define PLOTTER2
+//#define LASER
 
 // Queue for Gcode structs
 QueueHandle_t cmdQueue;
@@ -68,9 +69,15 @@ static void send_to_queue(Gstruct gstruct_to_send){
 void send_reply(const char* cmd_type){
 
 	//const char* reply_M10 = "M10 XY 380 310 0.00 0.00 A0 B0 H0 S80 U0 D255\r\n";		// reply code for M10 command
-#ifdef SIMULATOR
-	const char* reply_M10 = "M10 XY 500 500 0.00 0.00 A0 B0 H0 S80 U160 D90\r\n";		// reply code for M10 command
+
+#if defined(PLOTTER1)
+	const char* reply_M10 = "M10 XY 310 345 0.00 0.00 A0 B0 H0 S80 U0 D180\r\n";		// reply code for M10 command
+#elif defined(PLOTTER2)
+	const char* reply_M10 =	"M10 XY 310 340 0.00 0.00 A0 B0 H0 S80 U0 D180\r\n";		// reply code for M10 command
+#else
+	const char* reply_M10 =	"M10 XY 500 500 0.00 0.00 A0 B0 H0 S80 U160 D90\r\n";
 #endif
+
 	const char* reply_M11 = "M11 1 1 1 1\r\n";												// reply code for M11 command
 	const char* reply_OK = "OK\r\n";													// reply code for the rest of the commands
 
@@ -235,11 +242,20 @@ void static vTaskMotor(void* pvParamters){
 	Gstruct gstruct;
 	Motor motor;
 
-	penMove(160);	//Move pen up
-	setLaserPower(255);	//Turn laser off
+	setLaserPower(0);	//Turn laser off
+	motor.setPPS(4000);
 
-#ifdef SIMULATOR
+#if defined(PLOTTER1)
+	penMove(0); 		//Move pen up
+#elif define(PLOTTER2)
+	penMove(0); 		//Move pen up
+#else
+	penMove(160);		//Move pen up
 	motor.setPPS(2500);
+#endif
+
+#ifdef LASER
+	motor.setPPS(2000);	//Laser drawing should be slower
 #endif
 
 	motor.calibrate();
@@ -250,12 +266,20 @@ void static vTaskMotor(void* pvParamters){
 	int32_t newPositionY = 0;
 	interrupt_pins_init();
 	char buffer[80] = {'\0'};
+	double stepsPerMMX;
+	double stepsPerMMY;
 
-#ifdef SIMULATOR
-	double umToStepX = (double) motor.getLimDist(XAXIS)/50000;
-	double umToStepY = (double) motor.getLimDist(YAXIS)/50000;
-	double stepPerUmX = (double) 50000/motor.getLimDist(XAXIS);
-	double stepPerUmY = (double) 50000/motor.getLimDist(YAXIS);
+	//lower resolution might be a good idea???
+
+#if defined(PLOTTER1)
+	stepsPerMMX = (double) motor.getLimDist(XAXIS)/31000.0; //31cm
+	stepsPerMMY = (double) motor.getLimDist(YAXIS)/34500.0; //34.5cm
+#elif defined(PLOTTER2) || defined(PLOTTER3)
+	stepsPerMMX = (double) motor.getLimDist(XAXIS)/31000.0; //31cm
+	stepsPerMMY = (double) motor.getLimDist(YAXIS)/34000.0; //34cm
+#else
+	stepsPerMMX = (double) motor.getLimDist(XAXIS)/500000.0;
+	stepsPerMMY = (double) motor.getLimDist(YAXIS)/500000.0;
 #endif
 
 
@@ -263,20 +287,43 @@ void static vTaskMotor(void* pvParamters){
 
 		if(xQueueReceive(cmdQueue, (void*) &gstruct, portMAX_DELAY)) {
 			if (strcmp(gstruct.cmd_type, "G1") == 0) {
-				newPositionX = gstruct.x_pos*umToStepX;
-				newPositionY = gstruct.y_pos*umToStepY;
-				snprintf(buffer, 80, "G1 X%ld Y%ld \r\n", newPositionX, newPositionY);
+				newPositionX = round(gstruct.x_pos*stepsPerMMX);
+				newPositionY = round(gstruct.y_pos*stepsPerMMY);
+				snprintf(buffer, 80, "LPC G1 X%ld Y%ld \r\n", newPositionX, newPositionY);
 				ITM_write(buffer);
-				bresenham(&motor, motor.getPos(XAXIS), motor.getPos(YAXIS), newPositionX, newPositionY);
+				//bresenham(&motor, motor.getPos(XAXIS), motor.getPos(YAXIS), newPositionX, newPositionY);
+
+
+				int absX = 0;
+				int absY = 0;
+				motor.setDirection(XAXIS, (newPositionX - motor.getPos(XAXIS))>=0); // if newPositionX is large then move left
+				motor.setDirection(YAXIS, (newPositionY - motor.getPos(YAXIS))>=0); // if newPositionY is large then move down
+
+				absX = abs(newPositionX - motor.getPos(XAXIS));
+				absY = abs(newPositionY - motor.getPos(YAXIS));
+
+				if (absX > 0) {
+					motor.move(XAXIS, absX*2, motor.getPPS()); //All motor movement/RIT step must be multiplied by 2
+				}
+				motor.setPos(XAXIS, newPositionX);
+
+				//Move motor in Y axis
+				if (absY > 0) {
+					motor.move(YAXIS, absY*2, motor.getPPS()); //All motor movement/RIT step must be multiplied by 2
+				}
+				motor.setPos(YAXIS, newPositionY);
+
 
 				// Control pen servo
 			} else if(strcmp(gstruct.cmd_type,"M1") == 0){
 				penMove(gstruct.pen_pos);
+				vTaskDelay(50); // Delay a little bit to avoid pen not move up/down before motor move
 
 				// Control laser power
 			} else if (strcmp(gstruct.cmd_type,"M4") == 0){
 				setLaserPower(gstruct.laserPower);
 				ITM_write("Set laser power \r\n");
+				vTaskDelay(5); // Delay a little bit to avoid laser not on/off before motor move
 			}
 		}
 	}
