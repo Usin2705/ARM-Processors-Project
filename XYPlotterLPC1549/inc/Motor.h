@@ -53,6 +53,9 @@ public:
 	void setPos(Axis axis, int currentPos);
 	int getPos(Axis axis);
 
+	void setScale(Axis axis, double stepsPerMM);
+	double getScale(Axis axis);
+
 	void setPPS(int PPS);
 	int getPPS();
 
@@ -74,8 +77,12 @@ private:
 	int limDistX;			// Step Length of X
 	int limDistY;			// Step Length of Y
 
-	int32_t currentPosX;		//current position of X, measured in steps
-	int32_t currentPosY;		//current position of Y, measured in steps
+	int currentCoordX;		//current position of X, measured in xcoord in mDraw
+	int currentCoordY;		//current position of Y, measured in ycoord in mDraw
+
+	double stepsPerMMX; 	//to convert from xcoord to steps
+	double stepsPerMMY;		//to convert from ycoord to steps
+
 
 	int motorPPS;	//Pulse per second, delay = 500,000/pps. Maximum without acceleration = 6250 not finalized
 };

@@ -110,11 +110,11 @@ void RIT_start(int count, int us) {
 }
 
 Motor::Motor() 	: 	swY0(0,0, DigitalIoPin::pullup, true),
-swY1 (1,3, DigitalIoPin::pullup, true),
-swX0 (0,9, DigitalIoPin::pullup, true),
-swX1 (0,29, DigitalIoPin::pullup, true),
-directionX(1,0, DigitalIoPin::output, true),
-directionY(0,28, DigitalIoPin::output, true)
+		swY1 (1,3, DigitalIoPin::pullup, true),
+		swX0 (0,9, DigitalIoPin::pullup, true),
+		swX1 (0,29, DigitalIoPin::pullup, true),
+		directionX(1,0, DigitalIoPin::output, true),
+		directionY(0,28, DigitalIoPin::output, true)
 {
 	//motorPPS = 120; //simulator
 }
@@ -164,17 +164,40 @@ void Motor::setDirection(Axis axis, bool isLeftD) {
 	}
 }
 
-/* Set the position of the motor (measured by steps)
+/* Set the scale of the motor (measure by steps per mm)
+ * if cord = 'X' then set the scale for motor X
+ * Otherwise set for motor Y
+ *
+ */
+void Motor::setScale(Axis axis, double stepsPerMM) {
+	(axis==XAXIS?stepsPerMMX:stepsPerMMY) = stepsPerMM;
+}
+
+/* Return the scale of the motor (measure by steps per mm)
+ * if cord = 'X' then get the scale for motor X
+ * Otherwise get scale for motor Y
+ *
+ */
+double Motor::getScale(Axis axis) {
+	return (axis==XAXIS?stepsPerMMX:stepsPerMMY);
+}
+
+/* Set the position of the motor (measure by coordinate from mDraw)
  * if cord = 'X' then set the position for X
  * Otherwise set for Y
  *
  */
 void Motor::setPos(Axis axis, int currentPos) {
-	(axis==XAXIS?currentPosX:currentPosY) = currentPos;
+	(axis==XAXIS?currentCoordX:currentCoordY) = currentPos;
 }
 
+/* Return the position of the motor (measure by coordinate from mDraw)
+ * if cord = 'X' then get the position for X
+ * Otherwise get coordinate for Y
+ *
+ */
 int Motor::getPos(Axis axis) {
-	return (axis==XAXIS?currentPosX:currentPosY);
+	return (axis==XAXIS?currentCoordX:currentCoordY);
 }
 
 /* Read the limit switch
@@ -266,13 +289,23 @@ void Motor::calibrate() {
 	//Move to middle
 	setDirection(XAXIS, ISLEFTD);
 	setDirection(YAXIS, ISLEFTD);
+	/*
 	RITaxis = XAXIS;
-	RIT_start(getLimDist(RITaxis),500000/motorPPS);
+	RIT_start(getLimDist(RITaxis) ,500000/motorPPS);
 	RITaxis = YAXIS;
-	RIT_start(getLimDist(RITaxis),500000/motorPPS);
+	RIT_start(getLimDist(RITaxis) ,500000/motorPPS);
 
 	setPos(XAXIS, getLimDist(XAXIS)/2); // Set position in scale with mDraw
 	setPos(YAXIS, getLimDist(YAXIS)/2); // Set position in scale with mDraw
+	 */
+
+	RITaxis = XAXIS;
+	RIT_start(50 ,500000/motorPPS);
+	RITaxis = YAXIS;
+	RIT_start(50 ,500000/motorPPS);
+
+	setPos(XAXIS, 0); // Set position in scale with mDraw
+	setPos(YAXIS, 0); // Set position in scale with mDraw
 }
 
 

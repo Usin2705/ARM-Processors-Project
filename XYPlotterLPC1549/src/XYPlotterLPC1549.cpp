@@ -13,10 +13,9 @@
 // TODO: insert other include files here
 #include "user_vcom.h"
 #include "Parser.h"
-#include <math.h>
 
-//#define SIMULATOR
-#define PLOTTER1
+#define SIMULATOR
+//#define PLOTTER1
 //#define PLOTTER2
 //#define LASER
 
@@ -75,7 +74,7 @@ void send_reply(const char* cmd_type){
 #elif defined(PLOTTER2)
 	const char* reply_M10 =	"M10 XY 310 340 0.00 0.00 A0 B0 H0 S80 U0 D180\r\n";		// reply code for M10 command
 #else
-	const char* reply_M10 =	"M10 XY 500 500 0.00 0.00 A0 B0 H0 S80 U160 D90\r\n";
+	const char* reply_M10 =	"M10 XY 300 400 0.00 0.00 A0 B0 H0 S80 U160 D90\r\n";
 #endif
 
 	const char* reply_M11 = "M11 1 1 1 1\r\n";												// reply code for M11 command
@@ -251,6 +250,7 @@ void static vTaskMotor(void* pvParamters){
 	penMove(0); 		//Move pen up
 #else
 	penMove(160);		//Move pen up
+	setLaserPower(0);	//Turn laser off
 	motor.setPPS(2500);
 #endif
 
@@ -262,8 +262,6 @@ void static vTaskMotor(void* pvParamters){
 	//moveSquare(&motor);
 	//moveRhombus(&motor);
 	//moveTrapezoid(&motor);
-	int32_t newPositionX = 0;
-	int32_t newPositionY = 0;
 	interrupt_pins_init();
 	char buffer[80] = {'\0'};
 	double stepsPerMMX;
@@ -278,40 +276,42 @@ void static vTaskMotor(void* pvParamters){
 	stepsPerMMX = (double) motor.getLimDist(XAXIS)/31000.0; //31cm
 	stepsPerMMY = (double) motor.getLimDist(YAXIS)/34000.0; //34cm
 #else
-	stepsPerMMX = (double) motor.getLimDist(XAXIS)/500000.0;
-	stepsPerMMY = (double) motor.getLimDist(YAXIS)/500000.0;
+	stepsPerMMX = (double) motor.getLimDist(XAXIS)/50000.0;
+	stepsPerMMY = (double) motor.getLimDist(YAXIS)/50000.0;
 #endif
 
+	motor.setScale(XAXIS, stepsPerMMX);
+	motor.setScale(YAXIS, stepsPerMMY);
 
 	while(1) {
 
 		if(xQueueReceive(cmdQueue, (void*) &gstruct, portMAX_DELAY)) {
 			if (strcmp(gstruct.cmd_type, "G1") == 0) {
-				newPositionX = round(gstruct.x_pos*stepsPerMMX);
-				newPositionY = round(gstruct.y_pos*stepsPerMMY);
-				snprintf(buffer, 80, "LPC G1 X%ld Y%ld \r\n", newPositionX, newPositionY);
+
+				snprintf(buffer, 80, "LPC G1 X%d Y%d \r\n", gstruct.x_pos, gstruct.y_pos);
 				ITM_write(buffer);
-				//bresenham(&motor, motor.getPos(XAXIS), motor.getPos(YAXIS), newPositionX, newPositionY);
+				bresenham(&motor, motor.getPos(XAXIS), motor.getPos(YAXIS), gstruct.x_pos, gstruct.y_pos);
 
-
+				/*
 				int absX = 0;
 				int absY = 0;
-				motor.setDirection(XAXIS, (newPositionX - motor.getPos(XAXIS))>=0); // if newPositionX is large then move left
-				motor.setDirection(YAXIS, (newPositionY - motor.getPos(YAXIS))>=0); // if newPositionY is large then move down
+				motor.setDirection(XAXIS, (gstruct.x_pos - motor.getPos(XAXIS))>=0); // if newPositionX is large then move left
+				motor.setDirection(YAXIS, (gstruct.y_pos - motor.getPos(YAXIS))>=0); // if newPositionY is large then move down
 
-				absX = abs(newPositionX - motor.getPos(XAXIS));
-				absY = abs(newPositionY - motor.getPos(YAXIS));
+				absX = round(abs((gstruct.x_pos - motor.getPos(XAXIS))*motor.getScale(XAXIS));
+				absY = round(abs((gstruct.y_pos - motor.getPos(YAXIS))*motor.getScale(YAXIS));
 
 				if (absX > 0) {
 					motor.move(XAXIS, absX*2, motor.getPPS()); //All motor movement/RIT step must be multiplied by 2
 				}
-				motor.setPos(XAXIS, newPositionX);
+				motor.setPos(XAXIS, gstruct.x_pos);
 
 				//Move motor in Y axis
 				if (absY > 0) {
 					motor.move(YAXIS, absY*2, motor.getPPS()); //All motor movement/RIT step must be multiplied by 2
 				}
-				motor.setPos(YAXIS, newPositionY);
+				motor.setPos(YAXIS, gstruct.y_pos);
+				*/
 
 
 				// Control pen servo
