@@ -25,11 +25,6 @@
 #include <stdint.h>
 #include "ITM_write.h"
 
-
-#define SIMULATOR
-#define PLOTTER1
-
-
 #define ISLEFTD true
 
 typedef enum {XAXIS , YAXIS} Axis;
@@ -53,8 +48,9 @@ public:
 	void setPos(Axis axis, int currentPos);
 	int getPos(Axis axis);
 
-	void setScale(Axis axis, double stepsPerMM);
-	double getScale(Axis axis);
+	void setScale(Axis axis, double stepsPerMM, double MMPerSteps);
+	double getStepsPerMM(Axis axis);
+	double getMMPerStep(Axis axis);
 
 	void setPPS(int PPS);
 	int getPPS();
@@ -82,6 +78,9 @@ private:
 
 	double stepsPerMMX; 	//to convert from xcoord to steps
 	double stepsPerMMY;		//to convert from ycoord to steps
+
+	double MMPerStepX; 	//to convert from steps to xcoord
+	double MMPerStepY;		//to convert from steps to ycoord
 
 
 	int motorPPS;	//Pulse per second, delay = 500,000/pps. Maximum without acceleration = 6250 not finalized

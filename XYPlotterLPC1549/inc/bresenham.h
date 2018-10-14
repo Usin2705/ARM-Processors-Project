@@ -11,8 +11,8 @@
 #include <math.h>
 
 void drawplot(Motor *motor, int x0, int y0, int x1, int y1) {
-	int absX = round(abs(x1 - x0)*motor->getScale(XAXIS));
-	int absY= round(abs(y1 - y0)*motor->getScale(YAXIS));
+	int absX = abs(x1 - x0);
+	int absY= abs(y1 - y0);
 
 	//Move motor in X axis
 	if (absX > 0) {
@@ -78,7 +78,12 @@ void plotLineHigh(Motor *motor, int x0, int y0, int x1, int y1) {
 	}
 }
 
-void bresenham(Motor *motor, int x0, int y0, int x1, int y1) {
+void bresenham(Motor *motor, int xcoord0, int ycoord0, int xcoord1, int ycoord1) {
+	int x0 = xcoord0*motor->getStepsPerMM(XAXIS);
+	int x1 = xcoord1*motor->getStepsPerMM(XAXIS);
+	int y0 = ycoord0*motor->getStepsPerMM(YAXIS);
+	int y1 = ycoord1*motor->getStepsPerMM(YAXIS);
+
 	//Regardless of bresenham or not, the direction is set
 	motor->setDirection(XAXIS, (x1 - x0)>=0); // if newPositionX is large then move left
 	motor->setDirection(YAXIS, (y1 - y0)>=0); // if newPositionY is large then move down
@@ -120,10 +125,12 @@ void bresenham(Motor *motor, int x0, int y0, int x1, int y1) {
 		}
 	}
 
-	motor->setPos(XAXIS, x1);
-	motor->setPos(YAXIS, y1);
+	int newXcoord = (x1-x0)*motor->getMMPerStep(XAXIS) + xcoord0;
+	int newYcoord = (y1-y0)*motor->getMMPerStep(YAXIS) + ycoord0;
+	motor->setPos(XAXIS, newXcoord);
+	motor->setPos(YAXIS, newYcoord);
 	char buffer[80];
-	snprintf(buffer, 80, "BSH G1 X%ld Y%ld \r\n", x1, y1);
+	snprintf(buffer, 80, "BSH G1 X%d Y%d \r\n", x1, y1);
 	ITM_write(buffer);
 }
 

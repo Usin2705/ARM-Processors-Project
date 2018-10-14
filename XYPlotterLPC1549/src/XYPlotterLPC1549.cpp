@@ -67,21 +67,20 @@ static void send_to_queue(Gstruct gstruct_to_send){
 // Sends reply code to plotter
 void send_reply(const char* cmd_type){
 
-	//const char* reply_M10 = "M10 XY 380 310 0.00 0.00 A0 B0 H0 S80 U0 D255\r\n";		// reply code for M10 command
-
+	std::string reply_M10 = "";
 #if defined(PLOTTER1)
-	const char* reply_M10 = "M10 XY 310 345 0.00 0.00 A0 B0 H0 S80 U0 D180\r\n";		// reply code for M10 command
+	reply_M10 = "M10 XY 310 345 0.00 0.00 A0 B0 H0 S80 U0 D180\r\n";		// reply code for M10 command
 #elif defined(PLOTTER2)
-	const char* reply_M10 =	"M10 XY 310 340 0.00 0.00 A0 B0 H0 S80 U0 D180\r\n";		// reply code for M10 command
+	reply_M10 =	"M10 XY 310 340 0.00 0.00 A0 B0 H0 S80 U0 D180\r\n";		// reply code for M10 command
 #else
-	const char* reply_M10 =	"M10 XY 300 400 0.00 0.00 A0 B0 H0 S80 U160 D90\r\n";
+	reply_M10 =	"M10 XY 300 400 0.00 0.00 A0 B0 H0 S80 U160 D90\r\n";
 #endif
 
 	const char* reply_M11 = "M11 1 1 1 1\r\n";												// reply code for M11 command
 	const char* reply_OK = "OK\r\n";													// reply code for the rest of the commands
 
 	if(strcmp(cmd_type, "M10") == 0){
-		USB_send((uint8_t *)reply_M10, strlen(reply_M10));
+		USB_send((uint8_t *)reply_M10.c_str(), strlen(reply_M10.c_str()));
 		USB_send((uint8_t *)reply_OK, strlen(reply_OK));
 	}
 	if(strcmp(cmd_type, "M11") == 0){
@@ -246,11 +245,10 @@ void static vTaskMotor(void* pvParamters){
 
 #if defined(PLOTTER1)
 	penMove(0); 		//Move pen up
-#elif define(PLOTTER2)
+#elif defined(PLOTTER2)
 	penMove(0); 		//Move pen up
 #else
 	penMove(160);		//Move pen up
-	setLaserPower(0);	//Turn laser off
 	motor.setPPS(2500);
 #endif
 
@@ -266,22 +264,34 @@ void static vTaskMotor(void* pvParamters){
 	char buffer[80] = {'\0'};
 	double stepsPerMMX;
 	double stepsPerMMY;
+	double MMPerStepX;
+	double MMPerStepY;
 
 	//lower resolution might be a good idea???
 
 #if defined(PLOTTER1)
 	stepsPerMMX = (double) motor.getLimDist(XAXIS)/31000.0; //31cm
 	stepsPerMMY = (double) motor.getLimDist(YAXIS)/34500.0; //34.5cm
+
+	MMPerStepX = (double) 31000.0/motor.getLimDist(XAXIS); //31cm
+	MMPerStepY = (double) 34500.0/motor.getLimDist(YAXIS); //34.5cm
+
 #elif defined(PLOTTER2) || defined(PLOTTER3)
 	stepsPerMMX = (double) motor.getLimDist(XAXIS)/31000.0; //31cm
 	stepsPerMMY = (double) motor.getLimDist(YAXIS)/34000.0; //34cm
+
+	MMPerStepX = (double) 31000.0/motor.getLimDist(XAXIS); //31cm
+	MMPerStepY = (double) 34000.0/motor.getLimDist(YAXIS); //34cm
 #else
 	stepsPerMMX = (double) motor.getLimDist(XAXIS)/50000.0;
 	stepsPerMMY = (double) motor.getLimDist(YAXIS)/50000.0;
+
+	MMPerStepX = (double) 50000.0/motor.getLimDist(XAXIS);
+	MMPerStepY = (double) 50000.0/motor.getLimDist(YAXIS);
 #endif
 
-	motor.setScale(XAXIS, stepsPerMMX);
-	motor.setScale(YAXIS, stepsPerMMY);
+	motor.setScale(XAXIS, stepsPerMMX, MMPerStepX);
+	motor.setScale(YAXIS, stepsPerMMY, MMPerStepY);
 
 	while(1) {
 
@@ -311,7 +321,7 @@ void static vTaskMotor(void* pvParamters){
 					motor.move(YAXIS, absY*2, motor.getPPS()); //All motor movement/RIT step must be multiplied by 2
 				}
 				motor.setPos(YAXIS, gstruct.y_pos);
-				*/
+				 */
 
 
 				// Control pen servo

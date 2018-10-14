@@ -169,17 +169,27 @@ void Motor::setDirection(Axis axis, bool isLeftD) {
  * Otherwise set for motor Y
  *
  */
-void Motor::setScale(Axis axis, double stepsPerMM) {
+void Motor::setScale(Axis axis, double stepsPerMM, double MMPerSteps) {
 	(axis==XAXIS?stepsPerMMX:stepsPerMMY) = stepsPerMM;
+	(axis==XAXIS?MMPerStepX:MMPerStepY) = MMPerSteps;
 }
 
-/* Return the scale of the motor (measure by steps per mm)
+/* Return the step per mili of the motor
  * if cord = 'X' then get the scale for motor X
  * Otherwise get scale for motor Y
  *
  */
-double Motor::getScale(Axis axis) {
+double Motor::getStepsPerMM(Axis axis) {
 	return (axis==XAXIS?stepsPerMMX:stepsPerMMY);
+}
+
+/* Return the mili per steps of the motor
+ * if cord = 'X' then get the scale for motor X
+ * Otherwise get scale for motor Y
+ *
+ */
+double Motor::getMMPerStep(Axis axis) {
+	return (axis==XAXIS?MMPerStepX:MMPerStepY);
 }
 
 /* Set the position of the motor (measure by coordinate from mDraw)
