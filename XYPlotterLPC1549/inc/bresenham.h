@@ -10,6 +10,9 @@
 #include "Motor.h"
 #include <math.h>
 
+void bresenham(Motor *motor, int x0, int y0, int x1, int y1);
+void bresenhamCoord(Motor *motor, int x0, int y0, int x1, int y1);
+
 void drawplot(Motor *motor, int x0, int y0, int x1, int y1) {
 	int absX = abs(x1 - x0);
 	int absY= abs(y1 - y0);
@@ -29,7 +32,7 @@ void plotLineLow(Motor *motor, int x0, int y0, int x1, int y1) {
 	int dx = x1 - x0;
 	int dy = y1 - y0;
 	int yi = 1;
-	if (dy<0) {
+	if (dy < 0) {
 		yi = -1;
 		dy = -dy;
 	}
@@ -78,15 +81,30 @@ void plotLineHigh(Motor *motor, int x0, int y0, int x1, int y1) {
 	}
 }
 
-void bresenham(Motor *motor, int xcoord0, int ycoord0, int xcoord1, int ycoord1) {
+void bresenhamCoord(Motor *motor, int xcoord0, int ycoord0, int xcoord1, int ycoord1) {
 	int x0 = xcoord0*motor->getStepsPerMM(XAXIS);
 	int x1 = xcoord1*motor->getStepsPerMM(XAXIS);
 	int y0 = ycoord0*motor->getStepsPerMM(YAXIS);
 	int y1 = ycoord1*motor->getStepsPerMM(YAXIS);
 
+	bresenham(motor, x0, y0, x1, y1);
+
+	int newXcoord = (x1-x0)*motor->getMMPerStep(XAXIS) + xcoord0;
+	int newYcoord = (y1-y0)*motor->getMMPerStep(YAXIS) + ycoord0;
+	motor->setPos(XAXIS, newXcoord);
+	motor->setPos(YAXIS, newYcoord);
+	char buffer[80];
+	snprintf(buffer, 80, "BSH G1 X%d Y%d \r\n", x1, y1);
+	ITM_write(buffer);
+}
+
+void bresenham(Motor *motor, int x0, int y0, int x1, int y1) {
+	int deltaX = x1 - x0;
+	int deltaY = y1 - y0;
+
 	//Regardless of bresenham or not, the direction is set
-	motor->setDirection(XAXIS, (x1 - x0)>=0); // if newPositionX is large then move left
-	motor->setDirection(YAXIS, (y1 - y0)>=0); // if newPositionY is large then move down
+	motor->setDirection(XAXIS, deltaX>=0); // if newPositionX is large then move left
+	motor->setDirection(YAXIS, deltaY>=0); // if newPositionY is large then move down
 
 	//If line is vertical then using Bresenham:
 	if ((x0 != x1) && (y0 != y1)) {
@@ -125,12 +143,10 @@ void bresenham(Motor *motor, int xcoord0, int ycoord0, int xcoord1, int ycoord1)
 		}
 	}
 
-	int newXcoord = (x1-x0)*motor->getMMPerStep(XAXIS) + xcoord0;
-	int newYcoord = (y1-y0)*motor->getMMPerStep(YAXIS) + ycoord0;
-	motor->setPos(XAXIS, newXcoord);
-	motor->setPos(YAXIS, newYcoord);
+	motor->setPos(XAXIS, x0 + deltaX);
+	motor->setPos(YAXIS, y0 + deltaY);
 	char buffer[80];
-	snprintf(buffer, 80, "BSH G1 X%d Y%d \r\n", x1, y1);
+	snprintf(buffer, 80, "BSH G1 X%d Y%d \r\n", x0 + deltaX, y0 + deltaY);
 	ITM_write(buffer);
 }
 

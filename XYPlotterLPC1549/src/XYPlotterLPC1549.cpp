@@ -14,15 +14,10 @@
 #include "user_vcom.h"
 #include "Parser.h"
 
-<<<<<<< HEAD
 //#define SIMULATOR
 //#define PLOTTER1
-#define PLOTTER2
-=======
-#define SIMULATOR
-//#define PLOTTER1
 //#define PLOTTER2
->>>>>>> origin/usingCoordinate
+#define PLOTTER3
 //#define LASER
 
 // Queue for Gcode structs
@@ -71,13 +66,15 @@ static void send_to_queue(Gstruct gstruct_to_send){
 }
 
 // Sends reply code to plotter
-void send_reply(const char* cmd_type){
+void send_reply(const char* cmd_type, Gstruct* g ){
 
 	std::string reply_M10 = "";
 #if defined(PLOTTER1)
 	reply_M10 = "M10 XY 310 345 0.00 0.00 A0 B0 H0 S80 U0 D180\r\n";		// reply code for M10 command
 #elif defined(PLOTTER2)
 	reply_M10 =	"M10 XY 310 340 0.00 0.00 A0 B0 H0 S80 U0 D180\r\n";		// reply code for M10 command
+#elif defined(PLOTTER3)
+	reply_M10 =	"M10 XY 310 340 0.00 0.00 A0 B0 H0 S80 U80 D0\r\n";		// reply code for M10 command
 #else
 	reply_M10 =	"M10 XY 300 400 0.00 0.00 A0 B0 H0 S80 U160 D90\r\n";
 #endif
@@ -247,12 +244,14 @@ void static vTaskMotor(void* pvParamters){
 	Motor motor;
 
 	setLaserPower(0);	//Turn laser off
-	motor.setPPS(8000);
+	motor.setPPS(2000);
 
 #if defined(PLOTTER1)
 	penMove(0); 		//Move pen up
 #elif defined(PLOTTER2)
 	penMove(0); 		//Move pen up
+#elif defined(PLOTTER3)
+	penMove(80); 		//Move pen up
 #else
 	penMove(160);		//Move pen up
 	motor.setPPS(2500);
@@ -303,33 +302,30 @@ void static vTaskMotor(void* pvParamters){
 
 		if(xQueueReceive(cmdQueue, (void*) &gstruct, portMAX_DELAY)) {
 			if (strcmp(gstruct.cmd_type, "G1") == 0) {
-<<<<<<< HEAD
-				newPositionX = round(gstruct.x_pos*stepsPerMMX);
-				newPositionY = round(gstruct.y_pos*stepsPerMMY);
-				snprintf(buffer, 80, "LPC G1 X%ld Y%ld \r\n", newPositionX, newPositionY);
-				ITM_write(buffer);
-				bresenham(&motor, motor.getPos(XAXIS), motor.getPos(YAXIS), newPositionX, newPositionY);
-=======
-
+				/*
 				snprintf(buffer, 80, "LPC G1 X%d Y%d \r\n", gstruct.x_pos, gstruct.y_pos);
 				ITM_write(buffer);
-				bresenham(&motor, motor.getPos(XAXIS), motor.getPos(YAXIS), gstruct.x_pos, gstruct.y_pos);
->>>>>>> origin/usingCoordinate
+				bresenhamCoord(&motor, motor.getPos(XAXIS), motor.getPos(YAXIS), gstruct.x_pos, gstruct.y_pos);
+				*/
+
+				int newPositionX = gstruct.x_pos*stepsPerMMX;
+				int newPositionY = gstruct.y_pos*stepsPerMMY;
+				snprintf(buffer, 80, "LPC G1 X%d Y%d \r\n", newPositionX, newPositionY);
+				ITM_write(buffer);
+				bresenham(&motor, motor.getPos(XAXIS), motor.getPos(YAXIS), newPositionX, newPositionY);
+
 
 				/*
 				int absX = 0;
 				int absY = 0;
 				motor.setDirection(XAXIS, (gstruct.x_pos - motor.getPos(XAXIS))>=0); // if newPositionX is large then move left
 				motor.setDirection(YAXIS, (gstruct.y_pos - motor.getPos(YAXIS))>=0); // if newPositionY is large then move down
-
 				absX = round(abs((gstruct.x_pos - motor.getPos(XAXIS))*motor.getScale(XAXIS));
 				absY = round(abs((gstruct.y_pos - motor.getPos(YAXIS))*motor.getScale(YAXIS));
-
 				if (absX > 0) {
 					motor.move(XAXIS, absX*2, motor.getPPS()); //All motor movement/RIT step must be multiplied by 2
 				}
 				motor.setPos(XAXIS, gstruct.x_pos);
-
 				//Move motor in Y axis
 				if (absY > 0) {
 					motor.move(YAXIS, absY*2, motor.getPPS()); //All motor movement/RIT step must be multiplied by 2
@@ -337,7 +333,6 @@ void static vTaskMotor(void* pvParamters){
 				motor.setPos(YAXIS, gstruct.y_pos);
 				 */
 
-				*/
 
 				// Control pen servo
 			} else if(strcmp(gstruct.cmd_type,"M1") == 0){

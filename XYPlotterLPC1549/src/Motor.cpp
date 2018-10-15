@@ -281,6 +281,7 @@ void Motor::calibrate() {
 		limitread = readLimit(RITaxis==XAXIS?Xlimit1:Ylimit1);
 		while (!limitread){
 			limitread = readLimit(RITaxis==XAXIS?Xlimit1:Ylimit1);
+			step = maxSteps<20000?1000:8;
 			RIT_start(step,500000/motorPPS);
 			maxSteps= maxSteps + step/2;
 		}
@@ -309,10 +310,11 @@ void Motor::calibrate() {
 	setPos(YAXIS, getLimDist(YAXIS)/2); // Set position in scale with mDraw
 	 */
 
+	vTaskDelay(500);
 	RITaxis = XAXIS;
-	RIT_start(50 ,500000/motorPPS);
+	RIT_start(500 ,500000/motorPPS);
 	RITaxis = YAXIS;
-	RIT_start(50 ,500000/motorPPS);
+	RIT_start(500 ,500000/motorPPS);
 
 	setPos(XAXIS, 0); // Set position in scale with mDraw
 	setPos(YAXIS, 0); // Set position in scale with mDraw
