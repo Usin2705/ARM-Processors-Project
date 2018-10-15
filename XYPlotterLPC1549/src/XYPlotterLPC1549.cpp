@@ -13,11 +13,16 @@
 // TODO: insert other include files here
 #include "user_vcom.h"
 #include "Parser.h"
-#include <math.h>
 
+<<<<<<< HEAD
 //#define SIMULATOR
 //#define PLOTTER1
 #define PLOTTER2
+=======
+#define SIMULATOR
+//#define PLOTTER1
+//#define PLOTTER2
+>>>>>>> origin/usingCoordinate
 //#define LASER
 
 // Queue for Gcode structs
@@ -68,21 +73,20 @@ static void send_to_queue(Gstruct gstruct_to_send){
 // Sends reply code to plotter
 void send_reply(const char* cmd_type){
 
-	//const char* reply_M10 = "M10 XY 380 310 0.00 0.00 A0 B0 H0 S80 U0 D255\r\n";		// reply code for M10 command
-
+	std::string reply_M10 = "";
 #if defined(PLOTTER1)
-	const char* reply_M10 = "M10 XY 310 345 0.00 0.00 A0 B0 H0 S80 U0 D180\r\n";		// reply code for M10 command
+	reply_M10 = "M10 XY 310 345 0.00 0.00 A0 B0 H0 S80 U0 D180\r\n";		// reply code for M10 command
 #elif defined(PLOTTER2)
-	const char* reply_M10 =	"M10 XY 310 340 0.00 0.00 A0 B0 H0 S80 U0 D180\r\n";		// reply code for M10 command
+	reply_M10 =	"M10 XY 310 340 0.00 0.00 A0 B0 H0 S80 U0 D180\r\n";		// reply code for M10 command
 #else
-	const char* reply_M10 =	"M10 XY 500 500 0.00 0.00 A0 B0 H0 S80 U160 D90\r\n";
+	reply_M10 =	"M10 XY 300 400 0.00 0.00 A0 B0 H0 S80 U160 D90\r\n";
 #endif
 
 	const char* reply_M11 = "M11 1 1 1 1\r\n";												// reply code for M11 command
 	const char* reply_OK = "OK\r\n";													// reply code for the rest of the commands
 
 	if(strcmp(cmd_type, "M10") == 0){
-		USB_send((uint8_t *)reply_M10, strlen(reply_M10));
+		USB_send((uint8_t *)reply_M10.c_str(), strlen(reply_M10.c_str()));
 		USB_send((uint8_t *)reply_OK, strlen(reply_OK));
 	}
 	if(strcmp(cmd_type, "M11") == 0){
@@ -262,56 +266,76 @@ void static vTaskMotor(void* pvParamters){
 	//moveSquare(&motor);
 	//moveRhombus(&motor);
 	//moveTrapezoid(&motor);
-	int32_t newPositionX = 0;
-	int32_t newPositionY = 0;
 	interrupt_pins_init();
 	char buffer[80] = {'\0'};
 	double stepsPerMMX;
 	double stepsPerMMY;
+	double MMPerStepX;
+	double MMPerStepY;
 
 	//lower resolution might be a good idea???
 
 #if defined(PLOTTER1)
 	stepsPerMMX = (double) motor.getLimDist(XAXIS)/31000.0; //31cm
 	stepsPerMMY = (double) motor.getLimDist(YAXIS)/34500.0; //34.5cm
+
+	MMPerStepX = (double) 31000.0/motor.getLimDist(XAXIS); //31cm
+	MMPerStepY = (double) 34500.0/motor.getLimDist(YAXIS); //34.5cm
+
 #elif defined(PLOTTER2) || defined(PLOTTER3)
 	stepsPerMMX = (double) motor.getLimDist(XAXIS)/31000.0; //31cm
 	stepsPerMMY = (double) motor.getLimDist(YAXIS)/34000.0; //34cm
+
+	MMPerStepX = (double) 31000.0/motor.getLimDist(XAXIS); //31cm
+	MMPerStepY = (double) 34000.0/motor.getLimDist(YAXIS); //34cm
 #else
-	stepsPerMMX = (double) motor.getLimDist(XAXIS)/500000.0;
-	stepsPerMMY = (double) motor.getLimDist(YAXIS)/500000.0;
+	stepsPerMMX = (double) motor.getLimDist(XAXIS)/50000.0;
+	stepsPerMMY = (double) motor.getLimDist(YAXIS)/50000.0;
+
+	MMPerStepX = (double) 50000.0/motor.getLimDist(XAXIS);
+	MMPerStepY = (double) 50000.0/motor.getLimDist(YAXIS);
 #endif
 
+	motor.setScale(XAXIS, stepsPerMMX, MMPerStepX);
+	motor.setScale(YAXIS, stepsPerMMY, MMPerStepY);
 
 	while(1) {
 
 		if(xQueueReceive(cmdQueue, (void*) &gstruct, portMAX_DELAY)) {
 			if (strcmp(gstruct.cmd_type, "G1") == 0) {
+<<<<<<< HEAD
 				newPositionX = round(gstruct.x_pos*stepsPerMMX);
 				newPositionY = round(gstruct.y_pos*stepsPerMMY);
 				snprintf(buffer, 80, "LPC G1 X%ld Y%ld \r\n", newPositionX, newPositionY);
 				ITM_write(buffer);
 				bresenham(&motor, motor.getPos(XAXIS), motor.getPos(YAXIS), newPositionX, newPositionY);
+=======
+
+				snprintf(buffer, 80, "LPC G1 X%d Y%d \r\n", gstruct.x_pos, gstruct.y_pos);
+				ITM_write(buffer);
+				bresenham(&motor, motor.getPos(XAXIS), motor.getPos(YAXIS), gstruct.x_pos, gstruct.y_pos);
+>>>>>>> origin/usingCoordinate
 
 				/*
 				int absX = 0;
 				int absY = 0;
-				motor.setDirection(XAXIS, (newPositionX - motor.getPos(XAXIS))>=0); // if newPositionX is large then move left
-				motor.setDirection(YAXIS, (newPositionY - motor.getPos(YAXIS))>=0); // if newPositionY is large then move down
+				motor.setDirection(XAXIS, (gstruct.x_pos - motor.getPos(XAXIS))>=0); // if newPositionX is large then move left
+				motor.setDirection(YAXIS, (gstruct.y_pos - motor.getPos(YAXIS))>=0); // if newPositionY is large then move down
 
-				absX = abs(newPositionX - motor.getPos(XAXIS));
-				absY = abs(newPositionY - motor.getPos(YAXIS));
+				absX = round(abs((gstruct.x_pos - motor.getPos(XAXIS))*motor.getScale(XAXIS));
+				absY = round(abs((gstruct.y_pos - motor.getPos(YAXIS))*motor.getScale(YAXIS));
 
 				if (absX > 0) {
 					motor.move(XAXIS, absX*2, motor.getPPS()); //All motor movement/RIT step must be multiplied by 2
 				}
-				motor.setPos(XAXIS, newPositionX);
+				motor.setPos(XAXIS, gstruct.x_pos);
 
 				//Move motor in Y axis
 				if (absY > 0) {
 					motor.move(YAXIS, absY*2, motor.getPPS()); //All motor movement/RIT step must be multiplied by 2
 				}
-				motor.setPos(YAXIS, newPositionY);
+				motor.setPos(YAXIS, gstruct.y_pos);
+				 */
 
 				*/
 
