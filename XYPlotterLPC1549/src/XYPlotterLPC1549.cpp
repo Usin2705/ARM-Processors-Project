@@ -16,8 +16,8 @@
 #include <math.h>
 
 //#define SIMULATOR
-#define PLOTTER1
-//#define PLOTTER2
+//#define PLOTTER1
+#define PLOTTER2
 //#define LASER
 
 // Queue for Gcode structs
@@ -243,11 +243,11 @@ void static vTaskMotor(void* pvParamters){
 	Motor motor;
 
 	setLaserPower(0);	//Turn laser off
-	motor.setPPS(4000);
+	motor.setPPS(8000);
 
 #if defined(PLOTTER1)
 	penMove(0); 		//Move pen up
-#elif define(PLOTTER2)
+#elif defined(PLOTTER2)
 	penMove(0); 		//Move pen up
 #else
 	penMove(160);		//Move pen up
@@ -291,9 +291,9 @@ void static vTaskMotor(void* pvParamters){
 				newPositionY = round(gstruct.y_pos*stepsPerMMY);
 				snprintf(buffer, 80, "LPC G1 X%ld Y%ld \r\n", newPositionX, newPositionY);
 				ITM_write(buffer);
-				//bresenham(&motor, motor.getPos(XAXIS), motor.getPos(YAXIS), newPositionX, newPositionY);
+				bresenham(&motor, motor.getPos(XAXIS), motor.getPos(YAXIS), newPositionX, newPositionY);
 
-
+				/*
 				int absX = 0;
 				int absY = 0;
 				motor.setDirection(XAXIS, (newPositionX - motor.getPos(XAXIS))>=0); // if newPositionX is large then move left
@@ -313,6 +313,7 @@ void static vTaskMotor(void* pvParamters){
 				}
 				motor.setPos(YAXIS, newPositionY);
 
+				*/
 
 				// Control pen servo
 			} else if(strcmp(gstruct.cmd_type,"M1") == 0){

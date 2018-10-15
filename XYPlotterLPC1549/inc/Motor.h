@@ -25,11 +25,6 @@
 #include <stdint.h>
 #include "ITM_write.h"
 
-
-#define SIMULATOR
-#define PLOTTER1
-
-
 #define ISLEFTD true
 
 typedef enum {XAXIS , YAXIS} Axis;
