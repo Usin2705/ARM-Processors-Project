@@ -16,7 +16,7 @@ class Parser {
 
 public:
 	Parser();
-	Gstruct parse_gcode(const char* buffer);
+	Gstruct parse_gcode(const char* buffer, int pen_up, int pen_dw);
 	virtual ~Parser();
 };
 

@@ -11,7 +11,7 @@ Parser::Parser() {
 }
 
 // parsers G-code into Gcode structure
-Gstruct Parser::parse_gcode(const char* buffer){
+Gstruct Parser::parse_gcode(const char* buffer, int pen_up, int pen_dw){
 	ITM_write("mDraw: ");
 	ITM_write(buffer);
 	ITM_write("\r\n");
@@ -43,6 +43,9 @@ Gstruct Parser::parse_gcode(const char* buffer){
 	}
 	/*M10: Log opening in mDraw*/
 	if(strcmp(cmd, "M10") == 0){
+
+		gstruct.pen_up = pen_up;
+		gstruct.pen_dw = pen_dw;
 	}
 	/*M11: Limit Status Query*/
 	if(strcmp(cmd, "M11") == 0){

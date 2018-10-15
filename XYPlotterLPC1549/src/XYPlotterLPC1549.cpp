@@ -20,9 +20,11 @@
 #define PLOTTER3
 //#define LASER
 
-// Queue for Gcode structs
+// Queue for gcode command structs
 QueueHandle_t cmdQueue;
 
+int PenUP = 0;
+int PenDOWN = 0;
 
 /* the following is required if runtime statistics are to be collected */
 extern "C" {
@@ -32,9 +34,6 @@ void vConfigureTimerForRunTimeStats( void ) {
 	LPC_SCTSMALL1->CONFIG = SCT_CONFIG_32BIT_COUNTER;
 	LPC_SCTSMALL1->CTRL_U = SCT_CTRL_PRE_L(255) | SCT_CTRL_CLRCTR_L; // set prescaler to 256 (255 + 1), and start timer
 }
-
-
-
 }
 /* end runtime statictics collection */
 
@@ -66,32 +65,38 @@ static void send_to_queue(Gstruct gstruct_to_send){
 }
 
 // Sends reply code to plotter
-void send_reply(const char* cmd_type, Gstruct* g ){
+void send_reply(Gstruct* g ){
 
-	std::string reply_M10 = "";
-#if defined(PLOTTER1)
+
+	const char* replyM11 = "M11 1 1 1 1\r\n";												// reply code for M11 command
+	char replyM10[100] = {0};																// reply code for M10 command
+	const char* replyOK = "OK\r\n";
+
+	sprintf(replyM10, "M10 XY 310 340 0.00 0.00 A0 B0 S80 U%d D%d", g->pen_up, g->pen_dw);
+
+
+	/*
+	#if defined(PLOTTER1)
 	reply_M10 = "M10 XY 310 345 0.00 0.00 A0 B0 H0 S80 U0 D180\r\n";		// reply code for M10 command
-#elif defined(PLOTTER2)
+	#elif defined(PLOTTER2)
 	reply_M10 =	"M10 XY 310 340 0.00 0.00 A0 B0 H0 S80 U0 D180\r\n";		// reply code for M10 command
-#elif defined(PLOTTER3)
+	#elif defined(PLOTTER3)
 	reply_M10 =	"M10 XY 310 340 0.00 0.00 A0 B0 H0 S80 U80 D0\r\n";		// reply code for M10 command
-#else
+	#else
 	reply_M10 =	"M10 XY 300 400 0.00 0.00 A0 B0 H0 S80 U160 D90\r\n";
-#endif
+	#endif
+	 */
 
-	const char* reply_M11 = "M11 1 1 1 1\r\n";												// reply code for M11 command
-	const char* reply_OK = "OK\r\n";													// reply code for the rest of the commands
-
-	if(strcmp(cmd_type, "M10") == 0){
-		USB_send((uint8_t *)reply_M10.c_str(), strlen(reply_M10.c_str()));
-		USB_send((uint8_t *)reply_OK, strlen(reply_OK));
+	if(strcmp(g->cmd_type, "M10") == 0){
+		USB_send((uint8_t *)replyM10, strlen(replyM10));
+		USB_send((uint8_t *)replyOK, strlen(replyOK));
 	}
-	if(strcmp(cmd_type, "M11") == 0){
-		USB_send((uint8_t *)reply_M11, strlen(reply_M11));
-		USB_send((uint8_t *)reply_OK, strlen(reply_OK));
+	if(strcmp(g->cmd_type, "M11") == 0){
+		USB_send((uint8_t *)replyM11, strlen(replyM11));
+		USB_send((uint8_t *)replyOK, strlen(replyOK));
 	}
 	else{
-		USB_send((uint8_t *)reply_OK, strlen(reply_OK));
+		USB_send((uint8_t *)replyOK, strlen(replyOK));
 	}
 }
 
@@ -174,13 +179,23 @@ static void interrupt_pins_init(){
 	DigitalIoPin swX1 (0,29, DigitalIoPin::pullup, true);
 
 	/*configuring pins as interrupt pins*/
-	LPC_INMUX->PINTSEL[0] = 0; 				// select pin 0_0(swY0) as interrupt pin 0
-	LPC_INMUX->PINTSEL[1] = 35; 			// select pin 1_3((swY1)(32 + 3 = 35)) as interrupt pin 1
-	LPC_INMUX->PINTSEL[2] = 9;				// select pin 0_9 (swX0) as interrupt pin 2
-	LPC_INMUX->PINTSEL[3] = 29;				// select pin 0_29 (swX1) as interrupt pin 3
 
-	LPC_GPIO_PIN_INT->SIENF = 7; // enables falling edge interrupts
-	LPC_GPIO_PIN_INT->ISEL = 0; // configures pin interrupts as edge sensitive(0)
+	Chip_INMUX_PinIntSel(0, 0, 0);			// select pin 0_0(swY0) as interrupt pin 0
+	Chip_INMUX_PinIntSel(1, 1, 3);			// select pin 1_3(swY1) as interrupt pin 1
+	Chip_INMUX_PinIntSel(2, 0, 9);			// select pin 0_9(swX0) as interrupt pin 2
+	Chip_INMUX_PinIntSel(3, 0, 29); 		// select pin 0_29(swX1) as interrupt pin 3
+
+	/*configure selected pins as falling edge interrupts*/
+	Chip_PININT_EnableIntLow(LPC_GPIO_PIN_INT, PININTCH0);
+	Chip_PININT_EnableIntLow(LPC_GPIO_PIN_INT, PININTCH1);
+	Chip_PININT_EnableIntLow(LPC_GPIO_PIN_INT, PININTCH2);
+	Chip_PININT_EnableIntLow(LPC_GPIO_PIN_INT, PININTCH3);
+
+	/*configure selected pins as edge sensetive*/
+	Chip_PININT_SetPinModeEdge(LPC_GPIO_PIN_INT, PININTCH0);
+	Chip_PININT_SetPinModeEdge(LPC_GPIO_PIN_INT, PININTCH1);
+	Chip_PININT_SetPinModeEdge(LPC_GPIO_PIN_INT, PININTCH2);
+	Chip_PININT_SetPinModeEdge(LPC_GPIO_PIN_INT, PININTCH3);
 
 	/*Sets priorities for pin interrupts*/
 	NVIC_SetPriority(PIN_INT0_IRQn, configMAX_SYSCALL_INTERRUPT_PRIORITY + 1);
@@ -223,9 +238,10 @@ void static vTaskReceive(void* pvParamters){
 		}
 		/*the full g-code has been received*/
 		if(full_gcode){
-			gstruct_to_send = parser.parse_gcode(gcode_str.c_str());
+
+			gstruct_to_send = parser.parse_gcode(gcode_str.c_str(), PenUP, PenDOWN);
 			send_to_queue(gstruct_to_send);
-			send_reply(gstruct_to_send.cmd_type);
+			send_reply(&gstruct_to_send);
 
 			ITM_write(gcode_str.c_str());
 			ITM_write("\r\n");
@@ -244,7 +260,7 @@ void static vTaskMotor(void* pvParamters){
 	Motor motor;
 
 	setLaserPower(0);	//Turn laser off
-	motor.setPPS(2000);
+	motor.setPPS(8000);
 
 #if defined(PLOTTER1)
 	penMove(0); 		//Move pen up
@@ -260,6 +276,8 @@ void static vTaskMotor(void* pvParamters){
 #ifdef LASER
 	motor.setPPS(2000);	//Laser drawing should be slower
 #endif
+
+
 
 	motor.calibrate();
 	//moveSquare(&motor);
@@ -301,12 +319,13 @@ void static vTaskMotor(void* pvParamters){
 	while(1) {
 
 		if(xQueueReceive(cmdQueue, (void*) &gstruct, portMAX_DELAY)) {
+
 			if (strcmp(gstruct.cmd_type, "G1") == 0) {
 				/*
 				snprintf(buffer, 80, "LPC G1 X%d Y%d \r\n", gstruct.x_pos, gstruct.y_pos);
 				ITM_write(buffer);
 				bresenhamCoord(&motor, motor.getPos(XAXIS), motor.getPos(YAXIS), gstruct.x_pos, gstruct.y_pos);
-				*/
+				 */
 
 				int newPositionX = gstruct.x_pos*stepsPerMMX;
 				int newPositionY = gstruct.y_pos*stepsPerMMY;
