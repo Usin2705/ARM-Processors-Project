@@ -26,6 +26,7 @@
 #include "ITM_write.h"
 
 #define ISLEFTD true
+#define PPSLASER 1000
 #define PPSDEFAULT 2000
 #define PPSMAXCALI 8000
 #define PPSMAX 5000
@@ -52,9 +53,8 @@ public:
 	void setPos(Axis axis, int currentPos);
 	int getPos(Axis axis);
 
-	void setScale(Axis axis, double stepsPerMM, double MMPerSteps);
+	void setScale(Axis axis, double stepsPerMM);
 	double getStepsPerMM(Axis axis);
-	double getMMPerStep(Axis axis);
 
 	void setPPS(int PPS);
 	int getPPS();
@@ -85,9 +85,6 @@ private:
 
 	double stepsPerMMX; 	//to convert from xcoord to steps
 	double stepsPerMMY;		//to convert from ycoord to steps
-
-	double MMPerStepX; 		//to convert from steps to xcoord
-	double MMPerStepY;		//to convert from steps to ycoord
 
 	bool isMoving;			//if it is true then the motor is moving (and not drawing)
 	int motorPPS;			//Pulse per second, delay = 500,000/pps. Maximum without acceleration = 6250 not finalized

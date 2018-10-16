@@ -51,8 +51,6 @@ extern "C" {
 void RIT_IRQHandler(void) {
 	static DigitalIoPin btnStepX(0,24, DigitalIoPin::output, true);
 	static DigitalIoPin btnStepY(0,27, DigitalIoPin::output, true);
-	volatile static bool isHighX = true;
-	volatile static bool isHighY = true;
 
 	// This used to check if a context switch is required
 	portBASE_TYPE xHigherPriorityWoken = pdFALSE;
@@ -68,6 +66,7 @@ void RIT_IRQHandler(void) {
 			isHighY = !(bool)isHighY;
 			btnStepY.write(isHighY);
 		}*/
+
 		if (RITaxis == XAXIS) {
 			btnStepX.write(!btnStepX.read());
 		} else {
@@ -197,9 +196,8 @@ void Motor::setDirection(Axis axis, bool isLeftD) {
  * Otherwise set for motor Y
  *
  */
-void Motor::setScale(Axis axis, double stepsPerMM, double MMPerSteps) {
+void Motor::setScale(Axis axis, double stepsPerMM) {
 	(axis==XAXIS?stepsPerMMX:stepsPerMMY) = stepsPerMM;
-	(axis==XAXIS?MMPerStepX:MMPerStepY) = MMPerSteps;
 }
 
 /* Return the step per mili of the motor
@@ -209,15 +207,6 @@ void Motor::setScale(Axis axis, double stepsPerMM, double MMPerSteps) {
  */
 double Motor::getStepsPerMM(Axis axis) {
 	return (axis==XAXIS?stepsPerMMX:stepsPerMMY);
-}
-
-/* Return the mili per steps of the motor
- * if cord = 'X' then get the scale for motor X
- * Otherwise get scale for motor Y
- *
- */
-double Motor::getMMPerStep(Axis axis) {
-	return (axis==XAXIS?MMPerStepX:MMPerStepY);
 }
 
 /* Set the position of the motor (measure by coordinate from mDraw)
@@ -344,7 +333,7 @@ void Motor::calibrate() {
 			//Else decelerate until hit the limit
 			} else {
 				step = 8;
-				motorPPS = motorPPS>PPSDEFAULT?motorPPS-50:PPSDEFAULT;
+				motorPPS = motorPPS>PPSDEFAULT?motorPPS-5:PPSDEFAULT;
 			}
 			RIT_start(step,500000/motorPPS);
 			maxSteps= maxSteps + step/2;
@@ -364,15 +353,6 @@ void Motor::calibrate() {
 	//Move to middle
 	setDirection(XAXIS, ISLEFTD);
 	setDirection(YAXIS, ISLEFTD);
-	/*
-	RITaxis = XAXIS;
-	RIT_start(getLimDist(RITaxis) ,500000/motorPPS);
-	RITaxis = YAXIS;
-	RIT_start(getLimDist(RITaxis) ,500000/motorPPS);
-
-	setPos(XAXIS, getLimDist(XAXIS)/2); // Set position in scale with mDraw
-	setPos(YAXIS, getLimDist(YAXIS)/2); // Set position in scale with mDraw
-	 */
 
 	vTaskDelay(500);
 	RITaxis = XAXIS;

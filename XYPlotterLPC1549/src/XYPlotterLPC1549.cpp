@@ -18,7 +18,7 @@
 //#define PLOTTER1
 //#define PLOTTER2
 #define PLOTTER3
-#define LASER
+//#define LASER
 
 // Queue for gcode command structs
 QueueHandle_t cmdQueue;
@@ -323,8 +323,6 @@ void static vTaskMotor(void* pvParamters){
 	char buffer[80] = {'\0'};
 	double stepsPerMMX;
 	double stepsPerMMY;
-	double MMPerStepX;
-	double MMPerStepY;
 	bool isLaser = false;
 
 	//lower resolution might be a good idea???
@@ -332,45 +330,27 @@ void static vTaskMotor(void* pvParamters){
 #if defined(PLOTTER1)
 	stepsPerMMX = (double) motor.getLimDist(XAXIS)/31000.0; //31cm
 	stepsPerMMY = (double) motor.getLimDist(YAXIS)/34500.0; //34.5cm
-
-	MMPerStepX = (double) 31000.0/motor.getLimDist(XAXIS); //31cm
-	MMPerStepY = (double) 34500.0/motor.getLimDist(YAXIS); //34.5cm
-
 #elif defined(PLOTTER2)
 	stepsPerMMX = (double) motor.getLimDist(XAXIS)/31000.0; //31cm
 	stepsPerMMY = (double) motor.getLimDist(YAXIS)/34000.0; //34cm
-
-	MMPerStepX = (double) 31000.0/motor.getLimDist(XAXIS); //31cm
-	MMPerStepY = (double) 34000.0/motor.getLimDist(YAXIS); //34cm
 #elif defined(PLOTTER3)
 	stepsPerMMX = (double) motor.getLimDist(XAXIS)/30500.0; //30.5cm
 	stepsPerMMY = (double) motor.getLimDist(YAXIS)/34500.0; //34.5cm
-
-	MMPerStepX = (double) 31000.0/motor.getLimDist(XAXIS); //30.5cm
-	MMPerStepY = (double) 34000.0/motor.getLimDist(YAXIS); //34.5cm
 #else
 	stepsPerMMX = (double) motor.getLimDist(XAXIS)/50000.0;
 	stepsPerMMY = (double) motor.getLimDist(YAXIS)/50000.0;
-
-	MMPerStepX = (double) 50000.0/motor.getLimDist(XAXIS);
-	MMPerStepY = (double) 50000.0/motor.getLimDist(YAXIS);
 #endif
 
 #ifdef LASER
 	isLaser = true;
 #endif
-	motor.setScale(XAXIS, stepsPerMMX, MMPerStepX);
-	motor.setScale(YAXIS, stepsPerMMY, MMPerStepY);
+	motor.setScale(XAXIS, stepsPerMMX);
+	motor.setScale(YAXIS, stepsPerMMY);
 
 	while(1) {
 
 		if(xQueueReceive(cmdQueue, (void*) &gstruct, portMAX_DELAY)) {
 			if (strcmp(gstruct.cmd_type, "G1") == 0) {
-				/*
-				snprintf(buffer, 80, "LPC G1 X%d Y%d \r\n", gstruct.x_pos, gstruct.y_pos);
-				ITM_write(buffer);
-				bresenhamCoord(&motor, motor.getPos(XAXIS), motor.getPos(YAXIS), gstruct.x_pos, gstruct.y_pos);
-				 */
 
 				int newPositionX = gstruct.x_pos*stepsPerMMX;
 				int newPositionY = gstruct.y_pos*stepsPerMMY;
@@ -399,12 +379,15 @@ void static vTaskMotor(void* pvParamters){
 
 				// Control pen servo
 			} else if(strcmp(gstruct.cmd_type,"M1") == 0){
+				vTaskDelay(20); // Delay a little bit to avoid pen not move up/down before motor move
 				penMove(gstruct.pen_pos);
 				motor.setIsMoving(gstruct.pen_pos==penUp); //If pen up then move and not draw
-				vTaskDelay(50); // Delay a little bit to avoid pen not move up/down before motor move
+				vTaskDelay(20); // Delay a little bit to avoid pen not move up/down before motor move
+
 
 				// Control laser power
 			} else if (strcmp(gstruct.cmd_type,"M4") == 0){
+				vTaskDelay(5); // Delay a little bit to avoid laser not on/off before motor move
 				setLaserPower(gstruct.laserPower);
 				if (isLaser) {
 					motor.setIsMoving(gstruct.laserPower==0);

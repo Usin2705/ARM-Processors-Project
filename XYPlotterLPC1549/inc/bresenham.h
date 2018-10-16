@@ -10,9 +10,6 @@
 #include "Motor.h"
 #include <math.h>
 
-void bresenham(Motor *motor, int x0, int y0, int x1, int y1, bool isLaser);
-void bresenhamCoord(Motor *motor, int x0, int y0, int x1, int y1,bool isLaser);
-
 void drawplot(Motor *motor, int x0, int y0, int x1, int y1) {
 	int absX = abs(x1 - x0);
 	int absY= abs(y1 - y0);
@@ -81,23 +78,6 @@ void plotLineHigh(Motor *motor, int x0, int y0, int x1, int y1) {
 	}
 }
 
-void bresenhamCoord(Motor *motor, int xcoord0, int ycoord0, int xcoord1, int ycoord1, bool isLaser) {
-	int x0 = xcoord0*motor->getStepsPerMM(XAXIS);
-	int x1 = xcoord1*motor->getStepsPerMM(XAXIS);
-	int y0 = ycoord0*motor->getStepsPerMM(YAXIS);
-	int y1 = ycoord1*motor->getStepsPerMM(YAXIS);
-
-	bresenham(motor, x0, y0, x1, y1, isLaser);
-
-	int newXcoord = (x1-x0)*motor->getMMPerStep(XAXIS) + xcoord0;
-	int newYcoord = (y1-y0)*motor->getMMPerStep(YAXIS) + ycoord0;
-	motor->setPos(XAXIS, newXcoord);
-	motor->setPos(YAXIS, newYcoord);
-	char buffer[80];
-	snprintf(buffer, 80, "BSH G1 X%d Y%d \r\n", x1, y1);
-	ITM_write(buffer);
-}
-
 void bresenham(Motor *motor, int x0, int y0, int x1, int y1, bool isLaser) {
 	int deltaX = x1 - x0;
 	int deltaY = y1 - y0;
@@ -133,6 +113,7 @@ void bresenham(Motor *motor, int x0, int y0, int x1, int y1, bool isLaser) {
 		int absY= abs(y1 - y0);
 
 		if (isLaser&&!motor->getIsMoving()) {
+			motor->setPPS(PPSLASER);
 			if (absX > 0) {
 				motor->move(XAXIS, absX*2);
 			}
@@ -154,6 +135,7 @@ void bresenham(Motor *motor, int x0, int y0, int x1, int y1, bool isLaser) {
 		}
 	}
 
+	motor->setPPS(PPSDEFAULT); // come back to default PPS
 	motor->setPos(XAXIS, x0 + deltaX);
 	motor->setPos(YAXIS, y0 + deltaY);
 	char buffer[80];
