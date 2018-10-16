@@ -49,10 +49,10 @@ void SCT_init(){
 extern "C" {
 
 void RIT_IRQHandler(void) {
-	static DigitalIoPin bthStepX(0,24, DigitalIoPin::output, true);
-	static DigitalIoPin bthStepY(0,27, DigitalIoPin::output, true);
-	static bool isHighX = true;
-	static bool isHighY = true;
+	static DigitalIoPin btnStepX(0,24, DigitalIoPin::output, true);
+	static DigitalIoPin btnStepY(0,27, DigitalIoPin::output, true);
+	volatile static bool isHighX = true;
+	volatile static bool isHighY = true;
 
 	// This used to check if a context switch is required
 	portBASE_TYPE xHigherPriorityWoken = pdFALSE;
@@ -60,12 +60,18 @@ void RIT_IRQHandler(void) {
 	// Timer then removes the IRQ until next match occurs
 	Chip_RIT_ClearIntStatus(LPC_RITIMER); // clear IRQ flag
 	if(RIT_count > 0) {
+		/*
 		if (RITaxis == XAXIS) {
 			isHighX = !(bool)isHighX;
-			bthStepX.write(isHighX);
+			btnStepX.write(isHighX);
 		} else {
 			isHighY = !(bool)isHighY;
-			bthStepY.write(isHighY);
+			btnStepY.write(isHighY);
+		}*/
+		if (RITaxis == XAXIS) {
+			btnStepX.write(!btnStepX.read());
+		} else {
+			btnStepY.write(!btnStepY.read());
 		}
 
 		RIT_count--;
@@ -128,9 +134,31 @@ Motor::~Motor() {
  * Otherwise set for Y
  *
  */
-void Motor::move(Axis axis, int count, int pps) {
+void Motor::move(Axis axis, int count) {
 	RITaxis = axis;
-	RIT_start(count, 500000/pps);
+	RIT_start(count, 500000/motorPPS);
+}
+
+/* Accelerate the motor
+ * then decelerate (to avoid moving too fast)
+ *
+ */
+void Motor::motorAcce(Axis axis, int count) {
+	if (count > 20) {
+		motorPPS = PPSMAX;
+		move(axis, count - 20);
+		count = 20;
+	}
+
+	while (count > 0) {
+		motorPPS = motorPPS - 300;
+		if (motorPPS < PPSDEFAULT) {
+			motorPPS = PPSDEFAULT;
+		}
+		move(axis, 2);
+		count = count - 2;
+	}
+	motorPPS = PPSDEFAULT;
 }
 
 /* Set the distance of limit (measure by steps)
@@ -248,6 +276,24 @@ int Motor::getPPS() {
 	return motorPPS;
 }
 
+/* Set the moving boolean of the motor
+ * if it is true then the motor is moving (and not drawing)
+ * then we can acceleration it a little bit (too much would make the drawing bad)
+ *
+ */
+void Motor::setIsMoving(bool moving) {
+	isMoving = moving;
+}
+
+/* Get the moving boolean of the motor
+ * if it is true then the motor is moving (and not drawing)
+ * then we can acceleration it a little bit (too much would make the drawing bad)
+ *
+ */
+bool Motor::getIsMoving() {
+	return isMoving;
+}
+
 void penMove(int penPos){
 	int value = penPos*999/255;
 	LPC_SCT0->MATCHREL[1].L = 1000 + value;
@@ -266,22 +312,40 @@ void Motor::calibrate() {
 	RITaxis = XAXIS;
 	bool limitread = readLimit(Xlimit0);
 	char buffer[80] = {'\0'};
-	uint8_t step = 8;
+	int step = 8;
 	for (uint8_t i = 0; i < 2; i++) {
 		//Move to left (or down if cord == Y), without counting step
 		setDirection(RITaxis, ISLEFTD);
 		limitread = readLimit(RITaxis==XAXIS?Xlimit0:Ylimit0);
 		while (!limitread){
 			limitread = readLimit(RITaxis==XAXIS?Xlimit0:Ylimit0);
+			motorPPS = PPSMAX;
 			RIT_start(step, 500000/motorPPS);
 		}
 
 		//	When move back to right (or up if cord == Y), count step
 		setDirection(RITaxis, !ISLEFTD);
 		limitread = readLimit(RITaxis==XAXIS?Xlimit1:Ylimit1);
+		motorPPS = PPSDEFAULT;
 		while (!limitread){
 			limitread = readLimit(RITaxis==XAXIS?Xlimit1:Ylimit1);
-			step = maxSteps<20000?1000:8;
+
+			//Acceleration
+			if (maxSteps < 5000) {
+				motorPPS += 500;
+				motorPPS = motorPPS>PPSMAXCALI?PPSMAXCALI:motorPPS;
+				step = 1000;
+
+			//If within moving distance (not hit the limit soon) move really fast
+			} else if (maxSteps < 24000){
+				motorPPS = PPSMAXCALI;
+				step = 2000;
+
+			//Else decelerate until hit the limit
+			} else {
+				step = 8;
+				motorPPS = motorPPS>PPSDEFAULT?motorPPS-50:PPSDEFAULT;
+			}
 			RIT_start(step,500000/motorPPS);
 			maxSteps= maxSteps + step/2;
 		}
@@ -316,8 +380,10 @@ void Motor::calibrate() {
 	RITaxis = YAXIS;
 	RIT_start(500 ,500000/motorPPS);
 
+	motorPPS = PPSDEFAULT;
 	setPos(XAXIS, 0); // Set position in scale with mDraw
 	setPos(YAXIS, 0); // Set position in scale with mDraw
+	isMoving = true;
 }
 
 

@@ -10,8 +10,8 @@
 #include "Motor.h"
 #include <math.h>
 
-void bresenham(Motor *motor, int x0, int y0, int x1, int y1);
-void bresenhamCoord(Motor *motor, int x0, int y0, int x1, int y1);
+void bresenham(Motor *motor, int x0, int y0, int x1, int y1, bool isLaser);
+void bresenhamCoord(Motor *motor, int x0, int y0, int x1, int y1,bool isLaser);
 
 void drawplot(Motor *motor, int x0, int y0, int x1, int y1) {
 	int absX = abs(x1 - x0);
@@ -19,12 +19,12 @@ void drawplot(Motor *motor, int x0, int y0, int x1, int y1) {
 
 	//Move motor in X axis
 	if (absX > 0) {
-		motor->move(XAXIS, absX*2, motor->getPPS());
+		motor->move(XAXIS, absX*2);
 	}
 
 	//Move motor in Y axis
 	if (absY > 0) {
-		motor->move(YAXIS, absY*2, motor->getPPS());
+		motor->move(YAXIS, absY*2);
 	}
 }
 
@@ -81,13 +81,13 @@ void plotLineHigh(Motor *motor, int x0, int y0, int x1, int y1) {
 	}
 }
 
-void bresenhamCoord(Motor *motor, int xcoord0, int ycoord0, int xcoord1, int ycoord1) {
+void bresenhamCoord(Motor *motor, int xcoord0, int ycoord0, int xcoord1, int ycoord1, bool isLaser) {
 	int x0 = xcoord0*motor->getStepsPerMM(XAXIS);
 	int x1 = xcoord1*motor->getStepsPerMM(XAXIS);
 	int y0 = ycoord0*motor->getStepsPerMM(YAXIS);
 	int y1 = ycoord1*motor->getStepsPerMM(YAXIS);
 
-	bresenham(motor, x0, y0, x1, y1);
+	bresenham(motor, x0, y0, x1, y1, isLaser);
 
 	int newXcoord = (x1-x0)*motor->getMMPerStep(XAXIS) + xcoord0;
 	int newYcoord = (y1-y0)*motor->getMMPerStep(YAXIS) + ycoord0;
@@ -98,7 +98,7 @@ void bresenhamCoord(Motor *motor, int xcoord0, int ycoord0, int xcoord1, int yco
 	ITM_write(buffer);
 }
 
-void bresenham(Motor *motor, int x0, int y0, int x1, int y1) {
+void bresenham(Motor *motor, int x0, int y0, int x1, int y1, bool isLaser) {
 	int deltaX = x1 - x0;
 	int deltaY = y1 - y0;
 
@@ -106,8 +106,8 @@ void bresenham(Motor *motor, int x0, int y0, int x1, int y1) {
 	motor->setDirection(XAXIS, deltaX>=0); // if newPositionX is large then move left
 	motor->setDirection(YAXIS, deltaY>=0); // if newPositionY is large then move down
 
-	//If line is vertical then using Bresenham:
-	if ((x0 != x1) && (y0 != y1)) {
+	//If line is diagonal AND not moving then using Bresenham:
+	if ((x0 != x1) && (y0 != y1)&&!motor->getIsMoving()) {
 
 		//If True, Plot with x distance large than y distance
 		if (abs(y1 - y0) < abs(x1 - x0)) {
@@ -132,14 +132,25 @@ void bresenham(Motor *motor, int x0, int y0, int x1, int y1) {
 		int absX = abs(x1 - x0);
 		int absY= abs(y1 - y0);
 
-		//Move motor in X axis
-		if (absX > 0) {
-			motor->move(XAXIS, absX*2, motor->getPPS());
-		}
+		if (isLaser&&!motor->getIsMoving()) {
+			if (absX > 0) {
+				motor->move(XAXIS, absX*2);
+			}
 
-		//Move motor in Y axis
-		if (absY > 0) {
-			motor->move(YAXIS, absY*2, motor->getPPS()); //All motor movement/RIT step must be multiplied by 2
+			//Move motor in Y axis
+			if (absY > 0) {
+				motor->move(YAXIS, absY*2);
+			}
+		} else {
+			//Move motor in X axis
+			if (absX > 0) {
+				motor->motorAcce(XAXIS, absX*2);
+			}
+
+			//Move motor in Y axis
+			if (absY > 0) {
+				motor->motorAcce(YAXIS, absY*2);
+			}
 		}
 	}
 
@@ -157,16 +168,16 @@ void moveSquare(Motor *motor){
 	while(1) {
 		int x = 300;
 		int y = 250;
-		bresenham(motor, 250, 250, x, y);
+		bresenham(motor, 250, 250, x, y, false);
 		x = 300;
 		y = 300;
-		bresenham(motor, 300, 250, x, y);
+		bresenham(motor, 300, 250, x, y, false);
 		x = 250;
 		y = 300;
-		bresenham(motor, 300, 300, x, y);
+		bresenham(motor, 300, 300, x, y, false);
 		x = 250;
 		y = 250;
-		bresenham(motor, 250, 300, x, y);
+		bresenham(motor, 250, 300, x, y, false);
 		vTaskDelay(1000);
 	}
 }
@@ -176,16 +187,16 @@ void moveRhombus(Motor *motor){
 	while(1) {
 		int x = 300;
 		int y = 200;
-		bresenham(motor, 250, 250, x, y);
+		bresenham(motor, 250, 250, x, y, false);
 		x = 350;
 		y = 250;
-		bresenham(motor, 300, 200, x, y);
+		bresenham(motor, 300, 200, x, y, false);
 		x = 300;
 		y = 300;
-		bresenham(motor, 350, 250, x, y);
+		bresenham(motor, 350, 250, x, y, false);
 		x = 250;
 		y = 250;
-		bresenham(motor, 300, 300, x, y);
+		bresenham(motor, 300, 300, x, y, false);
 		vTaskDelay(1000);
 	}
 }
@@ -195,16 +206,16 @@ void moveTrapezoid(Motor *motor){
 	while(1) {
 		int x = 380;
 		int y = 200;
-		bresenham(motor, 250, 250, x, y);
+		bresenham(motor, 250, 250, x, y, false);
 		x = 320;
 		y = 270;
-		bresenham(motor, 380, 200, x, y);
+		bresenham(motor, 380, 200, x, y, false);
 		x = 300;
 		y = 330;
-		bresenham(motor, 320, 270, x, y);
+		bresenham(motor, 320, 270, x, y, false);
 		x = 250;
 		y = 250;
-		bresenham(motor, 300, 330, x, y);
+		bresenham(motor, 300, 330, x, y, false);
 		vTaskDelay(1000);
 	}
 }

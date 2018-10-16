@@ -26,6 +26,9 @@
 #include "ITM_write.h"
 
 #define ISLEFTD true
+#define PPSDEFAULT 2000
+#define PPSMAXCALI 8000
+#define PPSMAX 5000
 
 typedef enum {XAXIS , YAXIS} Axis;
 typedef enum {Xlimit0, Xlimit1, Ylimit0, Ylimit1} Limit;
@@ -38,7 +41,8 @@ class Motor {
 public:
 
 	Motor();
-	void move(Axis axis, int count, int pps);
+	void move(Axis axis, int count);
+	void motorAcce(Axis axis, int count);
 
 	void setLimDist(Axis axis, int newDist);
 	int getLimDist(Axis axis);
@@ -54,6 +58,9 @@ public:
 
 	void setPPS(int PPS);
 	int getPPS();
+
+	void setIsMoving(bool moving);
+	bool getIsMoving();
 
 	bool readLimit(Limit limit);
 	void calibrate();
@@ -79,11 +86,11 @@ private:
 	double stepsPerMMX; 	//to convert from xcoord to steps
 	double stepsPerMMY;		//to convert from ycoord to steps
 
-	double MMPerStepX; 	//to convert from steps to xcoord
+	double MMPerStepX; 		//to convert from steps to xcoord
 	double MMPerStepY;		//to convert from steps to ycoord
 
-
-	int motorPPS;	//Pulse per second, delay = 500,000/pps. Maximum without acceleration = 6250 not finalized
+	bool isMoving;			//if it is true then the motor is moving (and not drawing)
+	int motorPPS;			//Pulse per second, delay = 500,000/pps. Maximum without acceleration = 6250 not finalized
 };
 
 

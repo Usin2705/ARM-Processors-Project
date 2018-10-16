@@ -18,11 +18,14 @@
 //#define PLOTTER1
 //#define PLOTTER2
 #define PLOTTER3
-//#define LASER
+#define LASER
 
-// Queue for Gcode structs
+// Queue for gcode command structs
 QueueHandle_t cmdQueue;
 
+
+int penUp = 0;
+int penDown = 0;
 
 /* the following is required if runtime statistics are to be collected */
 extern "C" {
@@ -66,32 +69,51 @@ static void send_to_queue(Gstruct gstruct_to_send){
 }
 
 // Sends reply code to plotter
-void send_reply(const char* cmd_type, Gstruct* g ){
+void send_reply(Gstruct* g ){
 
-	std::string reply_M10 = "";
+	const char* replyM11 = "M11 1 1 1 1\r\n";												// reply code for M11 command
+	const char* replyOK = "OK\r\n";
+
+
+	/*
+	std::string replyM10 = "";
+	#if defined(PLOTTER1)
+	replyM10 = "M10 XY 310 345 0.00 0.00 A0 B0 H0 S80 U0 D180\r\n";		// reply code for M10 command
+	#elif defined(PLOTTER2)
+	replyM10 =	"M10 XY 310 340 0.00 0.00 A0 B0 H0 S80 U0 D180\r\n";		// reply code for M10 command
+	#elif defined(PLOTTER3)
+	replyM10 =	"M10 XY 305 345 0.00 0.00 A0 B0 H0 S80 U80 D0\r\n";		// reply code for M10 command
+	#else
+	replyM10 =	"M10 XY 500 500 0.00 0.00 A0 B0 H0 S80 U160 D90\r\n";
+	#endif
+	 */
+
+	if(strcmp(g->cmd_type, "M10") == 0){
+		char replyM10[100] = {0};
+
 #if defined(PLOTTER1)
-	reply_M10 = "M10 XY 310 345 0.00 0.00 A0 B0 H0 S80 U0 D180\r\n";		// reply code for M10 command
+		sprintf(replyM10, "M10 XY 310 345 0.00 0.00 A0 B0 H0 S80 U%d D%d\r\nOK\r\n", g->pen_up, g->pen_dw);
 #elif defined(PLOTTER2)
-	reply_M10 =	"M10 XY 310 340 0.00 0.00 A0 B0 H0 S80 U0 D180\r\n";		// reply code for M10 command
+		sprintf(replyM10, "M10 XY 310 340 0.00 0.00 A0 B0 H0 S80 U%d D%d\r\nOK\r\n", g->pen_up, g->pen_dw);
 #elif defined(PLOTTER3)
-	reply_M10 =	"M10 XY 310 340 0.00 0.00 A0 B0 H0 S80 U80 D0\r\n";		// reply code for M10 command
+		sprintf(replyM10, "M10 XY 305 345 0.00 0.00 A0 B0 H0 S80 U%d D%d\r\nOK\r\n", g->pen_up, g->pen_dw);
 #else
-	reply_M10 =	"M10 XY 300 400 0.00 0.00 A0 B0 H0 S80 U160 D90\r\n";
+		sprintf(replyM10, "M10 XY 500 500 0.00 0.00 A0 B0 H0 S80 U%d D%d\r\nOK\r\n", g->pen_up, g->pen_dw);
 #endif
 
-	const char* reply_M11 = "M11 1 1 1 1\r\n";												// reply code for M11 command
-	const char* reply_OK = "OK\r\n";													// reply code for the rest of the commands
 
-	if(strcmp(cmd_type, "M10") == 0){
-		USB_send((uint8_t *)reply_M10.c_str(), strlen(reply_M10.c_str()));
-		USB_send((uint8_t *)reply_OK, strlen(reply_OK));
+		ITM_write(replyM10);
+		USB_send((uint8_t *)replyM10, strlen(replyM10));
+		USB_send((uint8_t *)replyOK, strlen(replyOK));
 	}
-	if(strcmp(cmd_type, "M11") == 0){
-		USB_send((uint8_t *)reply_M11, strlen(reply_M11));
-		USB_send((uint8_t *)reply_OK, strlen(reply_OK));
+
+	if(strcmp(g->cmd_type, "M11") == 0){
+		USB_send((uint8_t *)replyM11, strlen(replyM11));
+		USB_send((uint8_t *)replyOK, strlen(replyOK));
 	}
+
 	else{
-		USB_send((uint8_t *)reply_OK, strlen(reply_OK));
+		USB_send((uint8_t *)replyOK, strlen(replyOK));
 	}
 }
 
@@ -174,13 +196,23 @@ static void interrupt_pins_init(){
 	DigitalIoPin swX1 (0,29, DigitalIoPin::pullup, true);
 
 	/*configuring pins as interrupt pins*/
-	LPC_INMUX->PINTSEL[0] = 0; 				// select pin 0_0(swY0) as interrupt pin 0
-	LPC_INMUX->PINTSEL[1] = 35; 			// select pin 1_3((swY1)(32 + 3 = 35)) as interrupt pin 1
-	LPC_INMUX->PINTSEL[2] = 9;				// select pin 0_9 (swX0) as interrupt pin 2
-	LPC_INMUX->PINTSEL[3] = 29;				// select pin 0_29 (swX1) as interrupt pin 3
 
-	LPC_GPIO_PIN_INT->SIENF = 7; // enables falling edge interrupts
-	LPC_GPIO_PIN_INT->ISEL = 0; // configures pin interrupts as edge sensitive(0)
+	Chip_INMUX_PinIntSel(0, 0, 0);			// select pin 0_0(swY0) as interrupt pin 0
+	Chip_INMUX_PinIntSel(1, 1, 3);			// select pin 1_3(swY1) as interrupt pin 1
+	Chip_INMUX_PinIntSel(2, 0, 9);			// select pin 0_9(swX0) as interrupt pin 2
+	Chip_INMUX_PinIntSel(3, 0, 29); 		// select pin 0_29(swX1) as interrupt pin 3
+
+	/*configure selected pins as falling edge interrupts*/
+	Chip_PININT_EnableIntLow(LPC_GPIO_PIN_INT, PININTCH0);
+	Chip_PININT_EnableIntLow(LPC_GPIO_PIN_INT, PININTCH1);
+	Chip_PININT_EnableIntLow(LPC_GPIO_PIN_INT, PININTCH2);
+	Chip_PININT_EnableIntLow(LPC_GPIO_PIN_INT, PININTCH3);
+
+	/*configure selected pins as edge sensetive*/
+	Chip_PININT_SetPinModeEdge(LPC_GPIO_PIN_INT, PININTCH0);
+	Chip_PININT_SetPinModeEdge(LPC_GPIO_PIN_INT, PININTCH1);
+	Chip_PININT_SetPinModeEdge(LPC_GPIO_PIN_INT, PININTCH2);
+	Chip_PININT_SetPinModeEdge(LPC_GPIO_PIN_INT, PININTCH3);
 
 	/*Sets priorities for pin interrupts*/
 	NVIC_SetPriority(PIN_INT0_IRQn, configMAX_SYSCALL_INTERRUPT_PRIORITY + 1);
@@ -194,6 +226,7 @@ static void interrupt_pins_init(){
 	NVIC_EnableIRQ(PIN_INT2_IRQn);
 	NVIC_EnableIRQ(PIN_INT3_IRQn);
 }
+
 
 
 /*Task receives Gcode commands from mDraw program via USB*/
@@ -223,9 +256,10 @@ void static vTaskReceive(void* pvParamters){
 		}
 		/*the full g-code has been received*/
 		if(full_gcode){
-			gstruct_to_send = parser.parse_gcode(gcode_str.c_str());
+
+			gstruct_to_send = parser.parse_gcode(gcode_str.c_str(), penUp, penDown);
 			send_to_queue(gstruct_to_send);
-			send_reply(gstruct_to_send.cmd_type);
+			send_reply(&gstruct_to_send);
 
 			ITM_write(gcode_str.c_str());
 			ITM_write("\r\n");
@@ -244,22 +278,42 @@ void static vTaskMotor(void* pvParamters){
 	Motor motor;
 
 	setLaserPower(0);	//Turn laser off
-	motor.setPPS(2000);
+	motor.setPPS(PPSDEFAULT);
+	bool isPenCalibrated = true;
 
 #if defined(PLOTTER1)
-	penMove(0); 		//Move pen up
+	penUp = 0;
+	penDown = 180;
+	penMove(penUp); 		//Move pen up
 #elif defined(PLOTTER2)
-	penMove(0); 		//Move pen up
+	penUp = 0;
+	penDown = 180;
+	penMove(penUp); 		//Move pen up
 #elif defined(PLOTTER3)
-	penMove(80); 		//Move pen up
+	penUp = 80;
+	penDown = 0;
+	penMove(penUp); 			//Move pen up
 #else
-	penMove(160);		//Move pen up
-	motor.setPPS(2500);
+	penMove(160);			//Move pen up
+	isPenCalibrated = false;
 #endif
 
-#ifdef LASER
-	motor.setPPS(2000);	//Laser drawing should be slower
-#endif
+	//For Calibrate
+	while (!isPenCalibrated) {
+		if(xQueueReceive(cmdQueue, (void*) &gstruct, portMAX_DELAY)) {
+			if (strcmp(gstruct.cmd_type,"M2") == 0){
+				penUp = gstruct.pen_up;
+				penDown = gstruct.pen_dw;
+
+			} else if(strcmp(gstruct.cmd_type,"M1") == 0){
+				penMove(gstruct.pen_pos);
+				vTaskDelay(50); // Delay a little bit to avoid pen not move up/down before motor move
+
+			} else if (strcmp(gstruct.cmd_type,"M28") == 0){
+				isPenCalibrated = true;
+			}
+		}
+	}
 
 	motor.calibrate();
 	//moveSquare(&motor);
@@ -271,6 +325,7 @@ void static vTaskMotor(void* pvParamters){
 	double stepsPerMMY;
 	double MMPerStepX;
 	double MMPerStepY;
+	bool isLaser = false;
 
 	//lower resolution might be a good idea???
 
@@ -281,12 +336,18 @@ void static vTaskMotor(void* pvParamters){
 	MMPerStepX = (double) 31000.0/motor.getLimDist(XAXIS); //31cm
 	MMPerStepY = (double) 34500.0/motor.getLimDist(YAXIS); //34.5cm
 
-#elif defined(PLOTTER2) || defined(PLOTTER3)
+#elif defined(PLOTTER2)
 	stepsPerMMX = (double) motor.getLimDist(XAXIS)/31000.0; //31cm
 	stepsPerMMY = (double) motor.getLimDist(YAXIS)/34000.0; //34cm
 
 	MMPerStepX = (double) 31000.0/motor.getLimDist(XAXIS); //31cm
 	MMPerStepY = (double) 34000.0/motor.getLimDist(YAXIS); //34cm
+#elif defined(PLOTTER3)
+	stepsPerMMX = (double) motor.getLimDist(XAXIS)/30500.0; //30.5cm
+	stepsPerMMY = (double) motor.getLimDist(YAXIS)/34500.0; //34.5cm
+
+	MMPerStepX = (double) 31000.0/motor.getLimDist(XAXIS); //30.5cm
+	MMPerStepY = (double) 34000.0/motor.getLimDist(YAXIS); //34.5cm
 #else
 	stepsPerMMX = (double) motor.getLimDist(XAXIS)/50000.0;
 	stepsPerMMY = (double) motor.getLimDist(YAXIS)/50000.0;
@@ -295,6 +356,9 @@ void static vTaskMotor(void* pvParamters){
 	MMPerStepY = (double) 50000.0/motor.getLimDist(YAXIS);
 #endif
 
+#ifdef LASER
+	isLaser = true;
+#endif
 	motor.setScale(XAXIS, stepsPerMMX, MMPerStepX);
 	motor.setScale(YAXIS, stepsPerMMY, MMPerStepY);
 
@@ -306,13 +370,13 @@ void static vTaskMotor(void* pvParamters){
 				snprintf(buffer, 80, "LPC G1 X%d Y%d \r\n", gstruct.x_pos, gstruct.y_pos);
 				ITM_write(buffer);
 				bresenhamCoord(&motor, motor.getPos(XAXIS), motor.getPos(YAXIS), gstruct.x_pos, gstruct.y_pos);
-				*/
+				 */
 
 				int newPositionX = gstruct.x_pos*stepsPerMMX;
 				int newPositionY = gstruct.y_pos*stepsPerMMY;
 				snprintf(buffer, 80, "LPC G1 X%d Y%d \r\n", newPositionX, newPositionY);
 				ITM_write(buffer);
-				bresenham(&motor, motor.getPos(XAXIS), motor.getPos(YAXIS), newPositionX, newPositionY);
+				bresenham(&motor, motor.getPos(XAXIS), motor.getPos(YAXIS), newPositionX, newPositionY, isLaser);
 
 
 				/*
@@ -333,15 +397,18 @@ void static vTaskMotor(void* pvParamters){
 				motor.setPos(YAXIS, gstruct.y_pos);
 				 */
 
-
 				// Control pen servo
 			} else if(strcmp(gstruct.cmd_type,"M1") == 0){
 				penMove(gstruct.pen_pos);
+				motor.setIsMoving(gstruct.pen_pos==penUp); //If pen up then move and not draw
 				vTaskDelay(50); // Delay a little bit to avoid pen not move up/down before motor move
 
 				// Control laser power
 			} else if (strcmp(gstruct.cmd_type,"M4") == 0){
 				setLaserPower(gstruct.laserPower);
+				if (isLaser) {
+					motor.setIsMoving(gstruct.laserPower==0);
+				}
 				ITM_write("Set laser power \r\n");
 				vTaskDelay(5); // Delay a little bit to avoid laser not on/off before motor move
 			}
