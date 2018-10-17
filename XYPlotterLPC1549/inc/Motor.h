@@ -29,7 +29,7 @@
 #define PPSLASER 1000
 #define PPSDEFAULT 2000
 #define PPSMAXCALI 8000
-#define PPSMAX 5000
+#define PPSMAX 4000
 
 typedef enum {XAXIS , YAXIS} Axis;
 typedef enum {Xlimit0, Xlimit1, Ylimit0, Ylimit1} Limit;
@@ -53,21 +53,18 @@ public:
 	void setPos(Axis axis, int currentPos);
 	int getPos(Axis axis);
 
-	void setScale(Axis axis, double stepsPerMM);
-	double getStepsPerMM(Axis axis);
-
 	void setPPS(int PPS);
 	int getPPS();
 
 	void setIsMoving(bool moving);
 	bool getIsMoving();
 
-	bool readLimit(Limit limit);
 	void calibrate();
 
 	virtual ~Motor();
 
 private:
+	bool readLimit(Limit limit);
 
 	DigitalIoPin swY0;	//Limit of Y at 0
 	DigitalIoPin swY1;	//Limit of Y at max Y
@@ -80,11 +77,8 @@ private:
 	int limDistX;			// Step Length of X
 	int limDistY;			// Step Length of Y
 
-	int currentCoordX;		//current position of X, measured in xcoord in mDraw
-	int currentCoordY;		//current position of Y, measured in ycoord in mDraw
-
-	double stepsPerMMX; 	//to convert from xcoord to steps
-	double stepsPerMMY;		//to convert from ycoord to steps
+	int currenPosX;		//current position of X, measured in steps
+	int currentPosY;		//current position of Y, measured in steps
 
 	bool isMoving;			//if it is true then the motor is moving (and not drawing)
 	int motorPPS;			//Pulse per second, delay = 500,000/pps. Maximum without acceleration = 6250 not finalized

@@ -75,7 +75,8 @@ void RIT_IRQHandler(void) {
 
 		RIT_count--;
 	}
-	else {
+
+	if (RIT_count <= 0) {
 		Chip_RIT_Disable(LPC_RITIMER); // disable timer
 		// Give semaphore and set context switch flag if a higher priority task was woken up
 		xSemaphoreGiveFromISR(sbRIT, &xHigherPriorityWoken);
@@ -191,31 +192,13 @@ void Motor::setDirection(Axis axis, bool isLeftD) {
 	}
 }
 
-/* Set the scale of the motor (measure by steps per mm)
- * if cord = 'X' then set the scale for motor X
- * Otherwise set for motor Y
- *
- */
-void Motor::setScale(Axis axis, double stepsPerMM) {
-	(axis==XAXIS?stepsPerMMX:stepsPerMMY) = stepsPerMM;
-}
-
-/* Return the step per mili of the motor
- * if cord = 'X' then get the scale for motor X
- * Otherwise get scale for motor Y
- *
- */
-double Motor::getStepsPerMM(Axis axis) {
-	return (axis==XAXIS?stepsPerMMX:stepsPerMMY);
-}
-
 /* Set the position of the motor (measure by coordinate from mDraw)
  * if cord = 'X' then set the position for X
  * Otherwise set for Y
  *
  */
 void Motor::setPos(Axis axis, int currentPos) {
-	(axis==XAXIS?currentCoordX:currentCoordY) = currentPos;
+	(axis==XAXIS?currenPosX:currentPosY) = currentPos;
 }
 
 /* Return the position of the motor (measure by coordinate from mDraw)
@@ -224,7 +207,7 @@ void Motor::setPos(Axis axis, int currentPos) {
  *
  */
 int Motor::getPos(Axis axis) {
-	return (axis==XAXIS?currentCoordX:currentCoordY);
+	return (axis==XAXIS?currenPosX:currentPosY);
 }
 
 /* Read the limit switch
@@ -283,11 +266,19 @@ bool Motor::getIsMoving() {
 	return isMoving;
 }
 
+/*	Move the pen
+ * 	(scale to 1000)
+ *
+ */
 void penMove(int penPos){
 	int value = penPos*999/255;
 	LPC_SCT0->MATCHREL[1].L = 1000 + value;
 }
 
+/* Set laser power
+ * (scale to 1000)
+ *
+ */
 void setLaserPower(int laserPower){
 	int value = laserPower*999/255;
 	LPC_SCT1->MATCHREL[1].L = value;
@@ -326,9 +317,9 @@ void Motor::calibrate() {
 				step = 1000;
 
 			//If within moving distance (not hit the limit soon) move really fast
-			} else if (maxSteps < 24000){
+			} else if (maxSteps < 23000){
 				motorPPS = PPSMAXCALI;
-				step = 2000;
+				step = 1000;
 
 			//Else decelerate until hit the limit
 			} else {

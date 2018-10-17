@@ -10,7 +10,13 @@
 #include "Motor.h"
 #include <math.h>
 
-void drawplot(Motor *motor, int x0, int y0, int x1, int y1) {
+
+/* Move the motor to draw
+ * DrawCurve only called when drawing curve for Bresenham algorithm
+ * It is not used to draw straight line (because it's slow)
+ *
+ */
+void drawCurve(Motor *motor, int x0, int y0, int x1, int y1) {
 	int absX = abs(x1 - x0);
 	int absY= abs(y1 - y0);
 
@@ -39,7 +45,7 @@ void plotLineLow(Motor *motor, int x0, int y0, int x1, int y1) {
 	int oldX = x0;
 	int oldY = y0;
 	for (int x = x0; x <= x1; x++) {
-		drawplot(motor, oldX, oldY, x, y);
+		drawCurve(motor, oldX, oldY, x, y);
 		oldX = x;
 		oldY = y;
 
@@ -65,7 +71,7 @@ void plotLineHigh(Motor *motor, int x0, int y0, int x1, int y1) {
 	int oldX = x0;
 	int oldY = y0;
 	for (int y = y0; y <= y1; y++) {
-		drawplot(motor, oldX, oldY, x, y);
+		drawCurve(motor, oldX, oldY, x, y);
 		oldX = x;
 		oldY = y;
 
@@ -78,6 +84,12 @@ void plotLineHigh(Motor *motor, int x0, int y0, int x1, int y1) {
 	}
 }
 
+/* Draw using Bresenham algorithm.
+ * Input including beginning coordinate x0,y0
+ * End coordinate x1, y1
+ * Depend on the drawing, motor can also acceleration or not.
+ *
+ */
 void bresenham(Motor *motor, int x0, int y0, int x1, int y1, bool isLaser) {
 	int deltaX = x1 - x0;
 	int deltaY = y1 - y0;
@@ -138,9 +150,9 @@ void bresenham(Motor *motor, int x0, int y0, int x1, int y1, bool isLaser) {
 	motor->setPPS(PPSDEFAULT); // come back to default PPS
 	motor->setPos(XAXIS, x0 + deltaX);
 	motor->setPos(YAXIS, y0 + deltaY);
-	char buffer[80];
-	snprintf(buffer, 80, "BSH G1 X%d Y%d \r\n", x0 + deltaX, y0 + deltaY);
-	ITM_write(buffer);
+	//char buffer[80];
+	//snprintf(buffer, 80, "BSH G1 X%d Y%d \r\n", x0 + deltaX, y0 + deltaY);
+	//ITM_write(buffer);
 }
 
 
