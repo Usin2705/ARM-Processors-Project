@@ -274,10 +274,10 @@ void static vTaskReceive(void* pvParamters){
 
 void static vTaskMotor(void* pvParamters){
 	Gstruct gstruct;
-	Motor motor;
+	Plotter plotter;
 
 	setLaserPower(0);	//Turn laser off
-	motor.setPPS(PPSDEFAULT);
+	plotter.setPPS(PPSDEFAULT);
 	bool isPenCalibrated = true;	//Check if the pen is calibrated or not
 
 #if defined(PLOTTER1)
@@ -314,7 +314,7 @@ void static vTaskMotor(void* pvParamters){
 		}
 	}
 
-	motor.calibrate();
+	plotter.calibrate();
 	//moveSquare(&motor);
 	//moveRhombus(&motor);
 	//moveTrapezoid(&motor);
@@ -324,7 +324,7 @@ void static vTaskMotor(void* pvParamters){
 	double stepsPerMMY;
 	bool isLaser = false;
 
-
+/*
 #if defined(PLOTTER1)
 	stepsPerMMX = (double) motor.getLimDist(XAXIS)/31000.0; //31cm
 	stepsPerMMY = (double) motor.getLimDist(YAXIS)/34500.0; //34.5cm
@@ -338,7 +338,7 @@ void static vTaskMotor(void* pvParamters){
 	stepsPerMMX = (double) motor.getLimDist(XAXIS)/50000.0;
 	stepsPerMMY = (double) motor.getLimDist(YAXIS)/50000.0;
 #endif
-
+*/
 	//char buffer[80] = {'\0'};
 	while(1) {
 
@@ -349,13 +349,13 @@ void static vTaskMotor(void* pvParamters){
 				int newPositionY = gstruct.y_pos*stepsPerMMY;
 				//snprintf(buffer, 80, "LPC G1 X%d Y%d \r\n", newPositionX, newPositionY);
 				//ITM_write(buffer);
-				bresenham(&motor, motor.getPos(XAXIS), motor.getPos(YAXIS), newPositionX, newPositionY, isLaser);
+				//bresenham(&motor, motor.getPos(XAXIS), motor.getPos(YAXIS), newPositionX, newPositionY, isLaser);
 
 				// Control pen servo
 			} else if(strcmp(gstruct.cmd_type,"M1") == 0){
 				vTaskDelay(50); // Delay a little bit to avoid pen not move up/down before motor move
 				penMove(gstruct.pen_pos);
-				motor.setIsMoving(gstruct.pen_pos==penUp); //If pen up then move and not draw
+				//motor.setIsMoving(gstruct.pen_pos==penUp); //If pen up then move and not draw
 				vTaskDelay(50); // Delay a little bit to avoid pen not move up/down before motor move
 
 
@@ -369,7 +369,7 @@ void static vTaskMotor(void* pvParamters){
 				}
 
 				if (isLaser) {
-					motor.setIsMoving(gstruct.laserPower==0);
+					//motor.setIsMoving(gstruct.laserPower==0);
 				}
 				ITM_write("Set laser power \r\n");
 				vTaskDelay(5); // Delay a little bit to avoid laser not on/off before motor move
@@ -379,7 +379,7 @@ void static vTaskMotor(void* pvParamters){
 				isLaser = false;
 				penMove(penUp);
 				setLaserPower(0);
-				motor.setIsMoving(true);
+				//motor.setIsMoving(true);
 			}
 		}
 	}
