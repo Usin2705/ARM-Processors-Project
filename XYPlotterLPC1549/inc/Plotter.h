@@ -51,13 +51,16 @@ public:
 
 	void calibrate();
 
+	Motor* getMotorX();
+	Motor* getMotorY();
+
 	virtual ~Plotter();
 
 private:
 	bool readLimit(Limit limit);
 
-	Motor motorX;		//Motor of X axis
-	Motor motorY;		//Motor of Y axis
+	Motor *motorX;		//Motor of X axis
+	Motor *motorY;		//Motor of Y axis
 
 	bool isMoving;			//if it is true then the motor is moving (and not drawing)
 	int motorPPS;			//Pulse per second, delay = 500,000/pps. Maximum without acceleration = 6250 not finalized

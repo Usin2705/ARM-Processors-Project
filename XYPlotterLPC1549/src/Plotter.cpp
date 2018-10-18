@@ -115,11 +115,10 @@ void RIT_start(int count, int us) {
 	}
 }
 
-Plotter::Plotter() 	:
-		motorX (0, 9, 0, 29, 1, 0),
-		motorY (0, 0, 1, 3, 0, 28)
+Plotter::Plotter()
 {
-
+	motorX = new Motor(0, 9, 0, 29, 1, 0);
+	motorY = new Motor(0, 0, 1, 3, 0, 28);
 }
 
 Plotter::~Plotter() {
@@ -167,13 +166,13 @@ void Plotter::motorAcce(Axis axis, int count) {
  */
 bool Plotter::readLimit(Limit limit) {
 	if (limit==Xlimit0) {
-		return motorX.readLimitOrigin();
+		return motorX->readLimitOrigin();
 	} else if (limit==Xlimit1){
-		return motorX.readLimitMaximum();
+		return motorX->readLimitMaximum();
 	} else if (limit==Ylimit0){
-		return motorY.readLimitOrigin();
+		return motorY->readLimitOrigin();
 	} else if (limit==Ylimit1){
-		return motorY.readLimitMaximum();
+		return motorY->readLimitMaximum();
 	} else {
 		ITM_write("Button read can't regconize the limit char code\r\n");
 		return true;
@@ -214,6 +213,20 @@ bool Plotter::getIsMoving() {
 	return isMoving;
 }
 
+/*
+ * Return the motor X
+ */
+Motor* Plotter::getMotorX() {
+	return motorX;
+}
+
+/*
+ * Return the motor Y
+ */
+Motor* Plotter::getMotorY() {
+	return motorY;
+}
+
 /*	Move the pen
  * 	(scale to 1000)
  *
@@ -244,7 +257,7 @@ void Plotter::calibrate() {
 	for (uint8_t i = 0; i < 2; i++) {
 		//Move to left (or down if cord == Y), without counting step
 
-		(RITaxis==XAXIS?motorX:motorY).setDirection(ISLEFTD);
+		(RITaxis==XAXIS?motorX:motorY)->setDirection(ISLEFTD);
 		limitread = readLimit(RITaxis==XAXIS?Xlimit0:Ylimit0);
 		while (!limitread){
 			limitread = readLimit(RITaxis==XAXIS?Xlimit0:Ylimit0);
@@ -253,7 +266,7 @@ void Plotter::calibrate() {
 		}
 
 		//	When move back to right (or up if cord == Y), count step
-		(RITaxis==XAXIS?motorX:motorY).setDirection(!ISLEFTD);
+		(RITaxis==XAXIS?motorX:motorY)->setDirection(!ISLEFTD);
 		limitread = readLimit(RITaxis==XAXIS?Xlimit1:Ylimit1);
 		motorPPS = PPSDEFAULT;
 		while (!limitread){
@@ -279,7 +292,7 @@ void Plotter::calibrate() {
 			maxSteps= maxSteps + step/2;
 		}
 
-		(RITaxis==XAXIS?motorX:motorY).setLimDist(maxSteps);
+		(RITaxis==XAXIS?motorX:motorY)->setLimDist(maxSteps);
 		snprintf(buffer, 80, "Max steps of axis %d is: %d \r\n", RITaxis, maxSteps);
 		ITM_write(buffer);
 		//If 'X' then change to Y, do the loop again
@@ -291,8 +304,8 @@ void Plotter::calibrate() {
 	}
 
 	//Move to middle
-	motorX.setDirection(ISLEFTD);
-	motorY.setDirection(ISLEFTD);
+	motorX->setDirection(ISLEFTD);
+	motorY->setDirection(ISLEFTD);
 
 	vTaskDelay(500);
 	RITaxis = XAXIS;
@@ -301,8 +314,8 @@ void Plotter::calibrate() {
 	RIT_start(500 ,500000/motorPPS);
 
 	motorPPS = PPSDEFAULT;
-	motorX.setPos(0); // Set position in scale with mDraw
-	motorY.setPos(0); // Set position in scale with mDraw
+	motorX->setPos(0); // Set position in scale with mDraw
+	motorY->setPos(0); // Set position in scale with mDraw
 	isMoving = true;
 }
 
