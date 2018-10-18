@@ -91,13 +91,13 @@ void send_reply(Gstruct* g ){
 		char replyM10[100] = {0};
 
 #if defined(PLOTTER1)
-		sprintf(replyM10, "M10 XY 310 345 0.00 0.00 A0 B0 H0 S80 U%d D%d\r\nOK\r\n", g->pen_up, g->pen_dw);
+		sprintf(replyM10, "M10 XY 310 345 0.00 0.00 A0 B0 H0 S50 U%d D%d\r\nOK\r\n", g->pen_up, g->pen_dw);
 #elif defined(PLOTTER2)
-		sprintf(replyM10, "M10 XY 310 340 0.00 0.00 A0 B0 H0 S80 U%d D%d\r\nOK\r\n", g->pen_up, g->pen_dw);
+		sprintf(replyM10, "M10 XY 310 340 0.00 0.00 A0 B0 H0 S50 U%d D%d\r\nOK\r\n", g->pen_up, g->pen_dw);
 #elif defined(PLOTTER3)
-		sprintf(replyM10, "M10 XY 305 345 0.00 0.00 A0 B0 H0 S80 U%d D%d\r\nOK\r\n", g->pen_up, g->pen_dw);
+		sprintf(replyM10, "M10 XY 305 345 0.00 0.00 A0 B0 H0 S50 U%d D%d\r\nOK\r\n", g->pen_up, g->pen_dw);
 #else
-		sprintf(replyM10, "M10 XY 500 500 0.00 0.00 A0 B0 H0 S80 U%d D%d\r\nOK\r\n", g->pen_up, g->pen_dw);
+		sprintf(replyM10, "M10 XY 500 500 0.00 0.00 A0 B0 H0 S50 U%d D%d\r\nOK\r\n", g->pen_up, g->pen_dw);
 #endif
 
 
@@ -185,7 +185,7 @@ void PIN_INT3_IRQHandler(void){
 }
 
 /* function for initializing limit switches as interrupt pins */
-static void interrupt_pins_init(){
+static void interruptPinsInit(){
 
 	Chip_PININT_Init(LPC_GPIO_PIN_INT);
 
@@ -256,7 +256,7 @@ void static vTaskReceive(void* pvParamters){
 		/*the full g-code has been received*/
 		if(full_gcode){
 
-			gstruct_to_send = parser.parse_gcode(gcode_str.c_str(), penUp, penDown);
+			gstruct_to_send = parser.parseGcode(gcode_str.c_str(), penUp, penDown);
 			send_to_queue(gstruct_to_send);
 			send_reply(&gstruct_to_send);
 
@@ -318,7 +318,7 @@ void static vTaskMotor(void* pvParamters){
 	//moveSquare(&plotter);
 	//moveRhombus(&plotter);
 	//moveTrapezoid(&plotter);
-	interrupt_pins_init();
+	interruptPinsInit();
 
 	double stepsPerMMX;
 	double stepsPerMMY;
@@ -354,10 +354,9 @@ void static vTaskMotor(void* pvParamters){
 
 				// Control pen servo
 			} else if(strcmp(gstruct.cmd_type,"M1") == 0){
-				vTaskDelay(50); // Delay a little bit to avoid pen not move up/down before motor move
 				penMove(gstruct.pen_pos);
 				plotter.setIsMoving(gstruct.pen_pos==penUp); //If pen up then move and not draw
-				vTaskDelay(50); // Delay a little bit to avoid pen not move up/down before motor move
+				vTaskDelay(200); // Delay a little bit to avoid pen not move up/down before motor move
 
 
 				// Control laser power
