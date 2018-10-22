@@ -25,10 +25,6 @@
 #include "Motor.h"
 
 #define ISLEFTD true
-#define PPSLASER 1000
-#define PPSDEFAULT 2000
-#define PPSMAXCALI 8000
-#define PPSMAX 4000
 
 typedef enum {XAXIS , YAXIS} Axis;
 typedef enum {Xlimit0, Xlimit1, Ylimit0, Ylimit1} Limit;
@@ -39,7 +35,7 @@ void SCT_init();
 class Plotter {
 
 public:
-	Plotter();
+	Plotter(Motor *myMotorX, Motor *myMotorY);
 	void move(Axis axis, int count);
 	void motorAcce(Axis axis, int count);
 

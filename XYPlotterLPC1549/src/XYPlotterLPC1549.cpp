@@ -116,118 +116,6 @@ void send_reply(Gstruct* g ){
 	}
 }
 
-extern "C"{
-
-// interrupt handler for interrupt pin 0 (swY0)
-void PIN_INT0_IRQHandler(void){
-
-	// This used to check if a context switch is required
-	portBASE_TYPE xHigherPriorityWoken = pdFALSE;
-
-	// clears falling edge detection
-	LPC_GPIO_PIN_INT->IST &= ~(1UL << 1);
-
-	// loops infinitely
-	while(1);
-
-	// End the ISR and (possibly) do a context switch
-	portEND_SWITCHING_ISR(xHigherPriorityWoken);
-}
-
-// interrupt handler for interrupt pin 1 (swY1)
-void PIN_INT1_IRQHandler(void){
-
-	// This used to check if a context switch is required
-	portBASE_TYPE xHigherPriorityWoken = pdFALSE;
-
-	// clears falling edge detection
-	LPC_GPIO_PIN_INT->IST &= ~(1UL << 2);
-
-	// loops infinitely
-	while(1);
-
-	// End the ISR and (possibly) do a context switch
-	portEND_SWITCHING_ISR(xHigherPriorityWoken);
-}
-
-// interrupt handler for interrupt pin 2 (swX0)
-void PIN_INT2_IRQHandler(void){
-
-	// This used to check if a context switch is required
-	portBASE_TYPE xHigherPriorityWoken = pdFALSE;
-
-	// clears falling edge detection
-	LPC_GPIO_PIN_INT->IST &= ~(1UL << 3);
-
-	// loops infinitely
-	while(1);
-
-	// End the ISR and (possibly) do a context switch
-	portEND_SWITCHING_ISR(xHigherPriorityWoken);
-}
-
-// interrupt handler for interrupt pin 3 (swX1)
-void PIN_INT3_IRQHandler(void){
-
-	// This used to check if a context switch is required
-	portBASE_TYPE xHigherPriorityWoken = pdFALSE;
-
-	// clears falling edge detection
-	LPC_GPIO_PIN_INT->IST &= ~(1UL << 4);
-
-	// loops infinitely
-	while(1);
-
-	// End the ISR and (possibly) do a context switch
-	portEND_SWITCHING_ISR(xHigherPriorityWoken);
-}
-
-}
-
-/* function for initializing limit switches as interrupt pins */
-static void interruptPinsInit(){
-
-	Chip_PININT_Init(LPC_GPIO_PIN_INT);
-
-	DigitalIoPin swY0(0,0, DigitalIoPin::pullup, true);
-	DigitalIoPin swY1 (1,3, DigitalIoPin::pullup, true);
-	DigitalIoPin swX0 (0,9, DigitalIoPin::pullup, true);
-	DigitalIoPin swX1 (0,29, DigitalIoPin::pullup, true);
-
-	/*configuring pins as interrupt pins*/
-
-	Chip_INMUX_PinIntSel(0, 0, 0);			// select pin 0_0(swY0) as interrupt pin 0
-	Chip_INMUX_PinIntSel(1, 1, 3);			// select pin 1_3(swY1) as interrupt pin 1
-	Chip_INMUX_PinIntSel(2, 0, 9);			// select pin 0_9(swX0) as interrupt pin 2
-	Chip_INMUX_PinIntSel(3, 0, 29); 		// select pin 0_29(swX1) as interrupt pin 3
-
-	/*configure selected pins as falling edge interrupts*/
-	Chip_PININT_EnableIntLow(LPC_GPIO_PIN_INT, PININTCH0);
-	Chip_PININT_EnableIntLow(LPC_GPIO_PIN_INT, PININTCH1);
-	Chip_PININT_EnableIntLow(LPC_GPIO_PIN_INT, PININTCH2);
-	Chip_PININT_EnableIntLow(LPC_GPIO_PIN_INT, PININTCH3);
-
-	/*configure selected pins as edge sensetive*/
-	Chip_PININT_SetPinModeEdge(LPC_GPIO_PIN_INT, PININTCH0);
-	Chip_PININT_SetPinModeEdge(LPC_GPIO_PIN_INT, PININTCH1);
-	Chip_PININT_SetPinModeEdge(LPC_GPIO_PIN_INT, PININTCH2);
-	Chip_PININT_SetPinModeEdge(LPC_GPIO_PIN_INT, PININTCH3);
-
-	/*Sets priorities for pin interrupts*/
-	NVIC_SetPriority(PIN_INT0_IRQn, configMAX_SYSCALL_INTERRUPT_PRIORITY + 1);
-	NVIC_SetPriority(PIN_INT1_IRQn, configMAX_SYSCALL_INTERRUPT_PRIORITY + 1);
-	NVIC_SetPriority(PIN_INT2_IRQn, configMAX_SYSCALL_INTERRUPT_PRIORITY + 1);
-	NVIC_SetPriority(PIN_INT3_IRQn, configMAX_SYSCALL_INTERRUPT_PRIORITY + 1);
-
-	/*Enables interrupt signals for the pin interrupts*/
-	NVIC_EnableIRQ(PIN_INT0_IRQn);
-	NVIC_EnableIRQ(PIN_INT1_IRQn);
-	NVIC_EnableIRQ(PIN_INT2_IRQn);
-	NVIC_EnableIRQ(PIN_INT3_IRQn);
-}
-
-
-
 /*Task receives Gcode commands from mDraw program via USB*/
 void static vTaskReceive(void* pvParamters){
 
@@ -274,7 +162,9 @@ void static vTaskReceive(void* pvParamters){
 
 void static vTaskMotor(void* pvParamters){
 	Gstruct gstruct;
-	Plotter plotter;
+	Motor motorX(0, 9, 0, 29, 1, 0);
+	Motor motorY(0, 0, 1, 3, 0, 28);
+	Plotter plotter(&motorX, &motorY);
 
 	setLaserPower(0);	//Turn laser off
 	plotter.setPPS(PPSDEFAULT);
@@ -318,7 +208,6 @@ void static vTaskMotor(void* pvParamters){
 	//moveSquare(&plotter);
 	//moveRhombus(&plotter);
 	//moveTrapezoid(&plotter);
-	interruptPinsInit();
 
 	double stepsPerMMX;
 	double stepsPerMMY;

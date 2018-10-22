@@ -8,6 +8,7 @@
 #include <Plotter.h>
 volatile Axis RITaxis = XAXIS;
 volatile uint32_t RIT_count;
+volatile bool isCalibrate = true;
 xSemaphoreHandle sbRIT = xSemaphoreCreateBinary();
 
 void SCT_init(){
@@ -52,6 +53,11 @@ void RIT_IRQHandler(void) {
 	static DigitalIoPin btnStepX(0,24, DigitalIoPin::output, true);
 	static DigitalIoPin btnStepY(0,27, DigitalIoPin::output, true);
 
+	DigitalIoPin swY0(0,0, DigitalIoPin::pullup, true);
+	DigitalIoPin swY1(1,3, DigitalIoPin::pullup, true);
+	DigitalIoPin swX0(0,9, DigitalIoPin::pullup, true);
+	DigitalIoPin swX1(0,29, DigitalIoPin::pullup, true);
+
 	// This used to check if a context switch is required
 	portBASE_TYPE xHigherPriorityWoken = pdFALSE;
 	// Tell timer that we have processed the interrupt.
@@ -67,13 +73,16 @@ void RIT_IRQHandler(void) {
 			btnStepY.write(isHighY);
 		}*/
 
-		if (RITaxis == XAXIS) {
-			btnStepX.write(!btnStepX.read());
-		} else {
-			btnStepY.write(!btnStepY.read());
-		}
+		if (isCalibrate||(!swX0.read() && !swX1.read() && !swY0.read() && !swY1.read())) {
 
-		RIT_count--;
+			if (RITaxis == XAXIS) {
+				btnStepX.write(!btnStepX.read());
+			} else {
+				btnStepY.write(!btnStepY.read());
+			}
+
+			RIT_count--;
+		}
 	}
 
 	if (RIT_count <= 0) {
@@ -115,10 +124,10 @@ void RIT_start(int count, int us) {
 	}
 }
 
-Plotter::Plotter()
+Plotter::Plotter(Motor *myMotorX, Motor *myMotorY)
 {
-	motorX = new Motor(0, 9, 0, 29, 1, 0);
-	motorY = new Motor(0, 0, 1, 3, 0, 28);
+	motorX = myMotorX;
+	motorY = myMotorY;
 }
 
 Plotter::~Plotter() {
@@ -137,23 +146,63 @@ void Plotter::move(Axis axis, int count) {
 
 /* Accelerate the motor
  * then decelerate (to avoid moving too fast)
+ * Depend on the distance, if long enough it can move with PPSMAXCALI
+ * Using PPSMAXCALI require acceleration and deceleration
+ * If the distance is short then it only move with PPSMAX
+ * Using PPSMAX only require deceleration
  *
  */
 void Plotter::motorAcce(Axis axis, int count) {
-	if (count > 20) {
-		motorPPS = PPSMAX;
-		move(axis, count - 20);
-		count = 20;
+
+	//If moving long distance then accelerate then decelerate
+	// 5500 counts = 2750 steps = ~3.1cm
+	if (count > 5500) {
+		//acceleration
+		// 2000 counts
+		while (count > 3500) {
+			move(axis, 10);
+			count = count - 10;
+			motorPPS = motorPPS + (PPSMAXCALI-PPSDEFAULT)/200;
+			if (motorPPS > PPSMAXCALI)  {
+				motorPPS = PPSMAXCALI;
+				break;
+			}
+		}
+
+		if (count > 2000) {
+			motorPPS = PPSMAXCALI;
+			move(axis, count - 2000);
+			count = 2000;
+		}
+
+		//Deceleration
+		//2000 counts
+		while (count > 0) {
+			move(axis, 10);
+			count = count - 10;
+			motorPPS = motorPPS - (PPSMAXCALI-PPSDEFAULT)/200;
+			if (motorPPS < PPSDEFAULT) {
+				motorPPS = PPSDEFAULT;
+			}
+		}
+		// If moving short distant then don't need to accelerate, however using lower speed
+	} else {
+		if (count > 20) {
+			motorPPS = PPSMAX;
+			move(axis, count - 20);
+			count = 20;
+		}
+
+		while (count > 0) {
+			motorPPS = motorPPS - (PPSMAX-PPSDEFAULT)/10;
+			if (motorPPS < PPSDEFAULT) {
+				motorPPS = PPSDEFAULT;
+			}
+			move(axis, 2);
+			count = count - 2;
+		}
 	}
 
-	while (count > 0) {
-		motorPPS = motorPPS - 300;
-		if (motorPPS < PPSDEFAULT) {
-			motorPPS = PPSDEFAULT;
-		}
-		move(axis, 2);
-		count = count - 2;
-	}
 	motorPPS = PPSDEFAULT;
 }
 
@@ -278,12 +327,12 @@ void Plotter::calibrate() {
 				motorPPS = motorPPS>PPSMAXCALI?PPSMAXCALI:motorPPS;
 				step = 1000;
 
-			//If within moving distance (not hit the limit soon) move really fast
+				//If within moving distance (not hit the limit soon) move really fast
 			} else if (maxSteps < 23000){
 				motorPPS = PPSMAXCALI;
 				step = 1000;
 
-			//Else decelerate until hit the limit
+				//Else decelerate until hit the limit
 			} else {
 				step = 8;
 				motorPPS = motorPPS>PPSDEFAULT?motorPPS-5:PPSDEFAULT;
@@ -317,6 +366,7 @@ void Plotter::calibrate() {
 	motorX->setPos(0); // Set position in scale with mDraw
 	motorY->setPos(0); // Set position in scale with mDraw
 	isMoving = true;
+	isCalibrate = false;
 }
 
 
