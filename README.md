@@ -1,4 +1,4 @@
-# X-Y Plotter
+# XY-Plotter
 Metropolia 3rd year group project: XY-Plotter\
 LPC1549 based firmware to control Makeblock's XY-Plotter with laser engraver upgrade
 <p>
